@@ -7,10 +7,12 @@ class Host(models.Model):
     name = models.CharField(max_length=128, unique=True)  # 存服务器名称
     ip_address = models.GenericIPAddressField(unique=True)  # 用来存IP地址的字段
     ip_port = models.SmallIntegerField(default=22)  # 存端口号，默认为22
-    idc = models.ForeignKey('IDC',on_delete=models.CASCADE)
+    idc = models.ForeignKey('IDC', on_delete=models.CASCADE)
+
     # remote_users = models.ManyToManyField('RomoteUser')  # 存远程登录的用户名密码
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name = '服务器表：Host'
         verbose_name_plural = '服务器表：Host'
@@ -21,6 +23,8 @@ class HostGroup(models.Model):
     name = models.CharField(max_length=128, unique=True)
     # hosts = models.ManyToManyField('Host')
     host_to_remote_users = models.ManyToManyField('HostToRemoteUser')
+    def __str__(self):
+        return self.name
     class Meta:
         verbose_name = '服务器分组表：HostGroup'
         verbose_name_plural = '服务器分组表：HostGroup'
@@ -28,7 +32,11 @@ class HostGroup(models.Model):
 
 # 机房表
 class IDC(models.Model):
-    name = models.CharField(max_length=64,unique=True)
+    name = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = '机房表：IDC'
         verbose_name_plural = '机房表：IDC'
@@ -90,10 +98,15 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
 # 绑定主机和用户的对应关系
 class HostToRemoteUser(models.Model):
-    host = models.ForeignKey('Host',on_delete=models.CASCADE)
-    remote_user = models.ForeignKey('RomoteUser',on_delete=models.CASCADE)
+    host = models.ForeignKey('Host', on_delete=models.CASCADE)
+    remote_user = models.ForeignKey('RomoteUser', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '%s:%s}' %(self.host,self.remote_user)
 
     class Meta:
+        verbose_name = '绑定主机和用户的对应关系：HostToRemoteUser'
+        verbose_name_plural = '绑定主机和用户的对应关系：HostToRemoteUser'
         unique_together = ('host', 'remote_user')
 
 
@@ -102,7 +115,10 @@ class RomoteUser(models.Model):
     auth_type_choices = ((0, 'ssh-password'), (1, 'ssh-key'))  # 密码类型
     auth_type = models.SmallIntegerField(choices=auth_type_choices, default=0)
     username = models.CharField(max_length=32)  # 存用户名
-    password = models.CharField(max_length=64)  # 存明文密码
+    password = models.CharField(max_length=64, blank=True, null=True)  # 存明文密码
+
+    def __str__(self):
+        return '{}:{}'.format(self.username, self.password)
 
     class Meta:
         verbose_name = '远程机器表：RomoteUser'
