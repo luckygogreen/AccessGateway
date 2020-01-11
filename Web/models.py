@@ -1,48 +1,61 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import (
+    BaseUserManager, AbstractBaseUser, PermissionsMixin
+)
 
 
-# 服务器表
+# Create your models here.
+
+
 class Host(models.Model):
-    name = models.CharField(max_length=128, unique=True)  # 存服务器名称
-    ip_address = models.GenericIPAddressField(unique=True)  # 用来存IP地址的字段
-    ip_port = models.SmallIntegerField(default=22)  # 存端口号，默认为22
-    idc = models.ForeignKey('IDC', on_delete=models.CASCADE)
-
-    # remote_users = models.ManyToManyField('RomoteUser')  # 存远程登录的用户名密码
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = '服务器表：Host'
-        verbose_name_plural = '服务器表：Host'
-
-
-# 服务器分组
-class HostGroup(models.Model):
-    name = models.CharField(max_length=128, unique=True)
-    # hosts = models.ManyToManyField('Host')
-    host_to_remote_users = models.ManyToManyField('HostToRemoteUser')
-    def __str__(self):
-        return self.name
-    class Meta:
-        verbose_name = '服务器分组表：HostGroup'
-        verbose_name_plural = '服务器分组表：HostGroup'
-
-
-# 机房表
-class IDC(models.Model):
+    """存储主机列表"""
     name = models.CharField(max_length=64, unique=True)
+    ip_addr = models.GenericIPAddressField(unique=True)
+    port = models.SmallIntegerField(default=22)
+    idc = models.ForeignKey("IDC", on_delete=models.CASCADE)
+
+    # remote_users = models.ManyToManyField("RemoteUser")
 
     def __str__(self):
         return self.name
 
+
+class HostGroup(models.Model):
+    """存储主机组"""
+    name = models.CharField(max_length=64, unique=True)
+    # hosts = models.ManyToManyField("Host")
+    host_to_remote_users = models.ManyToManyField("HostToRemoteUser")
+
+    def __str__(self):
+        return self.name
+
+
+class HostToRemoteUser(models.Model):
+    """绑定主机和远程用户的对应关系"""
+    host = models.ForeignKey("Host", on_delete=models.CASCADE)
+    remote_user = models.ForeignKey("RemoteUser", on_delete=models.CASCADE)
+
     class Meta:
-        verbose_name = '机房表：IDC'
-        verbose_name_plural = '机房表：IDC'
+        unique_together = ("host", "remote_user")
+
+    def __str__(self):
+        return "%s %s" % (self.host, self.remote_user)
 
 
-# 创建账号函数
+class RemoteUser(models.Model):
+    """存储远程要管理的主机的账号信息"""
+    auth_type_choices = ((0, 'ssh-password'), (1, 'ssh-key'))
+    auth_type = models.SmallIntegerField(choices=auth_type_choices, default=0)
+    username = models.CharField(max_length=32)
+    password = models.CharField(max_length=64, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('auth_type', 'username', 'password')
+
+    def __str__(self):
+        return "%s:%s" % (self.username, self.password)
+
+
 class UserProfileManager(BaseUserManager):
     def create_user(self, email, name, password=None):
         """
@@ -61,7 +74,7 @@ class UserProfileManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, name, password=None):
+    def create_superuser(self, email, name, password):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -76,58 +89,48 @@ class UserProfileManager(BaseUserManager):
         return user
 
 
-# 账号表
 class UserProfile(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(verbose_name='email address', max_length=255, unique=True, blank=True, null=True)
-    name = models.CharField(max_length=32, verbose_name="full name")
-    is_staff = models.BooleanField(default=True)
+    """堡垒机账号"""
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+
+    )
+    name = models.CharField(max_length=64, verbose_name="姓名")
     is_active = models.BooleanField(default=True)
-    objects = UserProfileManager()  # 变量名必须要是 objects ，不能为其他
-    host_to_remote_users = models.ManyToManyField('HostToRemoteUser', blank=True, null=True)
-    host_group = models.ManyToManyField('HostGroup', blank=True, null=True)
+    is_staff = models.BooleanField(default=True)
+    objects = UserProfileManager()
+    host_to_remote_users = models.ManyToManyField("HostToRemoteUser", blank=True, null=True)
+    host_groups = models.ManyToManyField("HostGroup", blank=True, null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
 
-    def __str__(self):
+    def get_full_name(self):
+        # The user is identified by their email address
         return self.email
 
-    class Meta:
-        verbose_name = '堡垒机账号表：UserProfile'
-        verbose_name_plural = '堡垒机账号表：UserProfile'
+    def get_short_name(self):
+        # The user is identified by their email address
+        return self.email
+
+    def __str__(self):  # __unicode__ on Python 2
+        return self.email
 
 
-# 绑定主机和用户的对应关系
-class HostToRemoteUser(models.Model):
-    host = models.ForeignKey('Host', on_delete=models.CASCADE)
-    remote_user = models.ForeignKey('RomoteUser', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return '%s:%s}' %(self.host,self.remote_user)
-
-    class Meta:
-        verbose_name = '绑定主机和用户的对应关系：HostToRemoteUser'
-        verbose_name_plural = '绑定主机和用户的对应关系：HostToRemoteUser'
-        unique_together = ('host', 'remote_user')
+class IDC(models.Model):
+    """机房信息"""
+    name = models.CharField(max_length=64, unique=True)
 
 
-# 远程机器表
-class RomoteUser(models.Model):
-    auth_type_choices = ((0, 'ssh-password'), (1, 'ssh-key'))  # 密码类型
-    auth_type = models.SmallIntegerField(choices=auth_type_choices, default=0)
-    username = models.CharField(max_length=32)  # 存用户名
-    password = models.CharField(max_length=64, blank=True, null=True)  # 存明文密码
-
-    def __str__(self):
-        return '{}:{}'.format(self.username, self.password)
-
-    class Meta:
-        verbose_name = '远程机器表：RomoteUser'
-        verbose_name_plural = '远程机器表：RomoteUser'
-        unique_together = ('auth_type', 'username', 'password')
-
-
-# 操作日志表
 class AuditLog(models.Model):
-    class Meta:
-        verbose_name = '操作日志表：AuditLog'
-        verbose_name_plural = '操作日志表：AuditLog'
+    """存储审计日志"""
+    user = models.ForeignKey("UserProfile", on_delete=models.CASCADE, verbose_name="堡垒机账号", null=True, blank=True)
+    host_to_remote_user = models.ForeignKey("HostToRemoteUser", on_delete=models.CASCADE, null=True, blank=True)
+    log_type_choices = ((0, 'login'), (1, 'cmd'), (2, 'logout'))
+    log_type = models.SmallIntegerField(choices=log_type_choices, default=0)
+    content = models.CharField(max_length=255, null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return "%s %s" % (self.host_to_remote_user, self.content)
