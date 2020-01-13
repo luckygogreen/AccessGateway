@@ -104,7 +104,7 @@ def ssh_connect(ssh_handler_instance,host_to_user_obj):
         chan.get_pty()
         chan.invoke_shell()
 
-        chan.crazyeye_account = ssh_handler_instance.user
+        chan.access_account = ssh_handler_instance.user
         chan.host_to_user_obj = host_to_user_obj
         chan.models = ssh_handler_instance.models
         print('*** Here we go!\n')

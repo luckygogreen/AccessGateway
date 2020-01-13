@@ -52,7 +52,7 @@ def posix_shell(chan):
                     # log = "%s   %s\n" %(time.strftime("%Y-%m-%d %X", time.gmtime()), ''.join(cmd))
                     # print(log)
                     chan.models.AuditLog.objects.create(
-                        user=chan.crazyeye_account,
+                        user=chan.access_account,
                         log_type=1,
                         host_to_remote_user=chan.host_to_user_obj,
                         content=''.join(cmd)
@@ -71,7 +71,7 @@ def posix_shell(chan):
 # thanks to Mike Looijmans for this code
 def windows_shell(chan):
     print("window chan", chan.host_to_user_obj)
-    print("window chan", chan.crazyeye_account)
+    print("window chan", chan.access_account)
     import threading
 
     sys.stdout.write("Line-buffered terminal emulation. Press F6 or ^Z to send EOF.\r\n\r\n")

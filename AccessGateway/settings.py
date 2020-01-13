@@ -25,7 +25,8 @@ SECRET_KEY = '2(992yeffkdir4-g43n6a02raw)vshhwq1l+x_%v(wa0n0px6^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []  # 容许本地访问
+ALLOWED_HOSTS = ["*"]  # 容许所有人访问
 
 
 # Application definition

@@ -48,5 +48,7 @@ class SshHandler(object):
                         choice = int(choice)
                         selected_host_to_user_obj = selected_host_group.host_to_remote_users.all()[choice]
                         print("going to logon  %s" % selected_host_to_user_obj )
+                        paramiko_ssh.ssh_connect(self, selected_host_to_user_obj )
+
                     if choice == "b":
                         break

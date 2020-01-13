@@ -102,7 +102,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=True)
     objects = UserProfileManager()
     host_to_remote_users = models.ManyToManyField("HostToRemoteUser", blank=True, null=True)
-    host_groups = models.ManyToManyField("HostGroup", blank=True, null=True)
+    host_group = models.ManyToManyField("HostGroup", blank=True, null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
 

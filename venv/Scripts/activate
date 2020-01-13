@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\BOSS\PycharmProjects\AccessGateway\venv"
+VIRTUAL_ENV="C:\Users\BOSS\Desktop\s3CrazyEye\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
