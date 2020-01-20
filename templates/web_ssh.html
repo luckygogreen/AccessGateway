@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block main_box %}
+    {% load static %}
+    <div id="content-container">
+        <div id="page-content">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="panel panel-bordered panel-dark">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">服务器组</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-hover table-vcenter">
+                                <thead>
+                                <tr>
+                                    <th class="min-width"></th>
+                                    <th>组名</th>
+                                    <th class="text-center">数量</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center"><i class="demo-pli-monitor-2 icon-2x"></i></td>
+                                    <td>
+                                        <span class="text-main text-semibold">Desktop</span>
+                                    </td>
+                                    <td class="text-center">5</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"><i class="demo-pli-monitor-2 icon-2x"></i></td>
+                                    <td>
+                                        <span class="text-main text-semibold">Desktop</span>
+                                    </td>
+                                    <td class="text-center">5</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--===================================================-->
+                        <!--End Hover Rows-->
+
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="panel panel-bordered panel-dark">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">服务器列表</h3>
+                        </div>
+
+                        <!--Condensed Table-->
+                        <!--===================================================-->
+                        <div class="panel-body">
+                            <table class="table table-hover table-vcenter">
+                                <thead>
+                                <tr>
+                                    <th>主机名</th>
+                                    <th>IP</th>
+                                    <th>Port</th>
+                                    <th>System</th>
+                                    <th>临时Token</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><a href="#fakelink" class="btn-link">asdasd</a></td>
+                                    <td>192.168.2.1<button class="btn btn-xs btn-success">SSH</button></td>
+                                    <td>22</td>
+                                    <td>Linux</td>
+                                    <td><span class="label label-default">645654</span><button class="btn btn-xs btn-info">生成</button></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#fakelink" class="btn-link">53451</a></td>
+                                    <td>192.168.2.1<button class="btn btn-xs btn-success">SSH</button></td>
+                                    <td>22</td>
+                                    <td>Linux</td>
+                                    <td><span class="label label-default">645654</span><button class="btn btn-xs btn-info">生成</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--===================================================-->
+                        <!--End Condensed Table-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

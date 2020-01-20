@@ -106,8 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-# 修改自定义用户后必须要加的代码
-AUTH_USER_MODEL = 'Web.UserProfile'
+
 
 LANGUAGE_CODE = 'en-us'
 
@@ -122,5 +121,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "statics"),
+]
+# 修改自定义用户
+AUTH_USER_MODEL = 'Web.UserProfile'
+
+#验证登录装饰器
+LOGIN_URL = '/login'

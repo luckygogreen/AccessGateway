@@ -1,7 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser, PermissionsMixin
-)
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+
 
 
 # Create your models here.
@@ -13,8 +12,7 @@ class Host(models.Model):
     ip_addr = models.GenericIPAddressField(unique=True)
     port = models.SmallIntegerField(default=22)
     idc = models.ForeignKey("IDC", on_delete=models.CASCADE)
-
-    # remote_users = models.ManyToManyField("RemoteUser")
+    remote_users = models.ManyToManyField("RemoteUser")
 
     def __str__(self):
         return self.name
