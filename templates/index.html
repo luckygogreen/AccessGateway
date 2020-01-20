@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    {% load static %}
+    <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
+    <link href="{% static 'plugins/bootstrap-table/bootstrap-table.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block main_box %}
+    {% load static %}
+    <div id="content-container">
+        <div id="page-content">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="panel panel-warning panel-colorful media middle pad-all">
+                        <div class="media-left">
+                            <div class="pad-hor">
+                                <i class="demo-pli-file-word icon-3x"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-2x mar-no text-semibold">241</p>
+                            <p class="mar-no">Documents</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-info panel-colorful media middle pad-all">
+                        <div class="media-left">
+                            <div class="pad-hor">
+                                <i class="demo-pli-file-zip icon-3x"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-2x mar-no text-semibold">241</p>
+                            <p class="mar-no">Zip Files</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-mint panel-colorful media middle pad-all">
+                        <div class="media-left">
+                            <div class="pad-hor">
+                                <i class="demo-pli-camera-2 icon-3x"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-2x mar-no text-semibold">241</p>
+                            <p class="mar-no">Photos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-danger panel-colorful media middle pad-all">
+                        <div class="media-left">
+                            <div class="pad-hor">
+                                <i class="demo-pli-video icon-3x"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-2x mar-no text-semibold">241</p>
+                            <p class="mar-no">Videos</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="page-content">
+            <div class="col-sm-12">
+                <!--Basic Toolbar-->
+                <!--===================================================-->
+                <div class="panel panel-bordered panel-dark">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Basic Toolbar</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table data-toggle="table"
+                               data-search="true"
+                               data-show-refresh="true"
+                               data-show-toggle="true"
+                               data-show-columns="true"
+                               data-sort-name="id"
+                               data-page-list="[5, 10, 20]"
+                               data-page-size="5"
+                               data-pagination="true" data-show-pagination-switch="true">
+                            <thead>
+                            <tr>
+                                <th data-field="id" data-sortable="true" data-formatter="invoiceFormatter">ID</th>
+                                <th data-field="name" data-sortable="true">Name</th>
+                                <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Order date
+                                </th>
+                                <th data-field="amount" data-align="center" data-sortable="true"
+                                    data-sorter="priceSorter">Balance
+                                </th>
+                                <th data-field="status" data-align="center" data-sortable="true"
+                                    data-formatter="statusFormatter">Status
+                                </th>
+                                <th data-field="track" data-align="center" data-sortable="true"
+                                    data-formatter="trackFormatter">Tracking Number
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr data-index="1">
+                                <td style=""><a href="#" class="btn-link"> Order #53432</a></td>
+                                <td style="">Charles S Boyle</td>
+                                <td style=""><span class="text-muted"><i class="fa fa-clock-o"></i> Oct 24, 2014</span>
+                                </td>
+                                <td style="text-align: center; ">$245.30</td>
+                                <td style="text-align: center; ">
+                                    <div class="label label-table label-info"> Shipped</div>
+                                </td>
+                                <td style="text-align: center; "><i class="fa fa-plane"></i> CGX0089734531</td>
+                            </tr>
+                            <tr data-index="2">
+                                <td style=""><a href="#" class="btn-link"> Order #53433</a></td>
+                                <td style="">Lucy Doe</td>
+                                <td style=""><span class="text-muted"><i class="fa fa-clock-o"></i> Oct 24, 2014</span>
+                                </td>
+                                <td style="text-align: center; ">$38.00</td>
+                                <td style="text-align: center; ">
+                                    <div class="label label-table label-info"> Shipped</div>
+                                </td>
+                                <td style="text-align: center; "><i class="fa fa-plane"></i> CGX0089934571</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>22</td>
+                                <td>222</td>
+                                <td>2222</td>
+                                <td><div class="label label-table label-info"> 22</div></td>
+                                <td>222222</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--===================================================-->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_javascript %}
+    <script src="{% static 'js/demo/nifty-demo.min.js' %}"></script>
+    <script src="{% static 'js/demo/tables-bs-table.js' %}"></script>
+    <script src="{% static 'plugins/x-editable/js/bootstrap-editable.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-table/bootstrap-table.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
+{% endblock %}
