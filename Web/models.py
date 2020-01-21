@@ -2,24 +2,21 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 
-
 # Create your models here.
 
-
+# 服务器表
 class Host(models.Model):
-    """存储主机列表"""
     name = models.CharField(max_length=64, unique=True)
     ip_addr = models.GenericIPAddressField(unique=True)
     port = models.SmallIntegerField(default=22)
     idc = models.ForeignKey("IDC", on_delete=models.CASCADE)
-    remote_users = models.ManyToManyField("RemoteUser")
 
     def __str__(self):
         return self.name
 
 
+# 服务器机组
 class HostGroup(models.Model):
-    """存储主机组"""
     name = models.CharField(max_length=64, unique=True)
     # hosts = models.ManyToManyField("Host")
     host_to_remote_users = models.ManyToManyField("HostToRemoteUser")
@@ -28,8 +25,8 @@ class HostGroup(models.Model):
         return self.name
 
 
+# 服务器和登录账号关联
 class HostToRemoteUser(models.Model):
-    """绑定主机和远程用户的对应关系"""
     host = models.ForeignKey("Host", on_delete=models.CASCADE)
     remote_user = models.ForeignKey("RemoteUser", on_delete=models.CASCADE)
 
@@ -40,8 +37,8 @@ class HostToRemoteUser(models.Model):
         return "%s %s" % (self.host, self.remote_user)
 
 
+# 服务器登录账号
 class RemoteUser(models.Model):
-    """存储远程要管理的主机的账号信息"""
     auth_type_choices = ((0, 'ssh-password'), (1, 'ssh-key'))
     auth_type = models.SmallIntegerField(choices=auth_type_choices, default=0)
     username = models.CharField(max_length=32)
@@ -87,8 +84,8 @@ class UserProfileManager(BaseUserManager):
         return user
 
 
+# 堡垒机账号
 class UserProfile(AbstractBaseUser, PermissionsMixin):
-    """堡垒机账号"""
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -116,13 +113,16 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
+# 机房信息
 class IDC(models.Model):
-    """机房信息"""
     name = models.CharField(max_length=64, unique=True)
 
+    def __str__(self):
+        return self.name
 
+
+# 存储审计日志
 class AuditLog(models.Model):
-    """存储审计日志"""
     user = models.ForeignKey("UserProfile", on_delete=models.CASCADE, verbose_name="堡垒机账号", null=True, blank=True)
     host_to_remote_user = models.ForeignKey("HostToRemoteUser", on_delete=models.CASCADE, null=True, blank=True)
     log_type_choices = ((0, 'login'), (1, 'cmd'), (2, 'logout'))
@@ -132,3 +132,36 @@ class AuditLog(models.Model):
 
     def __str__(self):
         return "%s %s" % (self.host_to_remote_user, self.content)
+
+
+# 存储任务信息，大任务
+class MultiTask(models.Model):
+    task_type_choices = (
+        ('cmd', 'CMD'),
+        ('filetrans', 'FILES'),
+    )
+    tasktype = models.CharField(max_length=32, choices=task_type_choices)
+    taskcontent = models.CharField(max_length=256, verbose_name='Task content')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.taskcontent
+
+
+# 存储任务信息返回的个线程数据，小任务
+class TaskDetails(models.Model):
+    task = models.ForeignKey(MultiTask, on_delete=models.CASCADE)
+    host_to_remote_user = models.ForeignKey(HostToRemoteUser, on_delete=models.CASCADE)
+    status_choices = (
+        (0,'initialized'),
+        (1,'timeout'),
+        (2,'Error'),
+        (3,'Success'),
+    )
+    status = models.PositiveIntegerField(choices=status_choices,default=0)
+    result = models.TextField(verbose_name='CMD result')
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.result

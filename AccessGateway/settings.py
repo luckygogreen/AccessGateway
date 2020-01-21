@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ DEBUG = True
 
 # ALLOWED_HOSTS = []  # 容许本地访问
 ALLOWED_HOSTS = ["*"]  # 容许所有人访问
-
 
 # Application definition
 
@@ -72,7 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'AccessGateway.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -82,7 +79,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -102,10 +98,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
-
 
 
 LANGUAGE_CODE = 'en-us'
@@ -118,6 +112,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+APPEND_SLASH = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -128,5 +123,5 @@ STATICFILES_DIRS = [
 # 修改自定义用户
 AUTH_USER_MODEL = 'Web.UserProfile'
 
-#验证登录装饰器
+# 验证登录装饰器
 LOGIN_URL = '/login'

@@ -1,89 +1,86 @@
 {% extends 'base.html' %}
+{% block extra_css %}
+    {% load static %}
+    <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
+    <link href="{% static 'plugins/bootstrap-table/bootstrap-table.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/bootstrap-select/bootstrap-select.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/select2/css/select2.min.css' %}" rel="stylesheet">
+{% endblock %}
 {% block main_box %}
     {% load static %}
     <div id="content-container">
         <div id="page-content">
             <div class="row">
-                <div class="col-lg-3">
+                <!--Basic Toolbar-->
+                <!--===================================================-->
+                <div class="col-lg-12">
                     <div class="panel panel-bordered panel-dark">
                         <div class="panel-heading">
-                            <h3 class="panel-title">服务器组</h3>
+                            <h3 class="panel-title">Basic Toolbar</h3>
                         </div>
                         <div class="panel-body">
-                            <table class="table table-hover table-vcenter">
+                            <table data-toggle="table"
+                                   data-search="true"
+                                   data-show-refresh="true"
+                                   data-show-toggle="true"
+                                   data-show-columns="true"
+                                   data-sort-name="id"
+                                   data-page-list="[5, 10, 20]"
+                                   data-page-size="5"
+                                   data-pagination="true" data-show-pagination-switch="true">
                                 <thead>
                                 <tr>
-                                    <th class="min-width"></th>
-                                    <th>组名</th>
-                                    <th class="text-center">数量</th>
+                                    <th data-field="id" data-sortable="true">ID</th>
+                                    <th data-field="name" data-sortable="true">Host Name</th>
+                                    <th data-field="ip" data-sortable="true">Host IP</th>
+                                    <th data-field="date" data-sortable="true">Port</th>
+                                    <th data-field="amount" data-align="center" data-sortable="true"
+                                        data-sorter="priceSorter">IDC
+                                    </th>
+                                    <th data-field="status" data-align="center" data-sortable="true">Login Name</th>
+                                    <th data-field="track" data-align="center" data-sortable="true">Login Type</th>
+                                    <th>Connect</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="text-center"><i class="demo-pli-monitor-2 icon-2x"></i></td>
-                                    <td>
-                                        <span class="text-main text-semibold">Desktop</span>
-                                    </td>
-                                    <td class="text-center">5</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center"><i class="demo-pli-monitor-2 icon-2x"></i></td>
-                                    <td>
-                                        <span class="text-main text-semibold">Desktop</span>
-                                    </td>
-                                    <td class="text-center">5</td>
-                                </tr>
+                                {% for single_host in hostlist %}
+                                    <tr data-index="0" id="{{ single_host.host.id }}">
+                                        <td data="{{ single_host.host.id }}" style="text-align: center; " id="{{ single_host.host.id }}">{{ single_host.host.id }}</td>
+                                        <td style="text-align: center; ">{{ single_host.host.name }}</td>
+                                        <td style="text-align: center; "><span class="text-muted">{{ single_host.host.ip_addr }}</span></td>
+                                        <td style="text-align: center; ">{{ single_host.host.port }}</td>
+                                        <td style="text-align: center; ">{{ single_host.host.idc.name }}</td>
+                                        <td style="text-align: center; ">{{ single_host.remote_user.username }}</td>
+                                        <td style="text-align: center; ">{{ single_host.remote_user.get_auth_type_display }}</td>
+                                        <td style="text-align: center; ">
+                                            <div class="btn-group btn-group-xs">
+                                                <button data-toggle="modal"
+                                                        class="btn btn-warning" onclick="windowsopen('{{ single_host.host.ip_addr }}','{{ single_host.host.port }}')">SSH
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-                        <!--===================================================-->
-                        <!--End Hover Rows-->
-
                     </div>
-                </div>
-                <div class="col-lg-9">
-                    <div class="panel panel-bordered panel-dark">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">服务器列表</h3>
-                        </div>
-
-                        <!--Condensed Table-->
-                        <!--===================================================-->
-                        <div class="panel-body">
-                            <table class="table table-hover table-vcenter">
-                                <thead>
-                                <tr>
-                                    <th>主机名</th>
-                                    <th>IP</th>
-                                    <th>Port</th>
-                                    <th>System</th>
-                                    <th>临时Token</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><a href="#fakelink" class="btn-link">asdasd</a></td>
-                                    <td>192.168.2.1<button class="btn btn-xs btn-success">SSH</button></td>
-                                    <td>22</td>
-                                    <td>Linux</td>
-                                    <td><span class="label label-default">645654</span><button class="btn btn-xs btn-info">生成</button></td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#fakelink" class="btn-link">53451</a></td>
-                                    <td>192.168.2.1<button class="btn btn-xs btn-success">SSH</button></td>
-                                    <td>22</td>
-                                    <td>Linux</td>
-                                    <td><span class="label label-default">645654</span><button class="btn btn-xs btn-info">生成</button></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!--===================================================-->
-                        <!--End Condensed Table-->
-
-                    </div>
+                    <!--===================================================-->
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block extra_javascript %}
+    <script src="{% static 'js/demo/tables-bs-table.js' %}"></script>
+    <script src="{% static 'js/kevinjs.js' %}"></script>
+    <script src="{% static 'plugins/x-editable/js/bootstrap-editable.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-table/bootstrap-table.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-select/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}"></script>
+    <script src="{% static 'js/demo/ui-panels.js' %}"></script>
+    <script src="{% static 'plugins/bootbox/bootbox.min.js' %}"></script>
+    <script src="{% static 'js/demo/ui-modals.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
 {% endblock %}

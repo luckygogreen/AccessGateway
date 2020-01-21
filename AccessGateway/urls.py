@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^logout/$',views.access_logout,name='access_logout'),  #登出页面
     url(r'^web_ssh/$',views.web_ssh,name='web_ssh'),
     url(r'^host_muilt/$',views.host_muilt,name='host_muilt'),
+    url(r'^batch_task_mgr/$',views.batch_task_mgr),
     url(r'^host_filetrans/$',views.host_filetrans,name='host_filetrans'),
 ]
