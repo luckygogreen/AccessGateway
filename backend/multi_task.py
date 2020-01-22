@@ -1,5 +1,8 @@
 import json
 from Web import models
+import subprocess
+from django import conf
+from backend import run_task
 
 
 class MultiTaskManager(object):
@@ -42,13 +45,22 @@ class MultiTaskManager(object):
             user=self.request.user
         )  # 插入前端传入的CMD 命令
         select_host_ids = set(self.task_data['select_host_ids'])  # set() 用于去重
-        print('打印task_obj：',task_obj)
+        print('打印task_obj：', task_obj)
         task_log_obj = []
         for id in select_host_ids:
             task_log_obj.append(
                 models.TaskDetails(
-                    task=task_obj, host_to_remote_user_id=id, result='Init...%s' %(id)
+                    task=task_obj, host_to_remote_user_id=id, result='Init...%s' % (id)
                 )
             )
         print('打印task_log_obj:', task_log_obj)
         models.TaskDetails.objects.bulk_create(task_log_obj)  # 批量创建添加数据
+
+        # 方法1，运行run_task方法，调用单独脚本，取路径,全新进程
+        task_url = "%s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
+        cmd_process = subprocess.Popen(task_url, shell='True')
+        self.task_id = task_obj.id
+
+        # # 方法2，运行run_task方法,直接调用函数方法，同一个进程
+        # run_task.task_runner(task_obj.id)
+        # self.task_id = task_obj.id

@@ -34,7 +34,7 @@ class HostToRemoteUser(models.Model):
         unique_together = ("host", "remote_user")
 
     def __str__(self):
-        return "%s %s" % (self.host, self.remote_user)
+        return "%s %s %s" % (self.id, self.host, self.remote_user)
 
 
 # 服务器登录账号
@@ -146,7 +146,7 @@ class MultiTask(models.Model):
     data = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.taskcontent
+        return '%s %s' %(self.id,self.taskcontent)
 
 
 # 存储任务信息返回的个线程数据，小任务
@@ -154,12 +154,12 @@ class TaskDetails(models.Model):
     task = models.ForeignKey(MultiTask, on_delete=models.CASCADE)
     host_to_remote_user = models.ForeignKey(HostToRemoteUser, on_delete=models.CASCADE)
     status_choices = (
-        (0,'initialized'),
-        (1,'timeout'),
-        (2,'Error'),
-        (3,'Success'),
+        (0, 'initialized'),
+        (1, 'timeout'),
+        (2, 'Error'),
+        (3, 'Success'),
     )
-    status = models.PositiveIntegerField(choices=status_choices,default=0)
+    status = models.PositiveIntegerField(choices=status_choices, default=0)
     result = models.TextField(verbose_name='CMD result')
     data = models.DateTimeField(auto_now_add=True)
 

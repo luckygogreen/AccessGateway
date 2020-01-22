@@ -82,7 +82,7 @@ function run_shell_cmd() {
         };
         var csrftoken = $("input[name='csrfmiddlewaretoken']").val()
         $.post("/batch_task_mgr/", {'task_data':JSON.stringify(task_mgr),'csrfmiddlewaretoken':csrftoken}, function (callback) {
-            console.log("task_callback:", task_mgr)
+            console.log("task_callback:"+callback)
         });  //end post
     }
 }
