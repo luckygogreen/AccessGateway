@@ -2,7 +2,7 @@ import json
 import platform
 
 from Web import models
-import subprocess
+import subprocess   #调用进程包
 from django import conf
 from backend import run_task
 
