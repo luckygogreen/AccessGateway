@@ -57,7 +57,8 @@ class MultiTaskManager(object):
         models.TaskDetails.objects.bulk_create(task_log_obj)  # 批量创建添加数据
 
         # 方法1，运行run_task方法，调用单独脚本，取路径,全新进程
-        task_url = "%s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
+        task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
+        print('打印task_url：',task_url)
         cmd_process = subprocess.Popen(task_url, shell='True')
         self.task_id = task_obj.id
 

@@ -124,4 +124,4 @@ STATICFILES_DIRS = [
 AUTH_USER_MODEL = 'Web.UserProfile'
 
 # 验证登录装饰器
-LOGIN_URL = '/login'
+LOGIN_URL = '/login/'
