@@ -1,10 +1,10 @@
+
 import json
 import platform
 
 from Web import models
-import subprocess   #调用进程包
+import subprocess  # 调用进程包
 from django import conf
-from backend import run_task
 
 
 class MultiTaskManager(object):
@@ -61,13 +61,13 @@ class MultiTaskManager(object):
         # 方法1，运行run_task方法，调用单独脚本，取路径,全新进程
         sys_type = platform.system()
         print('打印操作系统：', sys_type)
-        if sys_type=='Windows':
+        if sys_type == 'Windows':
             print('运行WindowsURL')
-            task_url = "%s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
+            task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
         else:
             print('运行MAC或其他平台URL')
             task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
-        print('打印task_url：',task_url)
+        print('打印task_url：', task_url)
         cmd_process = subprocess.Popen(task_url, shell='True')
         self.task_id = task_obj.id
 
