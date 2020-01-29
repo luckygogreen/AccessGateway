@@ -69,6 +69,7 @@ class MultiTaskManager(object):
             task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
         print('打印task_url：', task_url)
         cmd_process = subprocess.Popen(task_url, shell='True')
+        print('打印进程号:',cmd_process.pid)
         self.task_id = task_obj.id
 
         # # 方法2，运行run_task方法,直接调用函数方法，同一个进程
