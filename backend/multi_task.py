@@ -52,7 +52,7 @@ class MultiTaskManager(object):
         for id in select_host_ids:
             task_log_obj.append(
                 models.TaskDetails(
-                    task=task_obj, host_to_remote_user_id=id, result='Init...%s' % (id)
+                    task=task_obj, host_to_remote_user_id=id, result='Init'
                 )
             )
         print('打印task_log_obj:', task_log_obj)
@@ -70,8 +70,4 @@ class MultiTaskManager(object):
         print('打印task_url：', task_url)
         cmd_process = subprocess.Popen(task_url, shell='True')
         print('打印进程号:',cmd_process.pid)
-        self.task_id = task_obj.id
-
-        # # 方法2，运行run_task方法,直接调用函数方法，同一个进程
-        # run_task.task_runner(task_obj.id)
-        # self.task_id = task_obj.id
+        self.task_obj = task_obj

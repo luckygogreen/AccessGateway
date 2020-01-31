@@ -23,7 +23,8 @@
 
                             <!--Nav tabs-->
                             <ul class="nav nav-tabs">
-                                <li class="active"><a data-toggle="tab" href="#demo-tabs-box-1" aria-expanded="true">已分组主机</a>
+                                <li class="active"><a data-toggle="tab" href="#demo-tabs-box-1"
+                                                      aria-expanded="true">已分组主机</a>
                                 </li>
                                 <li class=""><a data-toggle="tab" href="#demo-tabs-box-2"
                                                 aria-expanded="false">未分组主机</a></li>
@@ -48,7 +49,7 @@
                                         </div>
                                         <!--Panel body-->
                                         <div class="collapse" id="{{ group_host.name }}">
-                                            <div class="panel-body">
+                                            <div class="panel-body" >
                                                 <table class="demo-add-niftycheck" data-toggle="table"
                                                        data-page-size="10"
                                                        data-pagination="true">
@@ -130,7 +131,7 @@
                 <!----------------------------->
             </div>
             <div class="col-lg-7">
-                <div  class="panel panel-bordered panel-dark">{% csrf_token %}
+                <div class="panel panel-bordered panel-dark">{% csrf_token %}
                     <div class="panel-heading">
                         <h3 class="panel-title">批量命令执行端口</h3>
                     </div>
@@ -151,14 +152,17 @@
                             <button class="btn btn-danger btn-labeled pull-right space" style="margin-left: 16px;"><i
                                     class="btn-label fa fa-stop"></i> 停止
                             </button>
-                            <button onclick="run_shell_cmd()" class="btn btn-success btn-labeled pull-right" ><i
+                            <button onclick="run_shell_cmd()" class="btn btn-success btn-labeled pull-right"><i
                                     class="btn-label fa fa-play"></i> 执行
                             </button>
                         </div>
                     </div>
                     <!--===================================================-->
                     <!--End Condensed Table-->
-
+                </div>
+                <div class="panel panel-bordered-primary">
+                    <button class="btn btn-block btn-primary">执行结果</button>
+                    <div class="panel-body" id="show_host_results"></div>
                 </div>
                 <div class="panel panel-bordered panel-dark">
                     <div class="panel-heading">
@@ -207,4 +211,3 @@
     <script src="{% static 'js/demo/ui-panels.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
 {% endblock %}
-</div>

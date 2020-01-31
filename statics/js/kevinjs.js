@@ -81,8 +81,58 @@ function run_shell_cmd() {
             'cmd_text': cmd_text
         };
         var csrftoken = $("input[name='csrfmiddlewaretoken']").val()
-        $.post("/batch_task_mgr/", {'task_data':JSON.stringify(task_mgr),'csrfmiddlewaretoken':csrftoken}, function (callback) {
-            console.log("task_callback:"+callback)
-        });  //end post
+        $.post("/batch_task_mgr/", {
+            'task_data': JSON.stringify(task_mgr),
+            'csrfmiddlewaretoken': csrftoken
+        }, function (callback) {
+            console.log("task_callback:" + callback)
+            var callbackdata = JSON.parse(callback);
+            $.each(callbackdata.select_host_list, function (index, ele) {
+                var li_ele = "<div pannelbox_id='" + ele.id + "' class=\"panel panel-bordered panel-dark \"><div class=\"panel-heading\"> <div class=\"panel-control\"> <div progressmain_id='" + ele.id + "' class=\"progress progress-md\"> <div progress_id='" + ele.id + "' style=\"width: 25%\" class=\"progress-bar progress-bar-primary progress-bar-striped active\"></div></div><button statusbutton_id='" + ele.id + "' class=\"btn btn-primary btn-labeled\"><i statusi_id='" + ele.id + "' class=\"btn-label fa fa-gears\"></i> <span statusspan_id='" + ele.id + "'>Running</span></button></div><h3 class=\"panel-title\">" + (index + 1) + "—<i class=\"fa fa-linux\"></i>—" + ele.host_to_remote_user__host__name + "@" + ele.host_to_remote_user__host__ip_addr + "</h3> </div><div class=\"panel-body\"> <pre log_id='" + ele.id + "'>Start</pre> </div> </div>";
+                $("#show_host_results").append(li_ele);
+            });
+            // Get Shell result//
+            ResultRefresh = setInterval(function () {
+                GetTaskResult(callbackdata.task_id);
+            }, 2000);
+
+
+        });
     }
+}
+
+function GetTaskResult(task_id) {
+    $.getJSON("/get_task_result/", {"task_id": task_id}, function (callback) {
+        console.log("data_callback:" + callback)
+        var all_finish = true;
+        $.each(callback, function (index, ele) {
+            var pre_ele = $("pre[log_id=" + ele.id + "]")
+            pre_ele.text(ele.result)
+            if (ele.status == 0) {
+                all_finish = false
+            }
+            if(pre_ele.text() == 'Init'){
+                $("div[progress_id=" + ele.id + "]").css({width:"50%"})
+                $("div[pannelbox_id=" + ele.id + "]").attr("class", " panel panel-bordered panel-mint ");
+            }
+            if(ele.status == 2){
+                $("div[progressmain_id=" + ele.id + "]").css({display:"none"})
+                $("div[pannelbox_id=" + ele.id + "]").attr("class", " panel panel-bordered panel-danger ");
+                $("i[statusi_id=" + ele.id + "]").attr("class", " btn-label fa fa-window-close-o ");
+                $("span[statusspan_id=" + ele.id + "]").text("Error!!!!!!");
+            }
+            if(ele.status == 3){
+                $("div[progressmain_id=" + ele.id + "]").css({display:"none"})
+                $("div[pannelbox_id=" + ele.id + "]").attr("class", " panel panel-bordered panel-success ");
+                $("i[statusi_id=" + ele.id + "]").attr("class", " btn-label fa fa-hand-peace-o ");
+                $("span[statusspan_id=" + ele.id + "]").text("Success");
+            }
+        })
+
+        console.log(all_finish)
+        if (all_finish) {
+            clearInterval(ResultRefresh) //停止运行方法
+            console.log("All command are finish!")
+        }
+    })
 }

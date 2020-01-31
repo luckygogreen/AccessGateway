@@ -49,8 +49,22 @@ def host_muilt(request):
 # 处理CMD提交过来的任务
 @login_required
 def batch_task_mgr(request):
-    multi_task_obj = MultiTaskManager(request)
-    return HttpResponse(multi_task_obj.task_id)
+    mutile_task_obj = MultiTaskManager(request)
+    response = {
+        'task_id': mutile_task_obj.task_obj.id,
+        'select_host_list': list(mutile_task_obj.task_obj.taskdetails_set.all().values('id', 'host_to_remote_user__host__ip_addr', 'host_to_remote_user__host__name', 'host_to_remote_user__remote_user__username'))
+    }
+    print('response:', response)
+    return HttpResponse(json.dumps(response))
+
+
+# 处理连接服务器命令，返回的结果
+@login_required
+def get_task_result(request):
+    task_id = request.GET.get('task_id')
+    task_details_obj = models.TaskDetails.objects.filter(task_id=task_id)
+    log_data = list(task_details_obj.values('id', 'status', 'result'))
+    return HttpResponse(json.dumps(log_data))
 
 
 # 批量文件页面
