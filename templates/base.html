@@ -446,17 +446,17 @@
                                         </a>
                                     </div>
                                 </div>
-                                 <!--------------------END Profile Widget-------------------->
+                                <!--------------------END Profile Widget-------------------->
                                 <!--------------------Left Sidebar-------------------->
                                 <ul id="mainnav-menu" class="list-group">
-                                    <li class="active-link">
+                                    <li>
                                         <a href="{% url 'dashboard' %}">
                                             <i class="pli-pac-man"></i>
                                             <span class="menu-title">信息面板</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'web_ssh' %}">
+                                        <a href={% url 'web_ssh' %}>
                                             <i class="pli-cloud-computer"></i>
                                             <span class="menu-title">
 												主机
@@ -473,7 +473,7 @@
 
                                         <!--ul 添加 class="collapse in" 则默认为展开-->
                                         <ul>
-                                            <li class="active-link"><a href="{% url 'host_muilt' %}">批量命令</a></li>
+                                            <li><a href="{% url 'host_muilt' %}">批量命令</a></li>
                                             <li><a href="{% url 'host_filetrans' %}">批量文件</a></li>
                                             <li><a href="#">任务日志</a></li>
 
@@ -674,10 +674,12 @@
     </div>
     <!--===================================================-->
     <!-- END OF CONTAINER -->
+
     <script src="{% static 'js/pace.min.js' %}"></script>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/nifty.min.js' %}"></script>
+    <script src="{% static 'js/kevinjs.js' %}"></script>
     {% block extra_javascript %}{% endblock %}
     </body>
 {% endblock %}

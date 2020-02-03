@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^web_ssh/$',views.web_ssh,name='web_ssh'),
     url(r'^host_muilt/$',views.host_muilt,name='host_muilt'),
     url(r'^batch_task_mgr/$',views.batch_task_mgr),
+    url(r'^muilt_file_trans/$',views.muilt_file_trans),
     url(r'^get_task_result/$',views.get_task_result),
     url(r'^host_filetrans/$',views.host_filetrans,name='host_filetrans'),
 ]

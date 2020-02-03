@@ -111,7 +111,7 @@
                                     <tbody>
                                     {% for host_info in host_obj %}
                                         <tr>
-                                            <td class="bs-checkbox "><input name="selectitem"
+                                            <td class="bs-checkbox "><input name="selectitem" tag="host_select"
                                                                             type="checkbox" value="{{ host_info.id }}"
                                                                             id="{{ host_info.id }}">
                                             </td>
@@ -149,10 +149,10 @@
                                 <option>任务超时时间(45Mins)</option>
                                 <option>任务超时时间(60Mins)</option>
                             </select>
-                            <button class="btn btn-danger btn-labeled pull-right space" style="margin-left: 16px;"><i
+                            <button onclick="stop_shell_cmd(this)" class="btn btn-danger btn-labeled pull-right space" style="margin-left: 16px;"><i
                                     class="btn-label fa fa-stop"></i> 停止
                             </button>
-                            <button onclick="run_shell_cmd()" class="btn btn-success btn-labeled pull-right"><i
+                            <button id="run_cmd_button" onclick="run_shell_cmd(this,'cmd')" class="btn btn-success btn-labeled pull-right"><i
                                     class="btn-label fa fa-play"></i> 执行
                             </button>
                         </div>
@@ -160,7 +160,7 @@
                     <!--===================================================-->
                     <!--End Condensed Table-->
                 </div>
-                <div class="panel panel-bordered-primary">
+                <div id="show_cmd_result" class="panel panel-bordered-primary hidden">
                     <button class="btn btn-block btn-primary">执行结果</button>
                     <div class="panel-body" id="show_host_results"></div>
                 </div>
@@ -202,7 +202,6 @@
     </div>
 {% endblock %}
 {% block extra_javascript %}
-    <script src="{% static 'js/kevinjs.js' %}"></script>
     <script src="{% static 'js/demo/tables-bs-table.js' %}"></script>
     <script src="{% static 'plugins/x-editable/js/bootstrap-editable.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-table/bootstrap-table.min.js' %}"></script>

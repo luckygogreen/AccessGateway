@@ -54,8 +54,7 @@ ROOT_URLCONF = 'AccessGateway.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,3 +124,6 @@ AUTH_USER_MODEL = 'Web.UserProfile'
 
 # 验证登录装饰器
 LOGIN_URL = '/login/'
+
+# 文件下载路径
+DOWNLOAD_PATH = "%s/downloads/" % BASE_DIR
