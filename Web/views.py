@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from Web import models
 from backend.multi_task import MultiTaskManager
+from backend import ag_info
+from backend.host_info import SSHHost
+from backend.ag_command_history import CommandHistory
 
 
 # 登录页面
@@ -27,9 +30,10 @@ def access_logout(request):
 
 @login_required
 def dashboard(request):
-    print(request.user)
-    return render(request, 'index.html',{'select_menu':'/'})
-    # return render(request, 'tables-bootstrap.html')
+    info_result = ag_info.get_accessgateway_info(request)  # 获取堡垒机基本信息
+    command_history = CommandHistory(request)
+    # print(command_history.command_history_list)   # 打印数据列表
+    return render(request, 'index.html', {'host_number': info_result['host_number'], 'host_group_number': info_result['host_group_number'], 'cmd_number': info_result['cmd_number'], 'user_number': info_result['user_number']})
 
 
 # 主机页面
@@ -90,3 +94,4 @@ def get_task_result(request):
     task_details_obj = models.TaskDetails.objects.filter(task_id=task_id)
     log_data = list(task_details_obj.values('id', 'status', 'result'))
     return HttpResponse(json.dumps(log_data))
+

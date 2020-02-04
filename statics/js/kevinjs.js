@@ -247,5 +247,6 @@ function active_menu() {
     // $("#mainnav-menu li").find("a[href='/web_ssh/']").parent().attr("class", "active-link");  //成功
     // $("#mainnav-menu li").find("a").attr("href",menupath).parent().addClass("active-link");
     $("#mainnav-menu li").find("a[href='"+menupath+"']").parent().addClass("active-link");
-    $("#mainnav-menu").find("a[href='"+menupath+"']").parent().parent().addClass("collapse in");
+    $("#mainnav-menu-sub li").find("a[href='"+menupath+"']").parent().addClass("active-link");
+    $("#mainnav-menu-sub li").find("a[href='"+menupath+"']").parent().parent().addClass("collapse in");
 }

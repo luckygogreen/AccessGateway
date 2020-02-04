@@ -17,15 +17,16 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
 from Web import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^$',views.dashboard,name='dashboard'),
-    url(r'^login/$',views.access_login,name='access_login'),     #登录页面
-    url(r'^logout/$',views.access_logout,name='access_logout'),  #登出页面
-    url(r'^web_ssh/$',views.web_ssh,name='web_ssh'),
-    url(r'^host_muilt/$',views.host_muilt,name='host_muilt'),
-    url(r'^batch_task_mgr/$',views.batch_task_mgr),
-    url(r'^muilt_file_trans/$',views.muilt_file_trans),
-    url(r'^get_task_result/$',views.get_task_result),
-    url(r'^host_filetrans/$',views.host_filetrans,name='host_filetrans'),
+    url(r'^$', views.dashboard, name='dashboard'),
+    url(r'^login/$', views.access_login, name='access_login'),  # 登录页面
+    url(r'^logout/$', views.access_logout, name='access_logout'),  # 登出页面
+    url(r'^web_ssh/$', views.web_ssh, name='web_ssh'),
+    url(r'^host_muilt/$', views.host_muilt, name='host_muilt'),
+    url(r'^batch_task_mgr/$', views.batch_task_mgr),
+    url(r'^muilt_file_trans/$', views.muilt_file_trans),
+    url(r'^get_task_result/$', views.get_task_result),
+    url(r'^host_filetrans/$', views.host_filetrans, name='host_filetrans'),
 ]

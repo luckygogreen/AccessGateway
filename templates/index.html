@@ -14,12 +14,12 @@
                     <div class="panel panel-warning panel-colorful media middle pad-all">
                         <div class="media-left">
                             <div class="pad-hor">
-                                <i class="demo-pli-file-word icon-3x"></i>
+                                <i class="fa fa-id-card-o fa-3x"></i>
                             </div>
                         </div>
                         <div class="media-body">
-                            <p class="text-2x mar-no text-semibold">241</p>
-                            <p class="mar-no">Documents</p>
+                            <p class="text-2x mar-no text-semibold">{{ user_number }}</p>
+                            <p class="mar-no">Total users</p>
                         </div>
                     </div>
                 </div>
@@ -27,12 +27,12 @@
                     <div class="panel panel-info panel-colorful media middle pad-all">
                         <div class="media-left">
                             <div class="pad-hor">
-                                <i class="demo-pli-file-zip icon-3x"></i>
+                                <i class="fa fa-object-group fa-3x"></i>
                             </div>
                         </div>
                         <div class="media-body">
-                            <p class="text-2x mar-no text-semibold">241</p>
-                            <p class="mar-no">Zip Files</p>
+                            <p class="text-2x mar-no text-semibold">{{ host_group_number }}</p>
+                            <p class="mar-no">Total server groups</p>
                         </div>
                     </div>
                 </div>
@@ -44,8 +44,8 @@
                             </div>
                         </div>
                         <div class="media-body">
-                            <p class="text-2x mar-no text-semibold">241</p>
-                            <p class="mar-no">Photos</p>
+                            <p class="text-2x mar-no text-semibold">{{ host_number }}</p>
+                            <p class="mar-no">Total Host</p>
                         </div>
                     </div>
                 </div>
@@ -53,12 +53,12 @@
                     <div class="panel panel-danger panel-colorful media middle pad-all">
                         <div class="media-left">
                             <div class="pad-hor">
-                                <i class="demo-pli-video icon-3x"></i>
+                                <i class="fa fa-desktop fa-3x"></i>
                             </div>
                         </div>
                         <div class="media-body">
-                            <p class="text-2x mar-no text-semibold">241</p>
-                            <p class="mar-no">Videos</p>
+                            <p class="text-2x mar-no text-semibold">{{ cmd_number }}</p>
+                            <p class="mar-no">Total Commands</p>
                         </div>
                     </div>
                 </div>
@@ -75,63 +75,30 @@
                     </div>
                     <div class="panel-body">
                         <table data-toggle="table"
+                               data-url="{% static 'data/command_history.json' %}"
                                data-search="true"
                                data-show-refresh="true"
+                               data-striped="true"
                                data-show-toggle="true"
                                data-show-columns="true"
                                data-sort-name="id"
-                               data-page-list="[5, 10, 20]"
-                               data-page-size="5"
+                               data-sort-order="desc"
+                               data-page-list="[5, 10, 20, 50]"
+                               data-height="600"
+                               data-page-size="20"
                                data-pagination="true" data-show-pagination-switch="true">
                             <thead>
                             <tr>
                                 <th data-field="id" data-sortable="true" data-formatter="invoiceFormatter">ID</th>
-                                <th data-field="name" data-sortable="true">Name</th>
-                                <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Order date
-                                </th>
-                                <th data-field="amount" data-align="center" data-sortable="true"
-                                    data-sorter="priceSorter">Balance
-                                </th>
-                                <th data-field="status" data-align="center" data-sortable="true"
-                                    data-formatter="statusFormatter">Status
-                                </th>
-                                <th data-field="track" data-align="center" data-sortable="true"
-                                    data-formatter="trackFormatter">Tracking Number
-                                </th>
+                                <th data-field="type" data-sortable="true">Type</th>
+                                <th data-field="command" data-sortable="true">Command</th>
+                                <th data-field="status" data-align="center" data-sortable="true" data-formatter="statusFormatter">Status</th>
+                                <th data-field="result" data-sortable="true" data-formatter="resultWidth">Result</th>
+                                <th data-field="hostname" data-sortable="true">Host Name</th>
+                                <th data-field="hostip" data-align="center" data-sortable="true" data-sorter="priceSorter">Host IP</th>
+                                <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Date</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr data-index="1">
-                                <td style=""><a href="#" class="btn-link"> Order #53432</a></td>
-                                <td style="">Charles S Boyle</td>
-                                <td style=""><span class="text-muted"><i class="fa fa-clock-o"></i> Oct 24, 2014</span>
-                                </td>
-                                <td style="text-align: center; ">$245.30</td>
-                                <td style="text-align: center; ">
-                                    <div class="label label-table label-info"> Shipped</div>
-                                </td>
-                                <td style="text-align: center; "><i class="fa fa-plane"></i> CGX0089734531</td>
-                            </tr>
-                            <tr data-index="2">
-                                <td style=""><a href="#" class="btn-link"> Order #53433</a></td>
-                                <td style="">Lucy Doe</td>
-                                <td style=""><span class="text-muted"><i class="fa fa-clock-o"></i> Oct 24, 2014</span>
-                                </td>
-                                <td style="text-align: center; ">$38.00</td>
-                                <td style="text-align: center; ">
-                                    <div class="label label-table label-info"> Shipped</div>
-                                </td>
-                                <td style="text-align: center; "><i class="fa fa-plane"></i> CGX0089934571</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>22</td>
-                                <td>222</td>
-                                <td>2222</td>
-                                <td><div class="label label-table label-info"> 22</div></td>
-                                <td>222222</td>
-                            </tr>
-                            </tbody>
                         </table>
                     </div>
                 </div>
