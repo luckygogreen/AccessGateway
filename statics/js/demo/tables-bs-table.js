@@ -128,8 +128,10 @@ function invoiceFormatter(value, row) {
     return '<a href="#" class="btn-link" >#' + value + '</a>';
 }
 
-function resultWidth(value,row) {
-    return '<div style="width: 300px;overflow: hidden;text-overflow: ellipsis;white-space:nowrap;">'+value+'</div>'
+
+function resultToplip(value,row) {
+    var html_cmd_result = '<button class="btn btn-xs btn-default add-tooltip" data-html="true" data-toggle="tooltip" data-container="body" data-placement="top" data-original-title="'+value+'">Command Result</button>'
+    return html_cmd_result
 }
 
 
@@ -152,12 +154,12 @@ function dateFormatter(value, row) {
 // =================================================================
 function statusFormatter(value, row) {
     var labelColor;
-    if (value == 3) {
+    if (value == "Success") {
         labelColor = "success";
-    } else if (value == 1) {
-        labelColor = "warning";
-    } else if (value == 2) {
+    } else if (value == "Error") {
         labelColor = "danger";
+    } else{
+        labelColor = "warning";
     }
     var icon = row.id % 2 === 0 ? 'fa-star' : 'fa-user';
     return '<div class="label label-table label-' + labelColor + '"> ' + value + '</div>';

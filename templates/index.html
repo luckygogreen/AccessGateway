@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_tag %}
 {% block extra_css %}
     {% load static %}
     <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
@@ -71,11 +72,11 @@
                 <!--===================================================-->
                 <div class="panel panel-bordered panel-dark">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Basic Toolbar</h3>
+                        <h3 class="panel-title">Command history</h3>
                     </div>
                     <div class="panel-body">
                         <table data-toggle="table"
-                               data-url="{% static 'data/command_history.json' %}"
+                               data-url="/static/data/{{ request.user.id }}/command_history.json"
                                data-search="true"
                                data-show-refresh="true"
                                data-striped="true"
@@ -92,25 +93,32 @@
                                 <th data-field="id" data-sortable="true" data-formatter="invoiceFormatter">ID</th>
                                 <th data-field="type" data-sortable="true">Type</th>
                                 <th data-field="command" data-sortable="true">Command</th>
-                                <th data-field="status" data-align="center" data-sortable="true" data-formatter="statusFormatter">Status</th>
-                                <th data-field="result" data-sortable="true" data-formatter="resultWidth">Result</th>
+                                <th data-field="status" data-align="center" data-sortable="true"
+                                    data-formatter="statusFormatter">Status
+                                </th>
+                                <th data-field="result" data-sortable="true" data-formatter="resultToplip">Result</th>
                                 <th data-field="hostname" data-sortable="true">Host Name</th>
-                                <th data-field="hostip" data-align="center" data-sortable="true" data-sorter="priceSorter">Host IP</th>
+                                <th data-field="hostip" data-align="center" data-sortable="true"
+                                    data-sorter="priceSorter">Host IP
+                                </th>
                                 <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Date</th>
                             </tr>
+                            <div style="width: 300px;overflow: hidden;text-overflow: ellipsis;white-space:nowrap;"></div>
                             </thead>
                         </table>
                     </div>
                 </div>
+
                 <!--===================================================-->
             </div>
         </div>
     </div>
 {% endblock %}
 {% block extra_javascript %}
-    <script src="{% static 'js/demo/nifty-demo.min.js' %}"></script>
+    {#    <script src="{% static 'js/demo/nifty-demo.min.js' %}"></script>#}
     <script src="{% static 'js/demo/tables-bs-table.js' %}"></script>
     <script src="{% static 'plugins/x-editable/js/bootstrap-editable.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-table/bootstrap-table.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
 {% endblock %}
+

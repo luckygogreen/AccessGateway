@@ -30,6 +30,8 @@ def ssh_command(sub_task_obj):
         stderr_result = stderr.read()
         print('打印stdout.read()的返回结果类型:', type(stdout_result))
         sub_task_obj.result = str(stdout_result + stderr_result, 'utf-8')  # 需要byte 类型的字节转换成 utf-8类型，否者输出结果b'.......\ns
+        if sub_task_obj.result == '':
+            sub_task_obj.result = 'The command was successfully executed but returned no results'
         print('打印stdout.read()的返回结果:', sub_task_obj.result)
         if stderr_result:
             print('有错误，status=2')
@@ -41,7 +43,7 @@ def ssh_command(sub_task_obj):
         print('e:', e)
         sub_task_obj.status = 2
         print('有错误e，status=2')
-        sub_task_obj.result = e
+        sub_task_obj.result = 'The command was run incorrectly, error message was:%s' % e
     sub_task_obj.save()
     print('已更新数据库')
     print('-' * 30, '以上是', sub_task_obj.id, '的输出结果', '-' * 30)
@@ -78,9 +80,8 @@ def sftp_file(sub_task_obj, task_data):
     except Exception as e:
         print('e:', e)
         sub_task_obj.status = 2
-        sub_task_obj.result = e
+        sub_task_obj.result = 'File transfer error. The error result is:%s' % e
     sub_task_obj.save()
-
 
 
 if __name__ == "__main__":

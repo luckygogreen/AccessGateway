@@ -7,10 +7,12 @@ function checkall(selectStatus) {
     //传入参数（全选框的选中状态）
     //根据name属性获取到单选框的input，使用each方法循环设置所有单选框的选中状态
     if (selectStatus) {
+        console.log(selectStatus)
         $("input[name='selectitem']").each(function (i, n) {
             n.checked = true;
         });
     } else {
+        console.log(selectStatus)
         $("input[name='selectitem']").each(function (i, n) {
             n.checked = false;
         });
@@ -237,6 +239,52 @@ function GetTaskResult(task_id) {
     })
 }
 
+function select_host_checkbox(self) {
+    console.log("select_host_checkbox成功运行")
+    if (self.checked) {
+        console.log(self.checked)
+        $("input[name='selectitem']").each(function (i, n) {
+            n.checked = true;
+        });
+    } else {
+        console.log(self.checked)
+        $("input[name='selectitem']").each(function (i, n) {
+            n.checked = false;
+        });
+    }
+    select_host_cmd()
+}
+
+function select_host_cmd(self) {
+    console.log("select_host_cmd 成功运行")
+    var select_host_ids = []
+    $("[tag=host_select]:checked").each(function () {
+        select_host_ids.push($(this).val())
+    })
+    console.log(select_host_ids)
+    var csrftoken = $("input[name='csrfmiddlewaretoken']").val()
+    $.post("/host_select_record/", {
+        'select_host_ids': JSON.stringify(select_host_ids),
+        'csrfmiddlewaretoken': csrftoken
+    }, function () {})
+    $("#sk_wave_spinkit").removeClass("hidden")
+    var x=(1+Math.ceil(Math.random()*5))*1000;
+    console.log('x='+x)
+    setTimeout('refresh_table()',x)  //设置延时执行方法
+    setTimeout('sk_wave_spinkit_control()',x)  //设置延时执行方法
+
+
+}
+//调用bootstrapTable的表格刷新方法
+function refresh_table(){
+    $("#host_record_result_table").bootstrapTable('refresh',{});
+}
+
+//加载数据期间运行加载波浪sk_wave_spinkit友好动画
+function sk_wave_spinkit_control() {
+    $("#sk_wave_spinkit").addClass("hidden")
+}
+
 //处理左侧菜单选中的状态
 function active_menu() {
     var menupath = window.location.pathname
@@ -246,7 +294,14 @@ function active_menu() {
     // $("a[href='/web_ssh/']").attr("class", "active-link");   //成功
     // $("#mainnav-menu li").find("a[href='/web_ssh/']").parent().attr("class", "active-link");  //成功
     // $("#mainnav-menu li").find("a").attr("href",menupath).parent().addClass("active-link");
-    $("#mainnav-menu li").find("a[href='"+menupath+"']").parent().addClass("active-link");
-    $("#mainnav-menu-sub li").find("a[href='"+menupath+"']").parent().addClass("active-link");
-    $("#mainnav-menu-sub li").find("a[href='"+menupath+"']").parent().parent().addClass("collapse in");
+    $("#mainnav-menu li").find("a[href='" + menupath + "']").parent().addClass("active-link");
+    $("#mainnav-menu-sub li").find("a[href='" + menupath + "']").parent().addClass("active-link");
+    $("#mainnav-menu-sub li").find("a[href='" + menupath + "']").parent().parent().addClass("collapse in");
 }
+
+//程序运行完以后激活tooltips,popover工具
+//bootstrap tooltips,popover 在表格中无法使用，需要在程序运行结尾激活，一下是激活代码
+$(document).ready(function () {
+    $("body").tooltip({selector: '[data-toggle=tooltip]'});
+    $("body").popover({selector: '[data-toggle=popover]'});
+});

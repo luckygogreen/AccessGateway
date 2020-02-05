@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    {% load static %}
+    <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
+    <link href="{% static 'plugins/bootstrap-table/bootstrap-table.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/bootstrap-select/bootstrap-select.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/spinkit/css/spinners/3-wave.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/select2/css/select2.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block main_box %}
+    {% load static %}
+    <div id="content-container">{% csrf_token %}
+        <div id="page-content">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="panel panel-bordered panel-dark">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Hosts list</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table data-toggle="table"
+                                   data-search="true"
+                                   data-show-toggle="true"
+                                   data-show-columns="true"
+                                   data-sort-name="id"
+                                   data-page-list="[5, 10, 20, 50]"
+                                   data-page-size="10"
+                                   data-pagination="true"
+                                   data-show-pagination-switch="true" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="bs-checkbox "><input type="checkbox"
+                                                                    onclick="select_host_checkbox(this)">
+                                        <!--onclick="checkall(this.checked)"-->
+                                    </th>
+                                    <th data-field="id" data-sortable="true">ID</th>
+                                    <th data-field="name" data-sortable="true">Host Name</th>
+                                    <th data-field="ip" data-sortable="true">Host IP</th>
+                                    <th data-field="date" data-sortable="true">Port</th>
+                                    <th data-field="amount" data-align="center" data-sortable="true"
+                                        data-sorter="priceSorter">IDC
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for single_host in host_list %}
+                                    <tr data-index="" id="{{ single_host.host.id }}">
+                                        <td class="bs-checkbox ">
+                                            <input name="selectitem" tag="host_select" type="checkbox"
+                                                   value="{{ single_host.id }}" id="host{{ single_host.id }}"
+                                                   onclick="select_host_cmd(this)">
+                                        </td>
+                                        <td data="{{ single_host.host.id }}" style="text-align: center; "
+                                            id="{{ single_host.host.id }}">{{ forloop.counter }}</td>
+                                        <td style="text-align: center; ">{{ single_host.host.name }}</td>
+                                        <td style="text-align: center; "><span
+                                                class="text-muted">{{ single_host.host.ip_addr }}</span></td>
+                                        <td style="text-align: center; ">{{ single_host.host.port }}</td>
+                                        <td style="text-align: center; ">{{ single_host.host.idc.name }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="panel panel-bordered panel-dark">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Operation record</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="sk_wave_spinkit" class="sk-wave hidden">
+                                <div class="sk-rect sk-rect1"></div>
+                                <div class="sk-rect sk-rect2"></div>
+                                <div class="sk-rect sk-rect3"></div>
+                                <div class="sk-rect sk-rect4"></div>
+                                <div class="sk-rect sk-rect5"></div>
+                            </div>
+                            <table id="host_record_result_table" data-toggle="table"
+                                   data-url="/static/data/{{ request.user.id }}/host_record_result.json"
+                                   data-search="true"
+                                   data-show-toggle="true"
+                                   data-show-refresh="true"
+                                   data-show-columns="true"
+                                   data-sort-order="desc"
+                                   data-sort-name="id"
+                                   data-page-list="[5, 10, 20, 50]"
+                                   data-page-size="10"
+                                   data-pagination="true"
+                                   data-show-pagination-switch="true" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th data-field="id" data-sortable="true" data-formatter="invoiceFormatter">ID</th>
+                                    <th data-field="type" data-sortable="true">Type</th>
+                                    <th data-field="cmd" data-sortable="true">Command</th>
+                                    <th data-field="status" data-align="center" data-sortable="true"
+                                        data-formatter="statusFormatter">Status
+                                    </th>
+                                    <th data-field="result" data-sortable="true" data-formatter="resultToplip">Result
+                                    </th>
+                                    <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Date</th>
+                                </tr>
+                                <div style="width: 300px;overflow: hidden;text-overflow: ellipsis;white-space:nowrap;"></div>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_javascript %}
+    <script src="{% static 'js/demo/tables-bs-table.js' %}"></script>
+    <script src="{% static 'plugins/x-editable/js/bootstrap-editable.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-table/bootstrap-table.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-select/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}"></script>
+    <script src="{% static 'js/demo/ui-panels.js' %}"></script>
+    <script src="{% static 'plugins/bootbox/bootbox.min.js' %}"></script>
+    <script src="{% static 'js/demo/ui-modals.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
+{% endblock %}

@@ -25,7 +25,7 @@ def access_login(request):
 # 登出页面
 def access_logout(request):
     logout(request)
-    return redirect('/login')
+    return redirect('/login/')
 
 
 @login_required
@@ -34,7 +34,11 @@ def dashboard(request):
     command_history = CommandHistory(request)
     # print(command_history.command_history_list)   # 打印数据列表
     return render(request, 'index.html', {'host_number': info_result['host_number'], 'host_group_number': info_result['host_group_number'], 'cmd_number': info_result['cmd_number'], 'user_number': info_result['user_number']})
-
+# 操作记录页面
+@login_required
+def host_record(request):
+    host_list = models.UserProfile.objects.get(id=request.user.id).host_to_remote_users.select_related()
+    return render(request,'host_record.html',{'host_list':host_list})
 
 # 主机页面
 @login_required
@@ -44,6 +48,7 @@ def web_ssh(request):
 
 
 # 获取用户权限下的服务器以及服务器组信息
+@login_required
 def host_hostgroup(request):
     host_obj = models.UserProfile.objects.get(id=request.user.id).host_to_remote_users.select_related()
     host_group_obj = models.UserProfile.objects.get(id=request.user.id).host_group.select_related()
@@ -63,6 +68,10 @@ def host_filetrans(request):
     host_obj, host_group_obj = host_hostgroup(request)
     return render(request, 'host_filetrans.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
 
+# 定时操作页面
+@login_required
+def timed_execution(request):
+    return render(request,'timed_execution.html')
 
 # 处理CMD提交过来的任务
 @login_required
@@ -75,6 +84,11 @@ def batch_task_mgr(request):
     print('response:', response)
     return HttpResponse(json.dumps(response))
 
+# 处理所选择的服务器列表
+@login_required
+def host_select_record(request):
+    ag_info.write_select_host_task_to_json(request)
+    return HttpResponse("ok")
 
 # 处理传输文件命令
 @login_required

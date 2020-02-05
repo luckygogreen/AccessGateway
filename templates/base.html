@@ -453,58 +453,49 @@
                                     <li>
                                         <a href="{% url 'dashboard' %}">
                                             <i class="pli-pac-man"></i>
-                                            <span class="menu-title">信息面板</span>
+                                            <span class="menu-title">Dashboard</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href={% url 'web_ssh' %}>
                                             <i class="pli-cloud-computer"></i>
                                             <span class="menu-title">
-												主机
-                                                <span class="pull-right badge badge-purple">7</span>
+												Host SSH
 											</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#">
                                             <i class="pli-mouse-3"></i>
-                                            <span class="menu-title">批量</span>
+                                            <span class="menu-title">Batch operation</span>
                                             <i class="arrow"></i>
                                         </a>
-
                                         <!--ul 添加 class="collapse in" 则默认为展开-->
                                         <ul id="mainnav-menu-sub">
-                                            <li><a href="{% url 'host_muilt' %}">批量命令</a></li>
-                                            <li><a href="{% url 'host_filetrans' %}">批量文件</a></li>
-                                            <li><a href="#">任务日志</a></li>
-
-
+                                            <li><a href="{% url 'host_muilt' %}">Batch command</a></li>
+                                            <li><a href="{% url 'host_filetrans' %}">Batch Files</a></li>
                                         </ul>
                                     </li>
                                     <li>
-                                        <a href="{% url 'web_ssh' %}">
+                                        <a href="{% url 'host_record' %}">
                                             <i class="pli-key-lock"></i>
-                                            <span class="menu-title">
-												操作记录
-                                                <span class="pull-right badge badge-purple">7</span>
-											</span>
+                                            <span class="menu-title">Operation record</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'web_ssh' %}">
+                                        <a href="{% url 'timed_execution' %}">
                                             <i class="pli-time-clock"></i>
                                             <span class="menu-title">
-												定时任务
-                                                <span class="pull-right badge badge-purple">7</span>
+												Timed task
 											</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/admin">
+                                        <a href="/admin/">
                                             <i class="pli-settings-window"></i>
                                             <span class="menu-title">
-												配置
-                                                <span class="pull-right badge badge-purple">7</span>
+												Setting
+                                                <!--<span class="pull-right badge badge-purple">7</span>-->
 											</span>
                                         </a>
                                     </li>
@@ -675,13 +666,12 @@
     </div>
     <!--===================================================-->
     <!-- END OF CONTAINER -->
-
-    <script src="{% static 'js/pace.min.js' %}"></script>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/pace.min.js' %}"></script>
     <script src="{% static 'js/nifty.min.js' %}"></script>
-    <script src="{% static 'js/kevinjs.js' %}"></script>
     {% block extra_javascript %}{% endblock %}
+    <script src="{% static 'js/kevinjs.js' %}"></script>
     </body>
 {% endblock %}
 
