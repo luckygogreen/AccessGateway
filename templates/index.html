@@ -8,6 +8,7 @@
 {% endblock %}
 {% block main_box %}
     {% load static %}
+    {% load custom_tag %}
     <div id="content-container">
         <div id="page-content">
             <div class="row">
@@ -76,7 +77,7 @@
                     </div>
                     <div class="panel-body">
                         <table data-toggle="table"
-                               data-url="/static/data/{{ request.user.id }}/command_history.json"
+                               data-url="{% get_static_url request %}data/{{ request.user.id }}/command_history.json"
                                data-search="true"
                                data-show-refresh="true"
                                data-striped="true"

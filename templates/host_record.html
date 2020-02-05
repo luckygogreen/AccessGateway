@@ -10,6 +10,7 @@
 {% endblock %}
 {% block main_box %}
     {% load static %}
+    {% load custom_tag %}
     <div id="content-container">{% csrf_token %}
         <div id="page-content">
             <div class="row">
@@ -79,7 +80,7 @@
                                 <div class="sk-rect sk-rect5"></div>
                             </div>
                             <table id="host_record_result_table" data-toggle="table"
-                                   data-url="/static/data/{{ request.user.id }}/host_record_result.json"
+                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/host_record_result.json"
                                    data-search="true"
                                    data-show-toggle="true"
                                    data-show-refresh="true"
