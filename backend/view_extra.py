@@ -64,7 +64,6 @@ def recent_command(request,type,show_number):
     command_obj = models.UserProfile.objects.get(id=request.user.id).multitask_set.select_related().order_by('-id').filter(tasktype=selected_type)[:show_number]
     recent_command_list = []
     for cmd in command_obj:
-        print('cmd:', cmd)
         recent_command_dict = {
             'id': cmd.id,
             'cmd': cmd.taskcontent,
@@ -76,7 +75,7 @@ def recent_command(request,type,show_number):
         }
         recent_command_list.append(recent_command_dict)
     dir_path = "%s/statics/data/%s/" % (conf.settings.BASE_DIR, request.user.id)
-    file_path = "%s/statics/data/%s/recent_command.json" % (conf.settings.BASE_DIR, request.user.id)
+    file_path = "%s/statics/data/%s/recent_command_%s.json" % (conf.settings.BASE_DIR, request.user.id,selected_type)
     all_about_json.write_json_file(dir_path, file_path, recent_command_list)
 
 

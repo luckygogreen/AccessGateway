@@ -95,7 +95,7 @@
                                        data-show-columns="true"
                                        data-sort-name="id"
                                        data-page-list="[5, 10, 20]"
-                                       data-page-size="5"
+                                       data-page-size="10"
                                        data-pagination="true"
                                        data-show-pagination-switch="true">
                                     <thead>
@@ -141,22 +141,21 @@
                     <div class="panel-body">
                         <div class="input-group mar-btm">
 					                        <span class="input-group-btn">
-					                            <button class="btn btn-mint" type="button">远程文件路径<span
-                                                        class="label label-danger" style="margin-left: 10px;">清空</span></button>
+					                            <button class="btn btn-mint" type="button" onclick="show_file_demo()">remote Path</button>
 					                        </span>
                             <input id="service_path" type="text" placeholder="/root/filename" class="form-control">
                         </div>
                         <div id="local_file_input" class="input-group mar-btm ">
 					                        <span class="input-group-btn">
-					                            <button class="btn btn-mint" type="button">本地文件路径<span
-                                                        class="label label-danger" style="margin-left: 10px;">清空</span></button>
+					                            <button class="btn btn-mint" type="button" onclick="show_file_demo()">Local Path</button>
 					                        </span>
                             <input id="local_path" type="text" placeholder="c:\filename" class="form-control">
                         </div>
                         <div class="row" style="padding-top: 10px;">
-                            <select id="file_trans_type" onchange="change_filetype_select(this)" class="selectpicker" data-style="btn-mint">
-                                <option value="sendto">从本地上传文件到远程</option>
-                                <option value="getfrom">从远程下载文件到本地</option>
+                            <select id="file_trans_type" onchange="change_filetype_select(this)" class="selectpicker"
+                                    data-style="btn-mint">
+                                <option value="sendto">From local to remote</option>
+                                <option value="getfrom">From remote to local</option>
                             </select>
                             <button id="stop_file_button" onclick="stop_shell_file(this)"
                                     class="btn btn-danger btn-labeled pull-right space"
@@ -182,16 +181,16 @@
                     </div>
                     <div class="panel-body">
                         <table id="recent_command_table" data-toggle="table"
-                               data-url="{% get_static_url request %}data/{{ request.user.id }}/recent_command.json"
+                               data-url="{% get_static_url request %}data/{{ request.user.id }}/recent_command_filetrans.json"
                                data-search="true"
                                data-show-toggle="true"
                                data-show-refresh="true"
                                data-sort-order="desc"
                                data-show-columns="true"
                                data-sort-name="id"
-                                {#                               data-page-list="[5, 10, 20]"#}
-                               data-page-size="10"
-                                {#                               data-pagination="true"#}
+                               data-page-list="[5, 10, 20]"
+                               data-page-size="5"
+                               data-pagination="true"
                                data-show-pagination-switch="true">
                             <thead>
                             <tr>

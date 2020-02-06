@@ -21,7 +21,7 @@ def ssh_command(sub_task_obj):
             port=host_remote_user_obj.host.port,
             username=host_remote_user_obj.remote_user.username,
             password=host_remote_user_obj.remote_user.password,
-            # timeout=10
+            timeout=15
         )
         print('执行命令：', sub_task_obj.task.taskcontent)
         # stdin, stdout, stderr = ssh.exec_command(". ./.bash_profile;echo $PATH")
@@ -62,11 +62,13 @@ def sftp_file(sub_task_obj, task_data):
     try:
         # host_connect = paramiko.Transport((host_ip, host_port))
         host_connect = paramiko.Transport(host_ip, host_port)
+        host_connect.banner_timeout = 15
         host_connect.connect(username=login_username, password=login_password)
         sftp = paramiko.SFTPClient.from_transport(host_connect)
         if task_data['file_trans_type'] == 'sendto':
             sftp.put(task_data['local_path'], task_data['service_path'])  # SFTP上传文件
             result_msg = "The file has been successfully uploaded to the target server.File location:%s" % task_data['service_path']
+            cmd_msg = "[upload file] to [%s]" % task_data['service_path']
         else:
             local_file_path = conf.settings.DOWNLOAD_PATH
             if not os.path.isdir("%s%s" % (local_file_path, task_obj.id)):
@@ -74,6 +76,7 @@ def sftp_file(sub_task_obj, task_data):
             filename = "%s_%s" % (sub_task_obj.host_to_remote_user.host.ip_addr, task_data["service_path"].split('/')[-1])  # split用/分割，取-1最后一个
             sftp.get(task_data["service_path"], "%s%s/%s" % (local_file_path, sub_task_obj.task.id, filename))  # SFTP下载文件
             result_msg = "The file has been successfully downloaded locally from the target server.Server location:%s" % task_data['service_path']
+            cmd_msg = "[Download file] from [%s]" % task_data['service_path']
         host_connect.close()
         sub_task_obj.status = 3
         sub_task_obj.result = result_msg
@@ -82,6 +85,10 @@ def sftp_file(sub_task_obj, task_data):
         sub_task_obj.status = 2
         sub_task_obj.result = 'File transfer error. The error result is:%s' % e
     sub_task_obj.save()
+    multi_Task = models.MultiTask.objects.get(id=sub_task_obj.task.id)
+    multi_Task.taskcontent = cmd_msg
+    multi_Task.save()
+
 
 
 if __name__ == "__main__":

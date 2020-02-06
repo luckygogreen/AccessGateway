@@ -95,7 +95,7 @@
                                        data-show-columns="true"
                                        data-sort-name="id"
                                        data-page-list="[5, 10, 20]"
-                                       data-page-size="5"
+                                       data-page-size="10"
                                        data-pagination="true"
                                        data-show-pagination-switch="true">
                                     <thead>
@@ -171,16 +171,16 @@
                     </div>
                     <div class="panel-body">
                         <table id="recent_command_table" data-toggle="table"
-                               data-url="{% get_static_url request %}data/{{ request.user.id }}/recent_command.json"
+                               data-url="{% get_static_url request %}data/{{ request.user.id }}/recent_command_cmd.json"
                                data-search="true"
                                data-show-toggle="true"
                                data-show-refresh="true"
                                data-sort-order="desc"
                                data-show-columns="true"
                                data-sort-name="id"
-                                {#                               data-page-list="[5, 10, 20]"#}
-                               data-page-size="10"
-                                {#                               data-pagination="true"#}
+                               data-page-list="[5, 10, 20]"
+                               data-page-size="5"
+                               data-pagination="true"
                                data-show-pagination-switch="true">
                             <thead>
                             <tr>

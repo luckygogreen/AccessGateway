@@ -135,6 +135,21 @@ function run_shell_cmd(self) {
     $("#recent_command_table").bootstrapTable('refresh', {});
 }
 
+//上傳文件路徑樣例
+function show_file_demo() {
+    $("#cmd_pannel").text("")
+    $.niftyNoty({
+        type: 'mint',
+        // icon: 'fa fa-bolt fa-2x',
+        // force: true,
+        container: '#cmd_pannel',
+        title:'【remote Path demo】 : /home/test2.jpg',
+        message:'【  local path demo】 : C:\\Users\\BOSS\\Pictures\\2.jpg',
+        closeBtn: true,
+        timer: 10000
+    });
+}
+
 //处理最近命令返回的结果
 function show_cmd_with_result(cmdid,task) {
     $("#recent_command_pannel_alert").text("");
