@@ -8,45 +8,37 @@ from concurrent.futures import ThreadPoolExecutor
 # 处理普通命令参数
 def ssh_command(sub_task_obj):
     time.sleep(2)
-    print('ssh_command方法已被执行')
-    print('接受传入的参数：', sub_task_obj)
     host_remote_user_obj = sub_task_obj.host_to_remote_user
-    print('获取host_remote_user_obj信息')
+    print('%s的 ssh_command 方法已被执行' % host_remote_user_obj.host.ip_addr)
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    print('连接IP：', host_remote_user_obj.host.ip_addr, '端口：', host_remote_user_obj.host.port, '用户名:', host_remote_user_obj.remote_user.username, '密码：', host_remote_user_obj.remote_user.password)
+    # print('连接IP：', host_remote_user_obj.host.ip_addr, '端口：', host_remote_user_obj.host.port, '用户名:', host_remote_user_obj.remote_user.username, '密码：', host_remote_user_obj.remote_user.password)
     try:
         ssh.connect(
             hostname=host_remote_user_obj.host.ip_addr,
             port=host_remote_user_obj.host.port,
             username=host_remote_user_obj.remote_user.username,
             password=host_remote_user_obj.remote_user.password,
-            timeout=15
+            timeout=5
         )
-        print('执行命令：', sub_task_obj.task.taskcontent)
         # stdin, stdout, stderr = ssh.exec_command(". ./.bash_profile;echo $PATH")
         stdin, stdout, stderr = ssh.exec_command(sub_task_obj.task.taskcontent)
         stdout_result = stdout.read()
         stderr_result = stderr.read()
-        print('打印stdout.read()的返回结果类型:', type(stdout_result))
+
         sub_task_obj.result = str(stdout_result + stderr_result, 'utf-8')  # 需要byte 类型的字节转换成 utf-8类型，否者输出结果b'.......\ns
         if sub_task_obj.result == '':
             sub_task_obj.result = 'The command was successfully executed but returned no results'
-        print('打印stdout.read()的返回结果:', sub_task_obj.result)
         if stderr_result:
-            print('有错误，status=2')
             sub_task_obj.status = 2
         else:
             sub_task_obj.status = 3
-            print('命令正确，status=3')
     except Exception as e:
-        print('e:', e)
         sub_task_obj.status = 2
-        print('有错误e，status=2')
+        print('有错误e，status=2',e)
         sub_task_obj.result = 'The command was run incorrectly, error message was:%s' % e
     sub_task_obj.save()
-    print('已更新数据库')
-    print('-' * 30, '以上是', sub_task_obj.id, '的输出结果', '-' * 30)
+    print('%s 的结果已存入数据库' % host_remote_user_obj.host.ip_addr)
     ssh.close()
 
 
@@ -58,11 +50,11 @@ def sftp_file(sub_task_obj, task_data):
     host_port = host_remote_user_obj.host.port
     login_username = host_remote_user_obj.remote_user.username
     login_password = host_remote_user_obj.remote_user.password
-
+    print('%s的 sftp_file 方法已被执行' % host_ip)
     try:
         # host_connect = paramiko.Transport((host_ip, host_port))
         host_connect = paramiko.Transport(host_ip, host_port)
-        host_connect.banner_timeout = 15
+        host_connect.banner_timeout = 5
         host_connect.connect(username=login_username, password=login_password)
         sftp = paramiko.SFTPClient.from_transport(host_connect)
         if task_data['file_trans_type'] == 'sendto':
@@ -102,16 +94,15 @@ if __name__ == "__main__":
     from Web import models
     from django import conf
 
-    print('打印:sys.argv', sys.argv)
-    print('打印:len(sys.argv)', len(sys.argv))
-    print('打印:sys.argv[0]', sys.argv[0])
+    # print('打印:sys.argv', sys.argv)
+    # print('打印:len(sys.argv)', len(sys.argv))
+    # print('打印:sys.argv[0]', sys.argv[0])
     if len(sys.argv) == 1:
         exit('程序终止')
     else:
         task_id = sys.argv[1]
-        print('打印:sys.argv[1]', sys.argv[1])
+        # print('打印:sys.argv[1]', sys.argv[1])
         task_obj = models.MultiTask.objects.get(id=task_id)
-        print('任务启动')
         pool_number = task_obj.taskdetails_set.all().count()  # 获取一共取出多少条数据   用到反向查找  _set
         print('开启线程条数：', pool_number)
         pool = ThreadPoolExecutor(pool_number)  # 初始化线程池 定义开启多少线程

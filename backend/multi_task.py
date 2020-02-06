@@ -16,7 +16,7 @@ class MultiTaskManager(object):
     def task_parse(self):
         self.task_data = json.loads(self.request.POST.get('task_data'))
         task_type = self.task_data.get('task_type')  # 打印task_typr: cmd
-        print('打印task_typr:', task_type)
+        # print('打印task_typr:', task_type)
         if hasattr(self, task_type):  # 反射，判断backend.multitask.MultiTaskManager 是否有方法cmd
             task_fuc = getattr(self, task_type)  # 反射，相当于 MultiTaskManager.cmd
             task_fuc()
@@ -43,7 +43,7 @@ class MultiTaskManager(object):
             user=self.request.user
         )  # 插入前端传入的CMD 命令
         select_host_ids = set(self.task_data['select_host_ids'])  # set() 用于去重
-        print('打印task_obj：', task_obj)
+        # print('打印task_obj：', task_obj)
         task_log_obj = []
         for id in select_host_ids:
             task_log_obj.append(
@@ -51,16 +51,16 @@ class MultiTaskManager(object):
                     task=task_obj, host_to_remote_user_id=id, result='Init'
                 )
             )
-        print('打印task_log_obj:', task_log_obj)
+        # print('打印task_log_obj:', task_log_obj)
         models.TaskDetails.objects.bulk_create(task_log_obj)  # 批量创建添加数据
 
         sys_type = platform.system()
-        print('打印操作系统：', sys_type)
+        print('执行命令的操作系统操作系统：', sys_type)
         if sys_type == 'Windows':
-            print('运行WindowsURL')
+            # print('运行WindowsURL')
             task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
         else:
-            print('运行MAC或其他平台URL')
+            # print('运行MAC或其他平台URL')
             task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
         print('打印task_url：', task_url)
         cmd_process = subprocess.Popen(task_url, shell='True')
@@ -68,12 +68,12 @@ class MultiTaskManager(object):
         self.task_obj = task_obj
 
     def file(self):
-        print('File Transfer func is ready!!')
-        print('task_data:', self.task_data)
-        print('select_host_list:', self.task_data['select_host_list'])
-        print('file_trans_type:', self.task_data['file_trans_type'])
-        print('service_path:', self.task_data['service_path'])
-        print('local_path:', self.task_data['local_path'])
+        # print('File Transfer func is ready!!')
+        # print('task_data:', self.task_data)
+        # print('select_host_list:', self.task_data['select_host_list'])
+        # print('file_trans_type:', self.task_data['file_trans_type'])
+        # print('service_path:', self.task_data['service_path'])
+        # print('local_path:', self.task_data['local_path'])
 
         task_obj = models.MultiTask.objects.create(
             tasktype='filetrans',
@@ -88,7 +88,7 @@ class MultiTaskManager(object):
                     task=task_obj, host_to_remote_user_id=id, result='Init'
                 )
             )
-        print('打印task_log_obj:', task_log_obj)
+        # print('打印task_log_obj:', task_log_obj)
         models.TaskDetails.objects.bulk_create(task_log_obj)  # 批量创建添加数据
         task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
         cmd_process = subprocess.Popen(task_url, shell='True')

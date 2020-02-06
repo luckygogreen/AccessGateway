@@ -95,7 +95,7 @@ def batch_task_mgr(request):
         'task_id': mutile_task_obj.task_obj.id,
         'select_host_list': list(mutile_task_obj.task_obj.taskdetails_set.all().values('id', 'host_to_remote_user__host__ip_addr', 'host_to_remote_user__host__name', 'host_to_remote_user__remote_user__username'))
     }
-    print('response:', response)
+    # print('response:', response)
     # view_extra.recent_command(request)
     return HttpResponse(json.dumps(response))
 
