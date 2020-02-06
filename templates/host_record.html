@@ -95,11 +95,11 @@
                                 <tr>
                                     <th data-field="id" data-sortable="true" data-formatter="invoiceFormatter">ID</th>
                                     <th data-field="type" data-sortable="true">Type</th>
-                                    <th data-field="cmd" data-sortable="true">Command</th>
+                                    <th data-field="cmd" data-sortable="true" data-formatter="resultToplip">Command</th>
                                     <th data-field="status" data-align="center" data-sortable="true"
                                         data-formatter="statusFormatter">Status
                                     </th>
-                                    <th data-field="result" data-sortable="true" data-formatter="resultToplip">Result
+                                    <th data-field="id" data-sortable="true" data-formatter="task_result_button">Result
                                     </th>
                                     <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Date</th>
                                 </tr>
@@ -108,6 +108,21 @@
                             </table>
                         </div>
                     </div>
+                    <div id="show_single_task_info_pannel" class="panel panel-bordered panel-dark hidden">
+                    <div class="panel-heading">
+                        <div class="panel-control">
+                            <button class="btn btn-default" data-panel="minmax" data-target="#panel-collapse-5b5e"
+                                    data-toggle="collapse" aria-expanded="true"><i class="demo-psi-chevron-up"></i>
+                            </button>
+                        </div>
+                        <h3 class="panel-title">Show Result</h3>
+                    </div>
+                    <div class="collapse in" id="panel-collapse-5b5e">
+                        <div class="panel-body">
+                            <div id="single_task_pannel_alert" class="panel-alert"></div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

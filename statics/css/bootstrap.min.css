@@ -6452,7 +6452,7 @@ button.close {
 }
 
 .tooltip-inner {
-    max-height: 310px;
+    max-height: 210px;
     padding: 3px 8px;
     color: #fff;
     text-align: left;

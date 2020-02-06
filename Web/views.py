@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from Web import models
 from backend.multi_task import MultiTaskManager
-from backend import ag_info
+from backend import view_extra
 from backend.host_info import SSHHost
 from backend.ag_command_history import CommandHistory
 
@@ -30,15 +30,25 @@ def access_logout(request):
 
 @login_required
 def dashboard(request):
-    info_result = ag_info.get_accessgateway_info(request)  # 获取堡垒机基本信息
+    info_result = view_extra.get_accessgateway_info(request)  # 获取堡垒机基本信息
     command_history = CommandHistory(request)
     # print(command_history.command_history_list)   # 打印数据列表
-    return render(request, 'index.html', {'host_number': info_result['host_number'], 'host_group_number': info_result['host_group_number'], 'cmd_number': info_result['cmd_number'], 'user_number': info_result['user_number']})
+    return render(request, 'index.html', {
+        'host_number': info_result['host_number'],
+        'host_group_number': info_result['host_group_number'],
+        'cmd_number': info_result['cmd_number'],
+        'task_number': info_result['task_number'],
+        'task_error_number': info_result['task_error_number'],
+        'task_success_number': info_result['task_success_number'],
+        'user_number': info_result['user_number']})
+
+
 # 操作记录页面
 @login_required
 def host_record(request):
     host_list = models.UserProfile.objects.get(id=request.user.id).host_to_remote_users.select_related()
-    return render(request,'host_record.html',{'host_list':host_list})
+    return render(request, 'host_record.html', {'host_list': host_list})
+
 
 # 主机页面
 @login_required
@@ -68,10 +78,12 @@ def host_filetrans(request):
     host_obj, host_group_obj = host_hostgroup(request)
     return render(request, 'host_filetrans.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
 
+
 # 定时操作页面
 @login_required
 def timed_execution(request):
-    return render(request,'timed_execution.html')
+    return render(request, 'timed_execution.html')
+
 
 # 处理CMD提交过来的任务
 @login_required
@@ -82,13 +94,24 @@ def batch_task_mgr(request):
         'select_host_list': list(mutile_task_obj.task_obj.taskdetails_set.all().values('id', 'host_to_remote_user__host__ip_addr', 'host_to_remote_user__host__name', 'host_to_remote_user__remote_user__username'))
     }
     print('response:', response)
+    view_extra.recent_command(request)
     return HttpResponse(json.dumps(response))
+
+
+# 处理host_muilt 批量命令页面传回的命令ID，返回该命令所涉及到的所有命令结果和数据
+@login_required
+def recent_cmd_result_button(request):
+    print('recent_cmd_result_button被成功执行')
+    result_list = view_extra.get_result_by_cmdid(request.GET.get('cmdid'), request)
+    return HttpResponse(json.dumps(result_list))
+
 
 # 处理所选择的服务器列表
 @login_required
 def host_select_record(request):
-    ag_info.write_select_host_task_to_json(request)
-    return HttpResponse("ok")
+    view_extra.command_history(request)
+    return HttpResponse("1")
+
 
 # 处理传输文件命令
 @login_required
@@ -108,4 +131,3 @@ def get_task_result(request):
     task_details_obj = models.TaskDetails.objects.filter(task_id=task_id)
     log_data = list(task_details_obj.values('id', 'status', 'result'))
     return HttpResponse(json.dumps(log_data))
-

@@ -120,6 +120,7 @@ function run_shell_cmd(self) {
             console.log("task_callback:" + callback)
             var callbackdata = JSON.parse(callback);
             $.each(callbackdata.select_host_list, function (index, ele) {
+                console.log("ele:" + ele.host_to_remote_user__host__ip_addr)
                 var li_ele = "<div pannelbox_id='" + ele.id + "' class=\"panel panel-bordered panel-dark \"><div class=\"panel-heading\"> <div class=\"panel-control\"> <div progressmain_id='" + ele.id + "' class=\"progress progress-md\" > <div progress_id='" + ele.id + "' style=\"width: 25%\" class=\"progress-bar progress-bar-primary progress-bar-striped active\"></div></div><button statusbutton_id='" + ele.id + "' class=\"btn btn-primary btn-labeled\" ><i statusi_id='" + ele.id + "' class=\"btn-label fa fa-gears\"  style=\" padding-left: 10px; border-left-width: 10px; \"></i> <span statusspan_id='" + ele.id + "'>Running</span></button></div><h3 class=\"panel-title\">" + (index + 1) + "—<i class=\"fa fa-linux\"></i>—" + ele.host_to_remote_user__host__name + "@" + ele.host_to_remote_user__host__ip_addr + "</h3> </div><div class=\"panel-body\"> <pre log_id='" + ele.id + "'>Start</pre> </div> </div>";
                 $("#show_host_results").append(li_ele);
             });
@@ -131,6 +132,94 @@ function run_shell_cmd(self) {
 
         });
     }
+    $("#recent_command_table").bootstrapTable('refresh', {});
+}
+
+//处理最近命令返回的结果
+function show_cmd_with_result(cmdid,task) {
+    $("#recent_command_pannel_alert").text("");
+    $("#show_rencent_cmd_result_panel").removeClass("hidden")
+    console.log("CMDID:" + cmdid);
+    var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+    $.getJSON('/recent_cmd_result_button/', {
+        'cmdid': cmdid,
+        'csrfmiddlewaretoken': csrftoken
+    }, function (callback) {
+        console.log("callback：" + callback)
+        // var callbackdata = JSON.parse(callback);  已经 object对象，不需要在JSON.parse
+        $.each(callback, function (index, ele) {
+            if (ele.taskstatus == "Error") {
+                recent_alert_type = 'danger'
+                recent_alert_icon = 'fa fa-bolt fa-2x'
+                status_lable_class = 'danger'
+            } else if (ele.taskstatus == "Success") {
+                recent_alert_type = 'success'
+                recent_alert_icon = 'fa fa-flag fa-2x'
+                status_lable_class = 'success'
+            } else {
+                recent_alert_type = 'warning'
+                recent_alert_icon = 'fa fa-bell fa-2x'
+                status_lable_class = 'warning'
+            }
+            $.niftyNoty({
+                type: recent_alert_type,
+                icon: 'fa fa-bolt fa-2x',
+                // title:ele.taskstatus,
+                // message:ele.taskresult,
+                force: true,
+                container: '#recent_command_pannel_alert',
+                html: '<div class="panel panel-bordered panel-mint">\n' +
+                    '<div class="panel-heading">\n' +
+                    '<h3 class="panel-title"><span class="badge badge-purple">' + ele.taskid + '</span><span class="badge badge-warning">' + ele.username + '</span><span class="badge badge-mint">' + ele.cmdtype + '</span><span class="badge badge-info">' + ele.taskip + '：' + ele.taskport + '</span><span class="badge badge-pink">' + ele.taskdate + '</span><span class="label label-' + status_lable_class + ' pull-right">' + ele.taskstatus + '</span></h3>\n' +
+                    '</div>\n' +
+                    '<div class="panel-body">\n' +
+                    '<span class="label label-mint" ><i class="btn-label fa fa-code"></i> ' + ele.command + '</span>\n' +
+                    '<pre style="color: #1b1b1b;">' + ele.taskresult + '</pre>\n' +
+                    '</div>\n' +
+                    '</div>',
+                closeBtn: true,
+                // timer: 5000
+            });
+
+        })
+
+    })
+
+
+}
+
+//处理host_record命令记录页面提交的Result结果按钮
+function show_task_info_result(task_id,task) {
+    console.log(task_id)
+    console.log(task)
+    $("#single_task_pannel_alert").text("");
+    $("#show_single_task_info_pannel").removeClass("hidden");
+    $.niftyNoty({
+        type: 'primary',
+        icon: 'fa fa-bolt fa-2x',
+        // force: true,
+        container: '#single_task_pannel_alert',
+        html: '<pre style="color: #1b1b1b;">' + task.result + '</pre>',
+        closeBtn: true,
+        // timer: 5000
+    });
+
+
+// JavaScript onclick传递对象参数（easyui传递一行数据时）错误：uncaught SyntaxError: Unexpected identifier
+//     用onclick传递对象参数时（easyui传递一行数据时），会报Sncaught SyntaxError: Unexpected identifier错误。
+//     经查，onclick（对象）这种传递对象形式里面的对象会变成onclick（[object Object]）。
+//     解决方法：将对象转化为json字符串，再将json字符串的双引号转换成单引号就行了
+//     思路： JSON.stringify().replace(/\”/g,”’”)将对象转化成JSON字符串传递，函数接收后会自动变成对象（原理暂不清楚）。
+//     过程解释： JSON.stringify()将对象转化成JSON字符串；.replace(/\”/g,”’”)将JSON字符串中的双引号转化成单引号，不然会报Unexpected end of input错误（这个错误是由于带的json字符串。它的双引号与onclick控件的双引号冲突了）
+//
+// 代码内容如下:传递参数
+//     var $row = JSON.stringify(row).replace(/\"/g,"'");//row的是一个对象
+//     <a href="#" onclick="editParentRow('+$row+')">编辑</a>//拼接传递对象
+
+
+
+
+
 }
 
 //处理提交的file命令
@@ -266,18 +355,20 @@ function select_host_cmd(self) {
     $.post("/host_select_record/", {
         'select_host_ids': JSON.stringify(select_host_ids),
         'csrfmiddlewaretoken': csrftoken
-    }, function () {})
+    }, function () {
+    })
     $("#sk_wave_spinkit").removeClass("hidden")
-    var x=(1+Math.ceil(Math.random()*5))*1000;
-    console.log('x='+x)
-    setTimeout('refresh_table()',x)  //设置延时执行方法
-    setTimeout('sk_wave_spinkit_control()',x)  //设置延时执行方法
+    var x = (1 + Math.ceil(Math.random() * 5)) * 1000;
+    console.log('x=' + x)
+    setTimeout('refresh_table()', x)  //设置延时执行方法
+    setTimeout('sk_wave_spinkit_control()', x)  //设置延时执行方法
 
 
 }
+
 //调用bootstrapTable的表格刷新方法
-function refresh_table(){
-    $("#host_record_result_table").bootstrapTable('refresh',{});
+function refresh_table() {
+    $("#host_record_result_table").bootstrapTable('refresh', {});
 }
 
 //加载数据期间运行加载波浪sk_wave_spinkit友好动画

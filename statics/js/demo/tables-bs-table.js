@@ -130,7 +130,19 @@ function invoiceFormatter(value, row) {
 
 
 function resultToplip(value,row) {
-    var html_cmd_result = '<button class="btn btn-xs btn-default add-tooltip" data-html="true" data-toggle="tooltip" data-container="body" data-placement="top" data-original-title="'+value+'">Command Result</button>'
+    var html_cmd_result = '<button class="btn btn-xs btn-default add-tooltip" data-html="true" data-toggle="tooltip" data-container="body" data-placement="top" data-original-title="'+value+'">Show</button>'
+    return html_cmd_result
+}
+//host_muilt 批量命令页面结果result按钮样式
+function click_small_button(value,row){
+    var html_cmd_result = '<button class="btn btn-primary btn-labeled btn-xs" onclick="show_cmd_with_result('+value+')"><i class="btn-label fa fa-code"></i> Show</button>'
+    return html_cmd_result
+}
+
+//host_record 命令操作记录页面结果result按钮样式
+function task_result_button(value,row){
+    var task = JSON.stringify(row).replace(/\"/g,"'");
+    var html_cmd_result = '<button class="btn btn-primary btn-labeled btn-xs" onclick="show_task_info_result('+value+','+task+')"><i class="btn-label fa fa-code"></i> Show</button>'
     return html_cmd_result
 }
 

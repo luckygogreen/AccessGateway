@@ -12,20 +12,8 @@
     <div id="content-container">
         <div id="page-content">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="panel panel-warning panel-colorful media middle pad-all">
-                        <div class="media-left">
-                            <div class="pad-hor">
-                                <i class="fa fa-id-card-o fa-3x"></i>
-                            </div>
-                        </div>
-                        <div class="media-body">
-                            <p class="text-2x mar-no text-semibold">{{ user_number }}</p>
-                            <p class="mar-no">Total users</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
+                <!--Total server groups-->
+                <div class="col-md-2">
                     <div class="panel panel-info panel-colorful media middle pad-all">
                         <div class="media-left">
                             <div class="pad-hor">
@@ -38,7 +26,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <!--Total Host-->
+                <div class="col-md-2">
                     <div class="panel panel-mint panel-colorful media middle pad-all">
                         <div class="media-left">
                             <div class="pad-hor">
@@ -51,8 +40,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="panel panel-danger panel-colorful media middle pad-all">
+                <!--Total Commands-->
+                <div class="col-md-2">
+                    <div class="panel panel-primary panel-colorful media middle pad-all">
                         <div class="media-left">
                             <div class="pad-hor">
                                 <i class="fa fa-desktop fa-3x"></i>
@@ -64,7 +54,48 @@
                         </div>
                     </div>
                 </div>
-
+                <!--task_number-->
+                <div class="col-md-2">
+                    <div class="panel panel-purple panel-colorful media middle pad-all">
+                        <div class="media-left">
+                            <div class="pad-hor">
+                                <i class="fa fa-id-card-o fa-3x"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-2x mar-no text-semibold">{{ task_number }}</p>
+                            <p class="mar-no">Total Tasks</p>
+                        </div>
+                    </div>
+                </div>
+                <!--task_error_number-->
+                <div class="col-md-2">
+                    <div class="panel panel-danger panel-colorful media middle pad-all">
+                        <div class="media-left">
+                            <div class="pad-hor">
+                                <i class="fa fa-id-card-o fa-3x"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-2x mar-no text-semibold">{{ task_error_number }}</p>
+                            <p class="mar-no">Total Error</p>
+                        </div>
+                    </div>
+                </div>
+                <!--task_success_number-->
+                <div class="col-md-2">
+                    <div class="panel panel-success panel-colorful media middle pad-all">
+                        <div class="media-left">
+                            <div class="pad-hor">
+                                <i class="fa fa-id-card-o fa-3x"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-2x mar-no text-semibold">{{ task_success_number }}</p>
+                            <p class="mar-no">Total Success</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="page-content">
@@ -93,7 +124,7 @@
                             <tr>
                                 <th data-field="id" data-sortable="true" data-formatter="invoiceFormatter">ID</th>
                                 <th data-field="type" data-sortable="true">Type</th>
-                                <th data-field="command" data-sortable="true">Command</th>
+                                <th data-field="command" data-sortable="true" data-formatter="resultToplip">Command</th>
                                 <th data-field="status" data-align="center" data-sortable="true"
                                     data-formatter="statusFormatter">Status
                                 </th>
