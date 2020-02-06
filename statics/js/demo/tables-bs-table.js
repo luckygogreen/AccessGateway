@@ -135,6 +135,7 @@ function resultToplip(value,row) {
 }
 //host_muilt 批量命令页面结果result按钮样式
 function click_small_button(value,row){
+    console.log(row)
     var html_cmd_result = '<button class="btn btn-primary btn-labeled btn-xs" onclick="show_cmd_with_result('+value+')"><i class="btn-label fa fa-code"></i> Show</button>'
     return html_cmd_result
 }

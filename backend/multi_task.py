@@ -75,8 +75,6 @@ class MultiTaskManager(object):
         print('service_path:', self.task_data['service_path'])
         print('local_path:', self.task_data['local_path'])
 
-
-
         task_obj = models.MultiTask.objects.create(
             tasktype='filetrans',
             taskcontent=json.dumps(self.task_data),

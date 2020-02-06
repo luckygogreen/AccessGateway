@@ -68,6 +68,7 @@ def host_hostgroup(request):
 # 批量命令处理页面
 @login_required
 def host_muilt(request):
+    view_extra.recent_command(request,'cmd',30)
     host_obj, host_group_obj = host_hostgroup(request)
     return render(request, 'host_muilt.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
 
@@ -75,6 +76,7 @@ def host_muilt(request):
 # 批量文件传送页面
 @login_required
 def host_filetrans(request):
+    view_extra.recent_command(request,'file',30)
     host_obj, host_group_obj = host_hostgroup(request)
     return render(request, 'host_filetrans.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
 
@@ -94,7 +96,7 @@ def batch_task_mgr(request):
         'select_host_list': list(mutile_task_obj.task_obj.taskdetails_set.all().values('id', 'host_to_remote_user__host__ip_addr', 'host_to_remote_user__host__name', 'host_to_remote_user__remote_user__username'))
     }
     print('response:', response)
-    view_extra.recent_command(request)
+    # view_extra.recent_command(request)
     return HttpResponse(json.dumps(response))
 
 

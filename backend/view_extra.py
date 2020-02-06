@@ -56,9 +56,12 @@ def command_history(request):
 
 
 # host_record批量命令页面，最近操作的命令Recent Command取10条
-def recent_command(request):
+def recent_command(request,type,show_number):
+    selected_type = 'cmd'
+    if type == 'file':
+        selected_type = 'filetrans'
     print("recent_command成功被执行")
-    command_obj = models.UserProfile.objects.get(id=request.user.id).multitask_set.select_related().order_by('-id').filter(tasktype='cmd')[:10]
+    command_obj = models.UserProfile.objects.get(id=request.user.id).multitask_set.select_related().order_by('-id').filter(tasktype=selected_type)[:show_number]
     recent_command_list = []
     for cmd in command_obj:
         print('cmd:', cmd)

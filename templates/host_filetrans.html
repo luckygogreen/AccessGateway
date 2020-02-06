@@ -178,35 +178,51 @@
                 </div>
                 <div class="panel panel-bordered panel-dark">
                     <div class="panel-heading">
-                        <h3 class="panel-title">最近操作</h3>
+                        <h3 class="panel-title">Recent Command</h3>
                     </div>
                     <div class="panel-body">
-                        <table data-toggle="table"
+                        <table id="recent_command_table" data-toggle="table"
+                               data-url="{% get_static_url request %}data/{{ request.user.id }}/recent_command.json"
                                data-search="true"
                                data-show-toggle="true"
+                               data-show-refresh="true"
+                               data-sort-order="desc"
                                data-show-columns="true"
                                data-sort-name="id"
-                               data-page-list="[5, 10, 20]"
-                               data-page-size="5"
-                               data-pagination="true" data-show-pagination-switch="true">
+                                {#                               data-page-list="[5, 10, 20]"#}
+                               data-page-size="10"
+                                {#                               data-pagination="true"#}
+                               data-show-pagination-switch="true">
                             <thead>
                             <tr>
-                                <th data-field="id" data-sortable="true" data-formatter="invoiceFormatter">ID</th>
-                                <th data-field="name" data-sortable="true">Name</th>
-                                <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Order date
+                                <th data-field="id" data-align="center" data-sortable="true"
+                                    data-formatter="invoiceFormatter">ID
                                 </th>
-                                <th data-field="amount" data-align="center" data-sortable="true"
-                                    data-sorter="priceSorter">Balance
+                                <th data-field="type" data-align="center" data-sortable="true">Type</th>
+                                <th data-field="cmd" data-align="center" data-formatter="resultToplip">Command</th>
+                                <th data-field="id" data-formatter="click_small_button">
+                                    Result
                                 </th>
-                                <th data-field="status" data-align="center" data-sortable="true"
-                                    data-formatter="statusFormatter">Status
-                                </th>
-                                <th data-field="track" data-align="center" data-sortable="true"
-                                    data-formatter="trackFormatter">Tracking Number
-                                </th>
+                                <th data-field="useremail" data-sortable="true">User</th>
+                                <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Date</th>
                             </tr>
                             </thead>
                         </table>
+                    </div>
+                </div>
+                <div id="show_rencent_cmd_result_panel" class="panel panel-bordered panel-dark hidden">
+                    <div class="panel-heading">
+                        <div class="panel-control">
+                            <button class="btn btn-default" data-panel="minmax" data-target="#panel-collapse-5b5e"
+                                    data-toggle="collapse" aria-expanded="true"><i class="demo-psi-chevron-up"></i>
+                            </button>
+                        </div>
+                        <h3 class="panel-title">Show Result</h3>
+                    </div>
+                    <div class="collapse in" id="panel-collapse-5b5e">
+                        <div class="panel-body">
+                            <div id="recent_command_pannel_alert" class="panel-alert"></div>
+                        </div>
                     </div>
                 </div>
             </div>
