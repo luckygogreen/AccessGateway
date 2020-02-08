@@ -1,14 +1,27 @@
 import json
-
 from django.shortcuts import render, redirect, HttpResponse
 from public_def import Kuser_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from Web import models
-from backend.multi_task import MultiTaskManager
-from backend import view_extra
-from backend.host_info import SSHHost
-from backend.ag_command_history import CommandHistory
+from backend_task.multi_task import MultiTaskManager
+from backend_task import view_extra
+from backend_task.ag_command_history import CommandHistory
+from Web.tasks import add,xsum,mul
+from celery.result import AsyncResult
+import time
+
+def celery_test(request):
+    time.sleep(10)
+    task = add.delay(1,2)
+    return HttpResponse(task)
+    # mul.delay(3,5)
+    # xsum.delay(8)
+
+def celery_result(request):
+    task_id = ""
+    res = AsyncResult(id=task_id)
+    return HttpResponse(res)
 
 
 # 登录页面
@@ -133,3 +146,5 @@ def get_task_result(request):
     task_details_obj = models.TaskDetails.objects.filter(task_id=task_id)
     log_data = list(task_details_obj.values('id', 'status', 'result'))
     return HttpResponse(json.dumps(log_data))
+
+

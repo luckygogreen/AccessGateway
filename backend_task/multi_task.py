@@ -8,7 +8,7 @@ from django import conf
 
 class MultiTaskManager(object):
     def __init__(self, request):
-        # print('打印self：', self)  # 打印self： <backend.multitask.MultiTaskManager object at 0x04073CA0>
+        # print('打印self：', self)  # 打印self： <backend_task.multitask.MultiTaskManager object at 0x04073CA0>
         self.request = request
         self.task_run()
 
@@ -58,10 +58,10 @@ class MultiTaskManager(object):
         print('执行命令的操作系统操作系统：', sys_type)
         if sys_type == 'Windows':
             # print('运行WindowsURL')
-            task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
+            task_url = "python %s/backend_task/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
         else:
             # print('运行MAC或其他平台URL')
-            task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
+            task_url = "python %s/backend_task/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
         print('打印task_url：', task_url)
         cmd_process = subprocess.Popen(task_url, shell='True')
         print('打印进程号:', cmd_process.pid)
@@ -90,7 +90,7 @@ class MultiTaskManager(object):
             )
         # print('打印task_log_obj:', task_log_obj)
         models.TaskDetails.objects.bulk_create(task_log_obj)  # 批量创建添加数据
-        task_url = "python %s/backend/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
+        task_url = "python %s/backend_task/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
         cmd_process = subprocess.Popen(task_url, shell='True')
         print('打印进程号:', cmd_process.pid)
         self.task_obj = task_obj

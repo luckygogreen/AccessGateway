@@ -5,7 +5,7 @@ if __name__ == "__main__":
     import django
     django.setup()
 
-    from backend import main
+    from backend_task import main
 
     interactive_obj = main.ArgvHandler(sys.argv)
     # interactive_obj.call()

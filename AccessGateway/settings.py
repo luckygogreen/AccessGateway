@@ -36,7 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    # 'djcelery',
     'Web.apps.WebConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -103,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Toronto'
 
 USE_I18N = True
 
@@ -127,3 +130,75 @@ LOGIN_URL = '/login/'
 
 # 文件下载路径
 DOWNLOAD_PATH = "%s/downloads/" % BASE_DIR
+
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+#for celery
+CELERY_BROKER_URL = 'redis://localhost'
+CELERY_RESULT_BACKEND = 'redis://localhost'
+
+
+#############################
+# celery 配置信息 start
+#############################
+# import djcelery
+# djcelery.setup_loader() # 遍历搜索所有APP下的tasks.py任务
+# BROKER_URL = 'redis://127.0.0.1:6379/1'
+# CELERY_IMPORTS = ('Web.tasks')
+# CELERY_TIMEZONE = 'America/Toronto'
+# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'  # 默认使用系统django项目配置的数据库
+# # CELERY_ENABLE_UTC = True  # 是否在同一时区，false是不同时区
+# # CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'yaml']  # 允许的格式
+# # BROKER_TRANSPORT = 'redis'  # redis作为中间件
+# # 下面是定时任务的设置，我一共配置了三个定时任务.
+# from celery.schedules import crontab
+# CELERYBEAT_SCHEDULE = {
+#     #定时任务一：　每24小时周期执行任务(del_redis_data)
+#     u'删除过期的redis数据': {
+#         "task": "app.tasks.del_redis_data",
+#         "schedule": crontab(hour='*/24'),
+#         "args": (),
+#     },
+#     #定时任务二:　每天的凌晨12:30分，执行任务(back_up1)
+#     u'生成日报表': {
+#         'task': 'app.tasks.back_up1',
+#         'schedule': crontab(minute=30, hour=0),
+#         "args": ()
+#     },
+#     #定时任务三:每个月的１号的6:00启动，执行任务(back_up2)
+#     u'生成统计报表': {
+#             'task': 'app.tasks.back_up2',
+#             'schedule': crontab(hour=6, minute=0,   day_of_month='1'),
+#             "args": ()
+#     },
+# }
+#############################
+# celery 配置信息 end
+#############################
+# 配置参数
+# # Celery
+# import djcelery
+# djcelery.setup_loader()  # 当 djcelery.setup_loader() 运行时，Celery 便会去查看 INSTALLD_APPS 下包含的所有 app 目录中的 tasks.py 文件，找到标记为task 的方法，将它们注册为 celery task.
+# CELERY_TIMEZONE = 'America/Toronto'
+# CELERY_ENABLE_UTC = True  #是否在同一时区，false是不同时区
+# CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'yaml']  # 允许的格式
+# BROKER_URL = 'redis://127.0.0.1:6379/0'  # redis作为中间件 负责分发任务给 worker 去执行
+# BROKER_TRANSPORT = 'redis'
+# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'  # 默认使用系统设置好的什么数据库，
+# # CELERY_DEFAULT_QUEUE：默认队列
+# # BROKER_URL  : 代理人即rabbitmq的网址
+# # CELERY_RESULT_BACKEND：结果存储地址
+# # CELERY_TASK_SERIALIZER：任务序列化方式
+# # CELERY_RESULT_SERIALIZER：任务执行结果序列化方式
+# # CELERY_TASK_RESULT_EXPIRES：任务过期时间
+# # CELERY_ACCEPT_CONTENT：指定任务接受的内容序列化类型(序列化)，一个列表；
+# # CELERYD_LOG_FILE = BASE_DIR + "/logs/celery/celery.log"         # log路径
+# # CELERYBEAT_LOG_FILE = BASE_DIR + "/logs/celery/beat.log"     # beat log路径
+# ##########################

@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate
-from backend import paramiko_ssh
+from backend_task import paramiko_ssh
 from Web import models
 class SshHandler(object):
     """堡垒机交互脚本"""

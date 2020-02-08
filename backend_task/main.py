@@ -26,7 +26,7 @@ class ArgvHandler(object):
 
     def run(self):
         """启动用户交互程序"""
-        from  backend.ssh_interactive import SshHandler
+        from  backend_task.ssh_interactive import SshHandler
         obj = SshHandler(self)
         obj.interactive()
 

@@ -214,7 +214,7 @@ function show_task_info_result(task_id,task) {
         icon: 'fa fa-bolt fa-2x',
         // force: true,
         container: '#single_task_pannel_alert',
-        html: '<pre style="color: #1b1b1b;">' + task.result + '</pre>',
+        html: '<pre style="color: #1b1b1b;max-height: 500px;">' + task.result + '</pre>',
         closeBtn: true,
         // timer: 5000
     });
