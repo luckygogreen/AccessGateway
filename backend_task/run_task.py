@@ -85,11 +85,11 @@ def sftp_file(sub_task_obj, task_data):
 
 
 if __name__ == "__main__":
-    # base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # sys.path.append(base_dir)
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append(base_dir)
     # print('sys.path:',sys.path)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "AccessGateway.settings")
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'AccessGateway.settings'
+    # os.environ['DJANGO_SETTINGS_MODULE'] = 'AccessGateway.settings'
     import django
     django.setup()
     from Web import models
