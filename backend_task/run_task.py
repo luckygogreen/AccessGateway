@@ -1,9 +1,6 @@
 # -*- coding: UTF-8 -*-
 import os, sys, time
-import paramiko
 import json
-from django import conf
-from concurrent.futures import ThreadPoolExecutor
 
 
 # 处理普通命令参数
@@ -85,15 +82,17 @@ def sftp_file(sub_task_obj, task_data):
 
 
 if __name__ == "__main__":
-    # base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # sys.path.append(base_dir)
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append(base_dir)
     # print('sys.path:',sys.path)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "AccessGateway.settings")
     # os.environ['DJANGO_SETTINGS_MODULE'] = 'AccessGateway.settings'
     import django
+    import paramiko
     django.setup()
     from Web import models
     from django import conf
+    from concurrent.futures import ThreadPoolExecutor
 
     # print('打印:sys.argv', sys.argv)
     # print('打印:len(sys.argv)', len(sys.argv))
