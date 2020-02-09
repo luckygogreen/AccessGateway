@@ -89,8 +89,8 @@ if __name__ == "__main__":
     # sys.path.append(base_dir)
     # print('sys.path:',sys.path)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "AccessGateway.settings")
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'AccessGateway.settings'
     import django
-
     django.setup()
     from Web import models
     from django import conf
