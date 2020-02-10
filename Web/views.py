@@ -13,8 +13,9 @@ import time
 
 def celery_test(request):
     time.sleep(10)
-    task = add.delay(1,2)
-    return HttpResponse(task)
+    task = add.delay(9,9)
+    res = "%s:%s" % (task.get(),task)
+    return HttpResponse(res)
     # mul.delay(3,5)
     # xsum.delay(8)
 
