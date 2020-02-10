@@ -1,13 +1,10 @@
 #
 # # EC2 Ubuntu 18.04   升级python 3.8.1 最正确的方式
-# # 第一步更新
+# ls /usr/bin/python*ls /usr/bin/python*  查看系统上所有Python的命令
+
+# # 第一步更新 PIP3
 # $ apt-get update
-# # 第二步输入python看看是否有python
-# # 如果没有
-# $ apt install python
-# # 这时候输入python 和python3 就可以查看到各自的版本
-# # python 2.7.17
-# # python3 3.6.8
+# $ sudo apt install python3-pip
 # # 为了不冲突，我直接全部删除3.6.8
 # $ sudo apt-get remove python3.6
 # $ sudo apt-get remove --auto-remove python3.6
@@ -115,6 +112,7 @@
 # $ git config --global user.name luckygogreen
 # # 配置email
 # $ git config --global user.email luckygogreen@me.com
+# $ cd /home
 # $ git clone https://github.com/luckygogreen/AccessGateway.git
 # # 配置正确,测试是否安装成功
 # $ cd /home/AccessGateway
