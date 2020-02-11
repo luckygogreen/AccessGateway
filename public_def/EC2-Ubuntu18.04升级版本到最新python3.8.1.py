@@ -49,6 +49,11 @@
 # $ git config --global user.email luckygogreen@me.com
 # $ cd /home
 # $ git clone https://github.com/luckygogreen/AccessGateway.git
+# # git强制覆盖更新本地代码
+# $ git fetch --all
+# $ git reset --hard origin/master
+# $ git pull
+
 # # 配置正确,测试是否安装成功
 # $ cd /home/AccessGateway
 # $ python3 manage.py runserver 0.0.0.0:9002
