@@ -7,14 +7,13 @@ from Web import models
 from backend_task.multi_task import MultiTaskManager
 from backend_task import view_extra
 from backend_task.ag_command_history import CommandHistory
-from Web.tasks import add,xsum,mul,setup_periodic_tasks
+from Web.tasks import add,xsum,mul
 from celery.result import AsyncResult
 import time
 
 def celery_test(request):
     time.sleep(10)
     task = add.delay(9,9)
-    task2 = setup_periodic_tasks()
     res = "%s:%s" % (task.get(),task)
     return HttpResponse(res)
     # mul.delay(3,5)
