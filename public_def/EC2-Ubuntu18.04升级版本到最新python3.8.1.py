@@ -16,9 +16,10 @@
 # 4、通过键入以下命令验证安装是否成功：
 # $ python3.8 --version
 # 返回信息：
-# Python 3.8.0
+# Python 3.8.1
 # 至此，Python 3.8已安装在Ubuntu 18.04系统上，你可以开始使用它了。
 # 给系统配置python版本的优先级，这个时候系统上应该有2到3个python版本， 最后的数字越大优先级越高
+# $ sudo update-alternatives --config python    检查是否配置成功 提示There is only one alternative....就是成功了
 # $ update-alternatives --install /usr/bin/python python /usr/bin/python3 8
 # $ update-alternatives --install /usr/bin/python python /usr/bin/python3.8 9
 # 运行python3 就是python3.6版本
@@ -27,8 +28,7 @@
 # $ vi /usr/bin/pip3
 # 修改第一行
 #!/usr/bin/python3.8      （ 如果要用3.6版本 就改为python3 ,因为python对应3.6）
-# 不管怎么却换，pip3库只能是一个，两个版本安装的模块是可以通用的。
-
+# pip3库不是公用的，如果切换默认版本到3.6，还需要重新安装一次pip3库，但是sqlite3不需要安装了
 # # 安装程序运行所需模块
 # $ pip3 install django
 # $ pip3 install celery
@@ -53,6 +53,8 @@
 # $ cd /home/AccessGateway
 # $ python3 manage.py runserver 0.0.0.0:9002
 # 如果提示/bin/sh: 1: python: not found 错误，是因为没有指定系统版本，单独开启的进程文件无法运行
-# 直接设置python3为默认系统版本即可
-# $ update-alternatives --install /usr/bin/python python /usr/bin/python3 8
-# $ sudo update-alternatives --config python    检查是否配置成功 提示There is only one alternative....就是成功了
+
+
+# 切换版本必须要完成两部操作
+# 1，alternatives 更换默认版本，该数字即可
+# 2，vi /usr/bin/pip3 默认指向
