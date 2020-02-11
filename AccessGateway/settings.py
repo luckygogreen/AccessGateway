@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_celery_beat',
     # 'djcelery',
     'Web.apps.WebConfig',
 
@@ -131,7 +132,6 @@ LOGIN_URL = '/login/'
 # 文件下载路径
 DOWNLOAD_PATH = "%s/downloads/" % BASE_DIR
 
-
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -140,10 +140,9 @@ REST_FRAMEWORK = {
     ]
 }
 
-#for celery
+# for celery
 CELERY_BROKER_URL = 'redis://localhost'
 CELERY_RESULT_BACKEND = 'redis://localhost'
-
 
 #############################
 # celery 配置信息 start
