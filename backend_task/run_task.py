@@ -50,7 +50,6 @@ def sftp_file(sub_task_obj, task_data):
     login_password = host_remote_user_obj.remote_user.password
     print('%s的 sftp_file 方法已被执行' % host_ip)
     try:
-        # host_connect = paramiko.Transport((host_ip, host_port))
         host_connect = paramiko.Transport(host_ip, host_port)
         host_connect.banner_timeout = 5
         host_connect.connect(username=login_username, password=login_password)
