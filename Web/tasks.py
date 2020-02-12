@@ -11,6 +11,11 @@ def add(x, y):
 def mul(x, y):
     return x * y
 
+@shared_task
+def testtast():
+    print("测试定时任务成功")
+    return "super ok"
+
 
 @shared_task
 def xsum(numbers):

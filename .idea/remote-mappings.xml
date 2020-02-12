@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteMappingsManager">
+    <list>
+      <list>
+        <remote-mappings server-id="python@sftp://root@35.183.17.205:22/usr/bin/python3.8">
+          <settings>
+            <list>
+              <mapping local-root="$USER_HOME$/Documents/DjangoProject/AccessGateway" remote-root="/home/AccessGateway" />
+            </list>
+          </settings>
+        </remote-mappings>
+      </list>
+    </list>
+  </component>
+</project>

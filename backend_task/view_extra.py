@@ -1,3 +1,5 @@
+import platform
+
 from Web import models
 import json
 from django import conf

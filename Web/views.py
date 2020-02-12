@@ -7,17 +7,20 @@ from Web import models
 from backend_task.multi_task import MultiTaskManager
 from backend_task import view_extra
 from backend_task.ag_command_history import CommandHistory
-from Web.tasks import add,xsum,mul
+from Web.tasks import add, xsum, mul
 from celery.result import AsyncResult
 import time
+import platform
+
 
 def celery_test(request):
-    time.sleep(10)
-    task = add.delay(9,9)
-    res = "%s:%s" % (task.get(),task)
+    time.sleep(2)
+    task = add.delay(9, 9)
+    res = "%s:%s" % (task.get(), task)
     return HttpResponse(res)
     # mul.delay(3,5)
     # xsum.delay(8)
+
 
 def celery_result(request):
     task_id = ""
@@ -44,8 +47,12 @@ def access_logout(request):
 
 @login_required
 def dashboard(request):
+    # 打印系统信息开始
+    print("*" * 60)
+    print("***【System:%s】***" % platform.platform())
+    print("*" * 60)
     info_result = view_extra.get_accessgateway_info(request)  # 获取堡垒机基本信息
-    command_history = CommandHistory(request)
+    # command_history = CommandHistory(request)
     # print(command_history.command_history_list)   # 打印数据列表
     return render(request, 'index.html', {
         'host_number': info_result['host_number'],
@@ -82,7 +89,7 @@ def host_hostgroup(request):
 # 批量命令处理页面
 @login_required
 def host_muilt(request):
-    view_extra.recent_command(request,'cmd',30)
+    view_extra.recent_command(request, 'cmd', 30)
     host_obj, host_group_obj = host_hostgroup(request)
     return render(request, 'host_muilt.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
 
@@ -90,7 +97,7 @@ def host_muilt(request):
 # 批量文件传送页面
 @login_required
 def host_filetrans(request):
-    view_extra.recent_command(request,'file',30)
+    view_extra.recent_command(request, 'file', 30)
     host_obj, host_group_obj = host_hostgroup(request)
     return render(request, 'host_filetrans.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
 
@@ -98,7 +105,14 @@ def host_filetrans(request):
 # 定时操作页面
 @login_required
 def timed_execution(request):
-    return render(request, 'timed_execution.html')
+    # 打印系统信息开始
+    print("*" * 60)
+    print("***【System:%s】***" % platform.platform())
+    print("****************【Time:%s】****************" % time.strftime("%Y-%m-%d %H:%I:%S"))
+    print("*" * 60)
+    view_extra.recent_command(request, 'cmd', 30)
+    host_obj, host_group_obj = host_hostgroup(request)
+    return render(request, 'timed_execution.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
 
 
 # 处理CMD提交过来的任务
@@ -107,7 +121,10 @@ def batch_task_mgr(request):
     mutile_task_obj = MultiTaskManager(request)
     response = {
         'task_id': mutile_task_obj.task_obj.id,
-        'select_host_list': list(mutile_task_obj.task_obj.taskdetails_set.all().values('id', 'host_to_remote_user__host__ip_addr', 'host_to_remote_user__host__name', 'host_to_remote_user__remote_user__username'))
+        'select_host_list': list(
+            mutile_task_obj.task_obj.taskdetails_set.all().values('id', 'host_to_remote_user__host__ip_addr',
+                                                                  'host_to_remote_user__host__name',
+                                                                  'host_to_remote_user__remote_user__username'))
     }
     # print('response:', response)
     # view_extra.recent_command(request)
@@ -135,7 +152,10 @@ def muilt_file_trans(request):
     file_trans_obj = MultiTaskManager(request)
     response = {
         'task_id': file_trans_obj.task_obj.id,
-        'select_host_list': list(file_trans_obj.task_obj.taskdetails_set.all().values('id', 'host_to_remote_user__host__ip_addr', 'host_to_remote_user__host__name', 'host_to_remote_user__remote_user__username'))
+        'select_host_list': list(
+            file_trans_obj.task_obj.taskdetails_set.all().values('id', 'host_to_remote_user__host__ip_addr',
+                                                                 'host_to_remote_user__host__name',
+                                                                 'host_to_remote_user__remote_user__username'))
     }
     return HttpResponse(json.dumps(response))
 
@@ -147,5 +167,3 @@ def get_task_result(request):
     task_details_obj = models.TaskDetails.objects.filter(task_id=task_id)
     log_data = list(task_details_obj.values('id', 'status', 'result'))
     return HttpResponse(json.dumps(log_data))
-
-
