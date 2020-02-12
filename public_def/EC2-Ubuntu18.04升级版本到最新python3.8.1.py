@@ -3,7 +3,8 @@
 # 默认系统会提供3.6.8以上的版本，这个版本也可以正常使用，只是没有PIP,我们需要给python3,安装pip
 # ls /usr/bin/python*ls /usr/bin/python*  查看系统上所有Python的命令
 # # 安装 PIP3
-# $ apt-get update
+# $ apt-get update 找出需要更新的文件
+# $ apt-get upgrade  进行更新
 # $ sudo apt install python3-pip
 # sqlite3已经安装好了，这省去了很多之前的怕坑工作。
 # 开始升级Python3.8.1
