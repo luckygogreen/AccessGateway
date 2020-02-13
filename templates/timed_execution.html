@@ -6,221 +6,222 @@
     <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/bootstrap-select/bootstrap-select.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/select2/css/select2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/chosen/chosen.min.css' %}" rel="stylesheet">
 {% endblock %}
 {% block main_box %}
     {% load static %}
     {% load custom_tag %}
     <div id="content-container">
-    <div id="page-content">
-        <div class="row">
-            <div class="col-lg-5">
-                <!----------------------------->
-                <div class="panel panel-primary panel-bordered panel-dark">
+        <div id="page-content">
+            <div class="row">
+                <div class="col-lg-5">
+                    <!----------------------------->
+                    <div class="panel panel-primary panel-bordered panel-dark">
 
-                    <!--Panel heading-->
-                    <div class="panel-heading">
-                        <div class="panel-control">
+                        <!--Panel heading-->
+                        <div class="panel-heading">
+                            <div class="panel-control">
 
-                            <!--Nav tabs-->
-                            <ul class="nav nav-tabs">
-                                <li class="active"><a data-toggle="tab" href="#demo-tabs-box-1"
-                                                      aria-expanded="true">已分组主机</a>
-                                </li>
-                                <li class=""><a data-toggle="tab" href="#demo-tabs-box-2"
-                                                aria-expanded="false">未分组主机</a></li>
-                            </ul>
+                                <!--Nav tabs-->
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#demo-tabs-box-1"
+                                                          aria-expanded="true">已分组主机</a>
+                                    </li>
+                                    <li class=""><a data-toggle="tab" href="#demo-tabs-box-2"
+                                                    aria-expanded="false">未分组主机</a></li>
+                                </ul>
 
+                            </div>
+                            <h3 class="panel-title">选择主机</h3>
                         </div>
-                        <h3 class="panel-title">选择主机</h3>
-                    </div>
-                    <div id="select_host_pannel" class="panel-alert"></div>
-                    <div class="panel-body">
-                        <div class="tab-content">
-                            <div id="demo-tabs-box-1" class="tab-pane fade active in">
-                                {% for group_host in host_group_obj %}
-                                    <!--Collapsed Panel by default-->
-                                    <!--===================================================-->
-                                    <div class="panel" id="grouphostpanel">
-                                        <!--Panel heading-->
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title"><a data-toggle="collapse"
-                                                                       href="#{{ group_host.name }}">{{ group_host.name }}</a>
-                                            </h3>
-                                        </div>
-                                        <!--Panel body-->
-                                        <div class="collapse" id="{{ group_host.name }}">
-                                            <div class="panel-body">
-                                                <table class="demo-add-niftycheck" data-toggle="table"
-                                                       data-page-size="10"
-                                                       data-pagination="true">
-                                                    <thead>
-                                                    <tr>
-                                                        <th class="bs-checkbox "><input type="checkbox"
-                                                                                        onclick="groupcheckall(this.checked,'{% str_group_host group_host %}')"/>
-                                                        </th>
-                                                        <th data-field="id" data-sortable="true">ID</th>
-                                                        <th data-field="name" data-sortable="true">Host Name</th>
-                                                        <th data-field="ip" data-sortable="true">@</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {% for single_host in group_host.host_to_remote_users.select_related %}
+                        <div id="select_host_pannel" class="panel-alert"></div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div id="demo-tabs-box-1" class="tab-pane fade active in">
+                                    {% for group_host in host_group_obj %}
+                                        <!--Collapsed Panel by default-->
+                                        <!--===================================================-->
+                                        <div class="panel" id="grouphostpanel">
+                                            <!--Panel heading-->
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title"><a data-toggle="collapse"
+                                                                           href="#{{ group_host.name }}">{{ group_host.name }}</a>
+                                                </h3>
+                                            </div>
+                                            <!--Panel body-->
+                                            <div class="collapse" id="{{ group_host.name }}">
+                                                <div class="panel-body">
+                                                    <table class="demo-add-niftycheck" data-toggle="table"
+                                                           data-page-size="10"
+                                                           data-pagination="true">
+                                                        <thead>
                                                         <tr>
-                                                            <td class="bs-checkbox ">
-                                                                <input name="{{ group_host.name }}xxx" tag="host_select"
-                                                                       type="checkbox" id="{{ single_host.id }}"
-                                                                       value="{{ single_host.id }}"/>
-                                                            </td>
-                                                            <td>{{ single_host.id }}</td>
-                                                            <td>{{ single_host.host.name }}</td>
-                                                            <td>{{ single_host.remote_user.username }}@{{ single_host.host.ip_addr }}:{{ single_host.host.port }}</td>
+                                                            <th class="bs-checkbox "><input type="checkbox"
+                                                                                            onclick="groupcheckall(this.checked,'{% str_group_host group_host %}')"/>
+                                                            </th>
+                                                            <th data-field="id" data-sortable="true">ID</th>
+                                                            <th data-field="name" data-sortable="true">Host Name</th>
+                                                            <th data-field="ip" data-sortable="true">@</th>
                                                         </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for single_host in group_host.host_to_remote_users.select_related %}
+                                                            <tr>
+                                                                <td class="bs-checkbox ">
+                                                                    <input name="{{ group_host.name }}xxx"
+                                                                           tag="host_select"
+                                                                           type="checkbox" id="{{ single_host.id }}"
+                                                                           value="{{ single_host.id }}"/>
+                                                                </td>
+                                                                <td>{{ single_host.id }}</td>
+                                                                <td>{{ single_host.host.name }}</td>
+                                                                <td>{{ single_host.remote_user.username }}@{{ single_host.host.ip_addr }}:{{ single_host.host.port }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!--===================================================-->
-                                    <!--End Collapsed Panel by default-->
-                                {% endfor %}
-                            </div>
-                            <div id="demo-tabs-box-2" class="tab-pane fade">
-                                <table id="demo-custom-toolbar"
-                                       class="demo-add-niftycheck"
-                                       data-toggle="table"
-                                       data-toolbar="#demo-delete-row"
-                                       data-search="true"
-                                       data-show-toggle="true"
-                                       data-show-columns="true"
-                                       data-sort-name="id"
-                                       data-page-list="[5, 10, 20]"
-                                       data-page-size="10"
-                                       data-pagination="true"
-                                       data-show-pagination-switch="true">
-                                    <thead>
-                                    <tr class="">
-                                        <th class="bs-checkbox "><input type="checkbox"
-                                                                        onclick="checkall(this.checked)"></th>
-                                        <th data-field="id" data-sortable="true">ID</th>
-                                        <th data-field="name" data-sortable="true">Host Name</th>
-                                        <th data-field="date" data-sortable="true">@</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for host_info in host_obj %}
-                                        <tr>
-                                            <td class="bs-checkbox "><input name="selectitem" tag="host_select"
-                                                                            type="checkbox" value="{{ host_info.id }}"
-                                                                            id="{{ host_info.id }}">
-                                            </td>
-                                            <td style="">{{ host_info.id }}<a href="#" class="btn-link"></a></td>
-                                            <td style="">{{ host_info.host.name }}</td>
-                                            <td style=""><span
-                                                    class="text-muted">{{ host_info.remote_user.username }}@{{ host_info.host.ip_addr }}</span>
-                                            </td>
-                                        </tr>
+                                        <!--===================================================-->
+                                        <!--End Collapsed Panel by default-->
                                     {% endfor %}
-                                    </tbody>
-                                </table>
+                                </div>
+                                <div id="demo-tabs-box-2" class="tab-pane fade">
+                                    <table id="demo-custom-toolbar"
+                                           class="demo-add-niftycheck"
+                                           data-toggle="table"
+                                           data-toolbar="#demo-delete-row"
+                                           data-search="true"
+                                           data-show-toggle="true"
+                                           data-show-columns="true"
+                                           data-sort-name="id"
+                                           data-page-list="[5, 10, 20]"
+                                           data-page-size="10"
+                                           data-pagination="true"
+                                           data-show-pagination-switch="true">
+                                        <thead>
+                                        <tr class="">
+                                            <th class="bs-checkbox "><input type="checkbox"
+                                                                            onclick="checkall(this.checked)"></th>
+                                            <th data-field="id" data-sortable="true">ID</th>
+                                            <th data-field="name" data-sortable="true">Host Name</th>
+                                            <th data-field="date" data-sortable="true">@</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for host_info in host_obj %}
+                                            <tr>
+                                                <td class="bs-checkbox "><input name="selectitem" tag="host_select"
+                                                                                type="checkbox"
+                                                                                value="{{ host_info.id }}"
+                                                                                id="{{ host_info.id }}">
+                                                </td>
+                                                <td style="">{{ host_info.id }}<a href="#" class="btn-link"></a></td>
+                                                <td style="">{{ host_info.host.name }}</td>
+                                                <td style=""><span
+                                                        class="text-muted">{{ host_info.remote_user.username }}@{{ host_info.host.ip_addr }}</span>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!----------------------------->
                 </div>
-                <!----------------------------->
-            </div>
-            <div class="col-lg-7">
-                <div class="panel panel-bordered panel-dark">{% csrf_token %}
-                    <div class="panel-heading">
-                        <h3 class="panel-title">文件传输路径</h3>
-                    </div>
-                    <div id="cmd_pannel" class="panel-alert"></div>
+                <div class="col-lg-7">
+                    <div class="panel panel-bordered panel-dark">{% csrf_token %}
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Add a one-time task</h3>
+                        </div>
+                        <div id="cmd_pannel" class="panel-alert"></div>
 
-                    <!--Condensed Table-->
-                    <!--===================================================-->
-                    <div class="panel-body">
-                        <div class="input-group mar-btm">
-					                        <span class="input-group-btn">
-					                            <button class="btn btn-mint" type="button" onclick="show_file_demo()">remote Path</button>
-					                        </span>
-                            <input id="service_path" type="text" placeholder="/root/filename" class="form-control">
-                        </div>
-                        <div id="local_file_input" class="input-group mar-btm ">
-					                        <span class="input-group-btn">
-					                            <button class="btn btn-mint" type="button" onclick="show_file_demo()">Local Path</button>
-					                        </span>
-                            <input id="local_path" type="text" placeholder="c:\filename" class="form-control">
-                        </div>
-                        <div class="row" style="padding-top: 10px;">
-                            <select id="file_trans_type" onchange="change_filetype_select(this)" class="selectpicker"
-                                    data-style="btn-mint">
-                                <option value="sendto">Periodic task</option>
-                                <option value="getfrom">From remote to local</option>
-                            </select>
-                            <button id="stop_file_button" onclick="stop_shell_file(this)"
-                                    class="btn btn-danger btn-labeled pull-right space"
-                                    style="margin-left: 16px;">
-                                <i class="btn-label fa fa-stop"></i> 停止
-                            </button>
-                            <button id="run_file_button" onclick="run_shell_file(this)"
-                                    class="btn btn-success btn-labeled pull-right">
-                                <i class="btn-label fa fa-play"></i> 执行
-                            </button>
-                        </div>
-                    </div>
-                    <!--===================================================-->
-                    <!--End Condensed Table-->
-                </div>
-                <div id="show_cmd_result" class="panel panel-bordered-primary hidden">
-                    <button class="btn btn-block btn-primary">执行结果</button>
-                    <div class="panel-body" id="show_host_results"></div>
-                </div>
-                <div class="panel panel-bordered panel-dark">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Recent Command</h3>
-                    </div>
-                    <div class="panel-body">
-                        <table id="recent_command_table" data-toggle="table"
-                               data-url="{% get_static_url request %}data/{{ request.user.id }}/recent_command_filetrans.json"
-                               data-search="true"
-                               data-show-toggle="true"
-                               data-show-refresh="true"
-                               data-sort-order="desc"
-                               data-show-columns="true"
-                               data-sort-name="id"
-                               data-page-list="[5, 10, 20]"
-                               data-page-size="5"
-                               data-pagination="true"
-                               data-show-pagination-switch="true">
-                            <thead>
-                            <tr>
-                                <th data-field="id" data-align="center" data-sortable="true"
-                                    data-formatter="invoiceFormatter">ID
-                                </th>
-                                <th data-field="type" data-align="center" data-sortable="true">Type</th>
-                                <th data-field="cmd" data-align="center" data-formatter="resultToplip">Command</th>
-                                <th data-field="id" data-formatter="click_small_button">
-                                    Result
-                                </th>
-                                <th data-field="useremail" data-sortable="true">User</th>
-                                <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Date</th>
-                            </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-                <div id="show_rencent_cmd_result_panel" class="panel panel-bordered panel-dark hidden">
-                    <div class="panel-heading">
-                        <div class="panel-control">
-                            <button class="btn btn-default" data-panel="minmax" data-target="#panel-collapse-5b5e"
-                                    data-toggle="collapse" aria-expanded="true"><i class="demo-psi-chevron-up"></i>
-                            </button>
-                        </div>
-                        <h3 class="panel-title">Show Result</h3>
-                    </div>
-                    <div class="collapse in" id="panel-collapse-5b5e">
+                        <!--Condensed Table-->
+                        <!--===================================================-->
                         <div class="panel-body">
-                            <div id="recent_command_pannel_alert" class="panel-alert"></div>
+                            <div class="input-group mar-btm">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-mint" type="button"
+                                            onclick="show_one_time_button(this)">Command:</button>
+                                </span>
+                                <input id="service_path" type="text" placeholder="please type the command"
+                                       class="form-control">
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+
+                                </div>
+                                <div class="col-lg-6">asdasdasd</div>
+                            </div>
+                            <div class="row" style="padding-top: 10px;">
+                                <button id="stop_file_button" onclick="stop_shell_file(this)"
+                                        class="btn btn-danger btn-labeled pull-right space"
+                                        style="margin-left: 16px;">
+                                    <i class="btn-label fa fa-stop"></i> 停止
+                                </button>
+                                <button id="run_file_button" onclick="run_shell_file(this)"
+                                        class="btn btn-success btn-labeled pull-right">
+                                    <i class="btn-label fa fa-play"></i> 执行
+                                </button>
+                            </div>
+                        </div>
+                        <!--===================================================-->
+                        <!--End Condensed Table-->
+                    </div>
+                    <div id="show_cmd_result" class="panel panel-bordered-primary hidden">
+                        <button class="btn btn-block btn-primary">执行结果</button>
+                        <div class="panel-body" id="show_host_results"></div>
+                    </div>
+                    <div class="panel panel-bordered panel-dark">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Recent Command</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table id="recent_command_table" data-toggle="table"
+                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/recent_command_filetrans.json"
+                                   data-search="true"
+                                   data-show-toggle="true"
+                                   data-show-refresh="true"
+                                   data-sort-order="desc"
+                                   data-show-columns="true"
+                                   data-sort-name="id"
+                                   data-page-list="[5, 10, 20]"
+                                   data-page-size="5"
+                                   data-pagination="true"
+                                   data-show-pagination-switch="true">
+                                <thead>
+                                <tr>
+                                    <th data-field="id" data-align="center" data-sortable="true"
+                                        data-formatter="invoiceFormatter">ID
+                                    </th>
+                                    <th data-field="type" data-align="center" data-sortable="true">Type</th>
+                                    <th data-field="cmd" data-align="center" data-formatter="resultToplip">Command</th>
+                                    <th data-field="id" data-formatter="click_small_button">
+                                        Result
+                                    </th>
+                                    <th data-field="useremail" data-sortable="true">User</th>
+                                    <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Date</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="show_rencent_cmd_result_panel" class="panel panel-bordered panel-dark hidden">
+                        <div class="panel-heading">
+                            <div class="panel-control">
+                                <button class="btn btn-default" data-panel="minmax" data-target="#panel-collapse-5b5e"
+                                        data-toggle="collapse" aria-expanded="true"><i class="demo-psi-chevron-up"></i>
+                                </button>
+                            </div>
+                            <h3 class="panel-title">Show Result</h3>
+                        </div>
+                        <div class="collapse in" id="panel-collapse-5b5e">
+                            <div class="panel-body">
+                                <div id="recent_command_pannel_alert" class="panel-alert"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -234,6 +235,7 @@
     <script src="{% static 'plugins/bootstrap-table/bootstrap-table.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-select/bootstrap-select.min.js' %}"></script>
     <script src="{% static 'plugins/select2/js/select2.min.js' %}"></script>
+    <script src="{% static 'plugins/chosen/chosen.jquery.min.js' %}"></script>
     <script src="{% static 'js/demo/ui-panels.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
 {% endblock %}

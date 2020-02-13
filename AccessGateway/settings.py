@@ -21,8 +21,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '2(992yeffkdir4-g43n6a02raw)vshhwq1l+x_%v(wa0n0px6^'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# 如果设置成了False ,讲无法调用Setting中的路径设置
+# 调试开发环境下需要True , 运营上线环境下，需要False
+DEBUG = True     # 默认是True  请不要在生产环境中使用Debug，会造成内容溢出
 
 # ALLOWED_HOSTS = []  # 容许本地访问
 ALLOWED_HOSTS = ["*"]  # 容许所有人访问

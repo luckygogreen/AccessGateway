@@ -23,8 +23,8 @@ def celery_test(request):
 
 
 def celery_result(request):
-    task_id = ""
-    res = AsyncResult(id=task_id)
+    task_id = "8ab1e14c-8eae-491a-98db-489d2b7d41cf"
+    res = AsyncResult(id=task_id).result
     return HttpResponse(res)
 
 

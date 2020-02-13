@@ -19,6 +19,21 @@ function checkall(selectStatus) {
     }
 }
 
+// 一次性任务页面 Command 提示按钮
+function show_one_time_button() {
+    $("#cmd_pannel").text("")
+    $.niftyNoty({
+        type: 'mint',
+        // icon: 'fa fa-bolt fa-2x',
+        // force: true,
+        container: '#cmd_pannel',
+        title:'This command will only be executed once, within the specified time',
+        // message:'【  local path demo】 : C:\\Users\\BOSS\\Pictures\\2.jpg',
+        closeBtn: true,
+        timer: 5000
+    });
+}
+
 // 全选反选  多组复选框
 function groupcheckall(selectStatus, checkboxname) {
     if (selectStatus) {
