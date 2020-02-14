@@ -138,3 +138,4 @@ def creat_onetime_task(request):
     clocked_schedule_obj = beatmodels.ClockedSchedule.objects.create(clocked_time=data_time_timezone)
     print("clocked_schedule数据已添加成功,添加时间为:",data_time_timezone)
     print("当前服务器时间:",datetime.datetime.now())
+    print("保存的时间ID为:",clocked_schedule_obj.id)
