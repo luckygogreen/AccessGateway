@@ -5,7 +5,7 @@
       <paths name="root@35.183.17.205:22">
         <serverdata>
           <mappings>
-            <mapping deploy="home/AccessGateway" local="$PROJECT_DIR$" web="" />
+            <mapping deploy="/home/AccessGateway" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

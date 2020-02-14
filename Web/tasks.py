@@ -23,3 +23,7 @@ def testtast():
 @shared_task
 def xsum(numbers):
     return sum(numbers)
+
+@shared_task
+def shell_cmd():
+    print("测试 shell_cmd")

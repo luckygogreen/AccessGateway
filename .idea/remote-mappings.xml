@@ -6,7 +6,7 @@
         <remote-mappings server-id="python@sftp://root@35.183.17.205:22/usr/bin/python3.8">
           <settings>
             <list>
-              <mapping local-root="$USER_HOME$/Documents/DjangoProject/AccessGateway" remote-root="/home/AccessGateway" />
+              <mapping local-root="$PROJECT_DIR$" remote-root="/home/AccessGateway" />
             </list>
           </settings>
         </remote-mappings>

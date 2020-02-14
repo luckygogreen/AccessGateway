@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block extra_css %}
     {% load static %}
-    <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
     <link href="{% static 'plugins/bootstrap-table/bootstrap-table.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/bootstrap-select/bootstrap-select.min.css' %}" rel="stylesheet">
-    <link href="{% static 'plugins/select2/css/select2.min.css' %}" rel="stylesheet">
-    <link href="{% static 'plugins/chosen/chosen.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/chosen/chosen.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/bootstrap-datepicker/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/bootstrap-timepicker/bootstrap-timepicker.min.css' %}" rel="stylesheet">
+
 {% endblock %}
 {% block main_box %}
     {% load static %}
@@ -138,33 +139,50 @@
                             <h3 class="panel-title">Add a one-time task</h3>
                         </div>
                         <div id="cmd_pannel" class="panel-alert"></div>
-
-                        <!--Condensed Table-->
-                        <!--===================================================-->
                         <div class="panel-body">
-                            <div class="input-group mar-btm">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-mint" type="button"
-                                            onclick="show_one_time_button(this)">Command:</button>
-                                </span>
-                                <input id="service_path" type="text" placeholder="please type the command"
-                                       class="form-control">
+                            <div class="row">
+                                <textarea id="onetime_cmdtext" placeholder="请输入要执行的SSH命令..." rows="8"
+                                          class="form-control"></textarea>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6">
-
+                                <div class="col-lg-4">
+                                    <!--=======================Datepicker============================-->
+                                    <hr class="new-section-sm bord-no">
+                                    <p class="text-main text-bold mar-btm">Datepicker</p>
+                                    <div id="demo-dp-component">
+                                        <div class="input-group date">
+                                            <input id="onetime_datapicker" type="text" class="form-control">
+                                            <span class="input-group-addon"><i class="demo-pli-calendar-4"></i></span>
+                                        </div>
+                                    </div>
+                                    <!--===================================================-->
                                 </div>
-                                <div class="col-lg-6">asdasdasd</div>
+                                <div class="col-lg-4">
+                                    <!--==========================Time Zone=========================-->
+                                    <hr class="new-section-sm bord-no">
+                                    <p class="text-main text-bold mar-btm">Time Zone</p>
+                                    <select data-placeholder="Time zone" id="demo-chosen-select" tabindex="2"></select>
+                                    <!--===================================================-->
+                                </div>
+                                <div class="col-lg-4">
+                                    <!--=======================Timepicker============================-->
+                                    <hr class="new-section-sm bord-no">
+                                    <p class="text-main text-bold mar-btm">Timepicker</p>
+                                    <div class="input-group date">
+                                        <input id="demo-tp-com" type="text" class="form-control">
+                                        <span class="input-group-addon"><i class="demo-pli-clock"></i></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row" style="padding-top: 10px;">
-                                <button id="stop_file_button" onclick="stop_shell_file(this)"
-                                        class="btn btn-danger btn-labeled pull-right space"
-                                        style="margin-left: 16px;">
-                                    <i class="btn-label fa fa-stop"></i> 停止
-                                </button>
-                                <button id="run_file_button" onclick="run_shell_file(this)"
+                                {#                                <button id="stop_file_button" onclick="stop_shell_file(this)"#}
+                                {#                                        class="btn btn-danger btn-labeled pull-right space"#}
+                                {#                                        style="margin-left: 16px;">#}
+                                {#                                    <i class="btn-label fa fa-stop"></i> 停止#}
+                                {#                                </button>#}
+                                <button id="run_file_button" onclick="save_onetime_task( this,{{ request.user.id }} )"
                                         class="btn btn-success btn-labeled pull-right">
-                                    <i class="btn-label fa fa-play"></i> 执行
+                                    <i class="btn-label fa fa-play"></i> Save Task
                                 </button>
                             </div>
                         </div>
@@ -234,8 +252,12 @@
     <script src="{% static 'plugins/x-editable/js/bootstrap-editable.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-table/bootstrap-table.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-select/bootstrap-select.min.js' %}"></script>
-    <script src="{% static 'plugins/select2/js/select2.min.js' %}"></script>
-    <script src="{% static 'plugins/chosen/chosen.jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-select/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'plugins/chosen/chosen.jquery.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-timepicker/bootstrap-timepicker.min.js' %}"></script>
+    <script src="{% static 'js/demo/form-component.js' %}"></script>
     <script src="{% static 'js/demo/ui-panels.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
+
 {% endblock %}

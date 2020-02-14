@@ -7,25 +7,26 @@ from Web import models
 from backend_task.multi_task import MultiTaskManager
 from backend_task import view_extra
 from backend_task.ag_command_history import CommandHistory
-from Web.tasks import add, xsum, mul
+# from Web.tasks_copy import add, xsum, mul
 from celery.result import AsyncResult
 import time
 import platform
+from django_celery_beat import models as beatmodels
 
 
-def celery_test(request):
-    time.sleep(2)
-    task = add.delay(9, 9)
-    res = "%s:%s" % (task.get(), task)
-    return HttpResponse(res)
-    # mul.delay(3,5)
-    # xsum.delay(8)
-
-
-def celery_result(request):
-    task_id = "8ab1e14c-8eae-491a-98db-489d2b7d41cf"
-    res = AsyncResult(id=task_id).result
-    return HttpResponse(res)
+# def celery_test(request):
+#     time.sleep(2)
+#     task = add.delay(9, 9)
+#     res = "%s:%s" % (task.get(), task)
+#     return HttpResponse(res)
+#     # mul.delay(3,5)
+#     # xsum.delay(8)
+#
+#
+# def celery_result(request):
+#     task_id = "8ab1e14c-8eae-491a-98db-489d2b7d41cf"
+#     res = AsyncResult(id=task_id).result
+#     return HttpResponse(res)
 
 
 # 登录页面
@@ -50,6 +51,7 @@ def dashboard(request):
     # 打印系统信息开始
     print("*" * 60)
     print("***【System:%s】***" % platform.platform())
+    print("****************【Time:%s】****************" % time.strftime("%Y-%m-%d %H:%I:%S"))
     print("*" * 60)
     info_result = view_extra.get_accessgateway_info(request)  # 获取堡垒机基本信息
     # command_history = CommandHistory(request)
@@ -113,6 +115,13 @@ def timed_execution(request):
     view_extra.recent_command(request, 'cmd', 30)
     host_obj, host_group_obj = host_hostgroup(request)
     return render(request, 'timed_execution.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
+
+
+# 处理timed_execution 页面Ajax提交的一次性任务按钮save_onetime_task  in kevin.js
+@login_required
+def onetime_task(request):
+    view_extra.creat_onetime_task(request)
+    return HttpResponse("2")
 
 
 # 处理CMD提交过来的任务

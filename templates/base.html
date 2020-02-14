@@ -15,6 +15,8 @@
     <link href="{% static 'premium/icon-sets/icons/line-icons/premium-line-icons.min.css' %}" rel="stylesheet">
     <link href="{% static 'premium/icon-sets/icons/solid-icons/premium-solid-icons.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/pace.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/pace/pace.min.css' %}" rel="stylesheet">
+    <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
     {% block extra_css %}{% endblock %}
 </head>
 
@@ -649,7 +651,8 @@
             <!-- Remove the class "show-fixed" and "hide-fixed" to make the content always appears. -->
             <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-            <p class="pad-lft">&#0169; 2018|真的是太牛逼了测试celery:celery:<a href="/celery_test/">Celery_test</a>*****<a href="/celery_result/">celery_result</a></p>
+            <p class="pad-lft">&#0169; 2018|真的是太牛逼了测试celery:celery:<a href="/celery_test/">Celery_test</a>*****<a
+                    href="/celery_result/">celery_result</a></p>
 
 
         </footer>
@@ -666,10 +669,10 @@
     </div>
     <!--===================================================-->
     <!-- END OF CONTAINER -->
-    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/pace.min.js' %}"></script>
     <script src="{% static 'js/nifty.min.js' %}"></script>
+    <script src="{% static 'js/pace.min.js' %}"></script>
     {% block extra_javascript %}{% endblock %}
     <script src="{% static 'js/kevinjs.js' %}"></script>
     </body>

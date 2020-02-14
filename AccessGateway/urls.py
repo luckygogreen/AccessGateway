@@ -32,7 +32,8 @@ urlpatterns = [
     url(r'^muilt_file_trans/$', views.muilt_file_trans),
     url(r'^host_select_record/$', views.host_select_record),
     url(r'^get_task_result/$', views.get_task_result),
-    url(r'^celery_test/$', views.celery_test),  # for Celery
-    url(r'^celery_result/$', views.celery_result),  # for Celery
+    # url(r'^celery_test/$', views.celery_test),  # for Celery
+    # url(r'^celery_result/$', views.celery_result),  # for Celery
+    url(r'^onetime_task/$', views.onetime_task),  # for timed_execution page # onetime_task function in kevin.js
     url(r'^host_filetrans/$', views.host_filetrans, name='host_filetrans'),
 ]

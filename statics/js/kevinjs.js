@@ -1,5 +1,83 @@
 //程序运行先执行的方法
 active_menu()
+get_select_timezone_form_json()
+
+//获取下拉列表的所有时区
+function get_select_timezone_form_json() {
+    $.getJSON("/static/data/public/timezone.json", function (data) {
+        var ele = "<option value=\"America/Toronto\">America/Toronto</option>"
+        $.each(data, function (index, timezone) {
+            var ele_each = "<option value=" + timezone + ">" + timezone + "</option>";
+            ele += ele_each;
+        });
+        $("#demo-chosen-select").append(ele);
+    });
+}
+
+
+// timed_execution页面//一次性任务提交按钮
+function save_onetime_task(self, userid) {
+    var csrftoken = $("input[name='csrfmiddlewaretoken']").val()
+    var cmd_text = $("#onetime_cmdtext").val();
+    var date_picker = $("#onetime_datapicker").val();
+    var timazone_select = $("#demo-chosen-select").val();
+    var time_picker = $("#demo-tp-com").val();
+    var select_host_ids = [];
+    $("[tag='host_select']:checked").each(
+        function () {
+            select_host_ids.push($(this).val())
+        }
+    )
+    if (select_host_ids.length == 0) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#select_host_pannel',
+            html: '<div class="media">🙁Please select a host and try again！</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (cmd_text.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁Please try to enter a valid command！</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (date_picker.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁Please pick a date</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (time_picker.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁Please pick a time</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else {
+        onttime_data = {
+            "cmd_text": cmd_text,
+            "date_picker": date_picker,
+            "timazone_select": timazone_select,
+            "time_picker": time_picker,
+            "user_id": userid,
+            "select_host_ids": select_host_ids
+        }
+        console.log(select_host_ids)
+        $.post('/onetime_task/', {"task_data":JSON.stringify(onttime_data),"csrfmiddlewaretoken": csrftoken}, function (callback) {
+            console.log(callback)
+        })
+
+    }
+
+
+}
 
 
 // 全选反选  单组复选框
@@ -27,7 +105,7 @@ function show_one_time_button() {
         // icon: 'fa fa-bolt fa-2x',
         // force: true,
         container: '#cmd_pannel',
-        title:'This command will only be executed once, within the specified time',
+        title: 'This command will only be executed once, within the specified time',
         // message:'【  local path demo】 : C:\\Users\\BOSS\\Pictures\\2.jpg',
         closeBtn: true,
         timer: 5000
@@ -158,15 +236,15 @@ function show_file_demo() {
         // icon: 'fa fa-bolt fa-2x',
         // force: true,
         container: '#cmd_pannel',
-        title:'【remote Path demo】 : /home/test2.jpg',
-        message:'【  local path demo】 : C:\\Users\\BOSS\\Pictures\\2.jpg',
+        title: '【remote Path demo】 : /home/test2.jpg',
+        message: '【  local path demo】 : C:\\Users\\BOSS\\Pictures\\2.jpg',
         closeBtn: true,
         timer: 10000
     });
 }
 
 //处理最近命令返回的结果
-function show_cmd_with_result(cmdid,task) {
+function show_cmd_with_result(cmdid, task) {
     $("#recent_command_pannel_alert").text("");
     $("#show_rencent_cmd_result_panel").removeClass("hidden")
     console.log("CMDID:" + cmdid);
@@ -219,7 +297,7 @@ function show_cmd_with_result(cmdid,task) {
 }
 
 //处理host_record命令记录页面提交的Result结果按钮
-function show_task_info_result(task_id,task) {
+function show_task_info_result(task_id, task) {
     console.log(task_id)
     console.log(task)
     $("#single_task_pannel_alert").text("");
@@ -245,9 +323,6 @@ function show_task_info_result(task_id,task) {
 // 代码内容如下:传递参数
 //     var $row = JSON.stringify(row).replace(/\"/g,"'");//row的是一个对象
 //     <a href="#" onclick="editParentRow('+$row+')">编辑</a>//拼接传递对象
-
-
-
 
 
 }
