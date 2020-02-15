@@ -10,6 +10,7 @@ import pytz
 from django_celery_beat import models as beatmodels
 
 
+
 # 获取Dashboard 页面的基本数字信息，注册人数，分组数，主机数，命令数
 def get_accessgateway_info(request):
     # print(request.user)  # 打印登录用户
@@ -67,7 +68,8 @@ def recent_command(request, type, show_number):
     if type == 'file':
         selected_type = 'filetrans'
     print("recent_command成功被执行")
-    command_obj = models.UserProfile.objects.get(id=request.user.id).multitask_set.select_related().order_by('-id').filter(tasktype=selected_type)[:show_number]
+    command_obj = models.UserProfile.objects.get(id=request.user.id).multitask_set.select_related().order_by(
+        '-id').filter(tasktype=selected_type)[:show_number]
     recent_command_list = []
     for cmd in command_obj:
         recent_command_dict = {
@@ -116,26 +118,81 @@ def get_result_by_cmdid(cmdid, request):
 
 
 # timed_execution 页面提交的ajax一次性保存任务
-def creat_onetime_task(request):
+def create_onetime_task(request):
+    result = creat_clock_schedule(request)
+    return result
+
+#重置Django celery beat 的系统默认时间
+# def reset_the_sun_time():
+#     from django_celery_beat.models import PeriodicTask, PeriodicTasks
+#     PeriodicTask.objects.all().update(last_run_at=None)
+#     for task in PeriodicTask.objects.all():
+#         PeriodicTasks.changed(task)
+
+def creat_clock_schedule(request):
     task_data = json.loads(request.POST.get('task_data'))
+    task_name = task_data.get('task_name')
     cmd_text = task_data.get('cmd_text')
     date_picker = task_data.get('date_picker')
     timazone_select = task_data.get('timazone_select')
     time_picker = task_data.get('time_picker')
     user_id = task_data.get('user_id')
     select_host_ids = task_data.get('select_host_ids')
-    new_date = date_picker.split('/', -1)    #  把日期分割全部取出,取出后是列表格式
-    new_time_hour = time_picker.split(':', -1)[0]   # 把时间按照分割,取第一位,小时
-    new_time_mins = int(time_picker.split(':', -1)[1].split(' ', -1)[0])-18 # 把分割后的时间按照空格再次分割,取出来是分钟和上下午标识
-    if time_picker.split(':', -1)[1].split(' ', -1)[1] == "PM":   #判断是否是PM下午
-        new_time_hour = int(new_time_hour)+12       # 如果是+12小时转换成24小时制
-    data_time = "%s-%s-%s %s:%s:%s" % (new_date[2],new_date[0],new_date[1],new_time_hour,new_time_mins,'00') # 将分割后的数据整理成固定格式的字符串
+    print("task name :",task_name)
+    if beatmodels.PeriodicTask.objects.filter(name = task_name):
+        result = 2
+        return result
+    else:
+        print("%s 任务名有效：" % task_name)
+
+    new_date = date_picker.split('/', -1)  # 把日期分割全部取出,取出后是列表格式
+    new_time_hour = time_picker.split(':', -1)[0]  # 把时间按照分割,取第一位,小时
+    new_time_mins = int(time_picker.split(':', -1)[1].split(' ', -1)[0])  # 把分割后的时间按照空格再次分割,取出来是分钟和上下午标识
+    if time_picker.split(':', -1)[1].split(' ', -1)[1] == "PM" and new_time_hour != "12":  # 判断是否是PM下午
+        new_time_hour = int(new_time_hour) + 12  # 如果是+12小时转换成24小时制
+    data_time = "%s-%s-%s %s:%s:%s" % (new_date[2], new_date[0], new_date[1], new_time_hour, new_time_mins, '00')  # 将分割后的数据整理成固定格式的字符串
     data_time_really = datetime.datetime.strptime(data_time, "%Y-%m-%d %H:%M:%S")  # 将字符串转换成datatime格式
     tz = pytz.timezone(timazone_select)  # 获取当前时区对应的时区格式的数据
-    data_time_timezone = data_time_really.replace(tzinfo=tz) # 把转换好的 datetime 格式,替换为有时区的 datetime 格式
+    print("tz:",tz)
+    data_time_timezone = data_time_really.replace(tzinfo=tz)  # 把转换好的 datetime 格式,替换为有时区的 datetime 格式
     # print('data_time_really:',data_time_really)  # 打印未加时区的日期   2020-02-20 18:45:00
     # print('data_time_timezone:',data_time_timezone)   # 打印加过时区后的日期格式  2020-02-20 18:45:00+08:06
-    clocked_schedule_obj = beatmodels.ClockedSchedule.objects.create(clocked_time=data_time_timezone)
-    print("clocked_schedule数据已添加成功,添加时间为:",data_time_timezone)
-    print("当前服务器时间:",datetime.datetime.now())
-    print("保存的时间ID为:",clocked_schedule_obj.id)
+    if beatmodels.ClockedSchedule.objects.filter(clocked_time = data_time_timezone):
+        clocked_schedule_obj = beatmodels.ClockedSchedule.objects.get(clocked_time=data_time_timezone)
+    else:
+        clocked_schedule_obj = beatmodels.ClockedSchedule.objects.create(clocked_time=data_time_timezone)
+
+    print("转换带时区的时间:", datetime.datetime(2016, 5, 11, 6, 49, 18, tzinfo=tz))
+    print("新建任务时间为:", data_time_timezone)
+    print("当前服务器时间:", datetime.datetime.now())
+    print("存时间表的时间:", clocked_schedule_obj.clocked_time)
+    print("datatime时间：", datetime.datetime.now())
+
+    if clocked_schedule_obj:
+        new_periodic_task_obj = creat_periodic_task(clocked_schedule_obj,task_name,cmd_text,'cmd',user_id,select_host_ids)
+        return new_periodic_task_obj
+    else:
+        result = 0
+        return result
+
+
+def creat_periodic_task(clocked_schedule_obj,task_name,cmd_text,task_type,user_id,select_host_ids):
+    periodic_task_obj = beatmodels.PeriodicTask.objects.create(
+        name = task_name,
+        task = 'Web.tasks.shell_cmd_task',
+        clocked = clocked_schedule_obj,
+        one_off = True,
+        # enabled = True,
+        args=[user_id,clocked_schedule_obj.id],
+        kwargs=json.dumps({
+            'select_host_ids': select_host_ids,
+            'cmd_text':cmd_text,
+            'task_type':task_type,
+            'task_name':task_name,
+        })
+    )
+    print("任务表的时间：",periodic_task_obj.clocked.clocked_time)
+    print("一次性任务名：",task_name)
+    print("一次性任务ID：",periodic_task_obj.id)
+    result = periodic_task_obj.id
+    return result

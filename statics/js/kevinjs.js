@@ -5,7 +5,7 @@ get_select_timezone_form_json()
 //获取下拉列表的所有时区
 function get_select_timezone_form_json() {
     $.getJSON("/static/data/public/timezone.json", function (data) {
-        var ele = "<option value=\"America/Toronto\">America/Toronto</option>"
+        var ele = "<option value=\"America/Toronto\">Canada/Newmarket</option>"
         $.each(data, function (index, timezone) {
             var ele_each = "<option value=" + timezone + ">" + timezone + "</option>";
             ele += ele_each;
@@ -17,7 +17,8 @@ function get_select_timezone_form_json() {
 
 // timed_execution页面//一次性任务提交按钮
 function save_onetime_task(self, userid) {
-    var csrftoken = $("input[name='csrfmiddlewaretoken']").val()
+    var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+    var task_name = $("#one_time_task_name_button").val();
     var cmd_text = $("#onetime_cmdtext").val();
     var date_picker = $("#onetime_datapicker").val();
     var timazone_select = $("#demo-chosen-select").val();
@@ -33,6 +34,14 @@ function save_onetime_task(self, userid) {
             type: 'pink',
             container: '#select_host_pannel',
             html: '<div class="media">🙁Please select a host and try again！</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (task_name.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁The Task name can be null</div>',
             closeBtn: true,
             timer: 2000
         });
@@ -61,22 +70,46 @@ function save_onetime_task(self, userid) {
             timer: 2000
         });
     } else {
-        onttime_data = {
+        onetime_data = {
             "cmd_text": cmd_text,
             "date_picker": date_picker,
             "timazone_select": timazone_select,
             "time_picker": time_picker,
             "user_id": userid,
-            "select_host_ids": select_host_ids
+            "select_host_ids": select_host_ids,
+            "task_name":task_name
         }
         console.log(select_host_ids)
-        $.post('/onetime_task/', {"task_data":JSON.stringify(onttime_data),"csrfmiddlewaretoken": csrftoken}, function (callback) {
-            console.log(callback)
+        $.post('/onetime_task/', {
+            "task_data": JSON.stringify(onetime_data),
+            "csrfmiddlewaretoken": csrftoken
+        }, function (callback) {
+            var result = JSON.parse(callback)
+            console.log(result)
+            if (result==2){
+                panel_alert_message('#cmd_pannel',"The Task Name already had been taken!",'pink');
+            }else if (result==0){
+                panel_alert_message('#cmd_pannel',"unknow error happen in servers .please try again ",'pink');
+            }
+            else {
+                panel_alert_message('#cmd_pannel',"Create one - time task Successful!",'success');
+            }
+
         })
 
     }
 
 
+}
+
+function panel_alert_message(panel_alert_name,message,type){
+    $.niftyNoty({
+            type: type,
+            container: panel_alert_name,
+            html: '<div class="media">'+message+'</div>',
+            closeBtn: true,
+            timer: 2000
+        });
 }
 
 

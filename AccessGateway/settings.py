@@ -111,12 +111,18 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Toronto'
+# 关闭 UTC
+USE_TZ = True
+CELERY_ENABLE_UTC = False
+# 设置 django-celery-beat 真正使用的时区
+CELERY_TIMEZONE = TIME_ZONE
+# 使用 timezone naive 模式
+DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
 
 APPEND_SLASH = False
 

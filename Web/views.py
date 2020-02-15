@@ -120,8 +120,9 @@ def timed_execution(request):
 # 处理timed_execution 页面Ajax提交的一次性任务按钮save_onetime_task  in kevin.js
 @login_required
 def onetime_task(request):
-    view_extra.creat_onetime_task(request)
-    return HttpResponse("2")
+    result = view_extra.create_onetime_task(request)
+    print("result:",result)
+    return HttpResponse(json.dumps(result))
 
 
 # 处理CMD提交过来的任务
