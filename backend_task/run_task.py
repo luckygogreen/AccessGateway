@@ -17,7 +17,7 @@ def ssh_command(sub_task_obj):
             port=host_remote_user_obj.host.port,
             username=host_remote_user_obj.remote_user.username,
             password=host_remote_user_obj.remote_user.password,
-            timeout=5
+            timeout=15
         )
         # stdin, stdout, stderr = ssh.exec_command(". ./.bash_profile;echo $PATH")
         stdin, stdout, stderr = ssh.exec_command(sub_task_obj.task.taskcontent)
@@ -51,7 +51,7 @@ def sftp_file(sub_task_obj, task_data):
     print('%s的 sftp_file 方法已被执行' % host_ip)
     try:
         host_connect = paramiko.Transport(host_ip, host_port)
-        host_connect.banner_timeout = 5
+        host_connect.banner_timeout = 15
         host_connect.connect(username=login_username, password=login_password)
         sftp = paramiko.SFTPClient.from_transport(host_connect)
         if task_data['file_trans_type'] == 'sendto':

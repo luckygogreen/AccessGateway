@@ -4,6 +4,7 @@ import platform
 from Web import models
 import subprocess  # 调用进程包
 from django import conf
+from public_def import all_about_json
 
 
 class MultiTaskManager(object):
@@ -42,6 +43,9 @@ class MultiTaskManager(object):
             taskcontent=self.task_data.get('cmd_text'),
             user=self.request.user
         )  # 插入前端传入的CMD 命令
+
+
+
         select_host_ids = set(self.task_data['select_host_ids'])  # set() 用于去重
         # print('打印task_obj：', task_obj)
         task_log_obj = []

@@ -10,7 +10,6 @@ import pytz
 from django_celery_beat import models as beatmodels
 
 
-
 # 获取Dashboard 页面的基本数字信息，注册人数，分组数，主机数，命令数
 def get_accessgateway_info(request):
     # print(request.user)  # 打印登录用户
@@ -122,12 +121,22 @@ def create_onetime_task(request):
     result = creat_clock_schedule(request)
     return result
 
-#重置Django celery beat 的系统默认时间
-# def reset_the_sun_time():
-#     from django_celery_beat.models import PeriodicTask, PeriodicTasks
-#     PeriodicTask.objects.all().update(last_run_at=None)
-#     for task in PeriodicTask.objects.all():
-#         PeriodicTasks.changed(task)
+def get_one_time_task_history(request):
+    one_time_task_history_list = []
+    one_time_task_history_obj = beatmodels.PeriodicTask.objects.filter(userid=request.user.id)
+
+    for each_task in one_time_task_history_obj:
+        if each_task.clocked:
+            one_time_task_history_dict = {
+                'task_id':each_task.id,
+                'task_name':each_task.name,
+                'task_time':str(each_task.clocked.clocked_time),
+                'task_status':each_task.enabled,
+            }
+            one_time_task_history_list.append(one_time_task_history_dict)
+    dir_path = "%s/statics/data/%s/" % (conf.settings.BASE_DIR,request.user.id)
+    file_path = "%s/statics/data/%s/onetimetaskhistory.json" % (conf.settings.BASE_DIR,request.user.id)
+    all_about_json.write_json_file(dir_path,file_path,one_time_task_history_list)
 
 def creat_clock_schedule(request):
     task_data = json.loads(request.POST.get('task_data'))
@@ -138,8 +147,8 @@ def creat_clock_schedule(request):
     time_picker = task_data.get('time_picker')
     user_id = task_data.get('user_id')
     select_host_ids = task_data.get('select_host_ids')
-    print("task name :",task_name)
-    if beatmodels.PeriodicTask.objects.filter(name = task_name):
+    print("task name :", task_name)
+    if beatmodels.PeriodicTask.objects.filter(name=task_name):
         result = 2
         return result
     else:
@@ -153,46 +162,50 @@ def creat_clock_schedule(request):
     data_time = "%s-%s-%s %s:%s:%s" % (new_date[2], new_date[0], new_date[1], new_time_hour, new_time_mins, '00')  # 将分割后的数据整理成固定格式的字符串
     data_time_really = datetime.datetime.strptime(data_time, "%Y-%m-%d %H:%M:%S")  # 将字符串转换成datatime格式
     tz = pytz.timezone(timazone_select)  # 获取当前时区对应的时区格式的数据
-    print("tz:",tz)
-    data_time_timezone = data_time_really.replace(tzinfo=tz)  # 把转换好的 datetime 格式,替换为有时区的 datetime 格式
+    print("tz:", tz)
+    data_time_timezone = tz.localize(data_time_really)
+    # data_time_timezone = data_time_really.replace(tzinfo=tz)  # 把转换好的 datetime 格式,替换为有时区的 datetime 格式 这个转换时间会有18分钟的误差,时区不对
     # print('data_time_really:',data_time_really)  # 打印未加时区的日期   2020-02-20 18:45:00
     # print('data_time_timezone:',data_time_timezone)   # 打印加过时区后的日期格式  2020-02-20 18:45:00+08:06
-    if beatmodels.ClockedSchedule.objects.filter(clocked_time = data_time_timezone):
+    if beatmodels.ClockedSchedule.objects.filter(clocked_time=data_time_timezone):
         clocked_schedule_obj = beatmodels.ClockedSchedule.objects.get(clocked_time=data_time_timezone)
     else:
         clocked_schedule_obj = beatmodels.ClockedSchedule.objects.create(clocked_time=data_time_timezone)
 
-    print("转换带时区的时间:", datetime.datetime(2016, 5, 11, 6, 49, 18, tzinfo=tz))
-    print("新建任务时间为:", data_time_timezone)
-    print("当前服务器时间:", datetime.datetime.now())
-    print("存时间表的时间:", clocked_schedule_obj.clocked_time)
-    print("datatime时间：", datetime.datetime.now())
+    print("data_time_really:", data_time_really)
+    print("data_time_timezone:", data_time_timezone)
+    print("tz.localize(datetime.datetime.now()):", tz.localize(datetime.datetime.now()))
+    print("clocked_schedule_obj.clocked_time:", clocked_schedule_obj.clocked_time)
+    print("datetime.datetime.now().replace(tzinfo=tz)", datetime.datetime.now().replace(tzinfo=tz))
 
     if clocked_schedule_obj:
-        new_periodic_task_obj = creat_periodic_task(clocked_schedule_obj,task_name,cmd_text,'cmd',user_id,select_host_ids)
+        new_periodic_task_obj = creat_periodic_task(clocked_schedule_obj, task_name, cmd_text, 'cmd', user_id, select_host_ids,request)
         return new_periodic_task_obj
     else:
         result = 0
         return result
 
 
-def creat_periodic_task(clocked_schedule_obj,task_name,cmd_text,task_type,user_id,select_host_ids):
+def creat_periodic_task(clocked_schedule_obj, task_name, cmd_text, task_type, user_id, select_host_ids,request):
+    print("user_id", type(user_id), user_id)
+    task_dict = {
+        "user_id": user_id,
+        "cmd_text": cmd_text,
+        "task_type": task_type,
+        "task_name": task_name,
+    }
     periodic_task_obj = beatmodels.PeriodicTask.objects.create(
-        name = task_name,
-        task = 'Web.tasks.shell_cmd_task',
-        clocked = clocked_schedule_obj,
-        one_off = True,
-        # enabled = True,
-        args=[user_id,clocked_schedule_obj.id],
-        kwargs=json.dumps({
-            'select_host_ids': select_host_ids,
-            'cmd_text':cmd_text,
-            'task_type':task_type,
-            'task_name':task_name,
-        })
+        name=task_name,
+        task="Web.tasks.shell_cmd_task",
+        clocked=clocked_schedule_obj,
+        one_off=True,
+        args=json.dumps(select_host_ids),
+        kwargs=json.dumps(task_dict),
+        userid=int(user_id)
     )
-    print("任务表的时间：",periodic_task_obj.clocked.clocked_time)
-    print("一次性任务名：",task_name)
-    print("一次性任务ID：",periodic_task_obj.id)
+    print("任务表的时间：", periodic_task_obj.clocked.clocked_time)
+    print("一次性任务名：", task_name)
+    print("一次性任务ID：", periodic_task_obj.id)
+    get_one_time_task_history(request)
     result = periodic_task_obj.id
     return result

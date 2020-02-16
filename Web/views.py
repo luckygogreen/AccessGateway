@@ -54,7 +54,7 @@ def dashboard(request):
     print("****************【Time:%s】****************" % time.strftime("%Y-%m-%d %H:%I:%S"))
     print("*" * 60)
     info_result = view_extra.get_accessgateway_info(request)  # 获取堡垒机基本信息
-    # command_history = CommandHistory(request)
+    CommandHistory(request)
     # print(command_history.command_history_list)   # 打印数据列表
     return render(request, 'index.html', {
         'host_number': info_result['host_number'],

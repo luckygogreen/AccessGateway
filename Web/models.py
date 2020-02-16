@@ -144,6 +144,7 @@ class MultiTask(models.Model):
     taskcontent = models.CharField(max_length=256, verbose_name='Task content')
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now_add=True)
+    task_name = models.CharField(max_length=256,default="",blank=True,null=True)
 
     def __str__(self):
         return '%s %s' %(self.id,self.taskcontent)
