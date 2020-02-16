@@ -15,101 +15,14 @@ function get_select_timezone_form_json() {
 }
 
 
-// timed_execution页面//一次性任务提交按钮
-function save_onetime_task(self, userid) {
-    var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
-    var task_name = $("#one_time_task_name_button").val();
-    var cmd_text = $("#onetime_cmdtext").val();
-    var date_picker = $("#onetime_datapicker").val();
-    var timazone_select = $("#demo-chosen-select").val();
-    var time_picker = $("#demo-tp-com").val();
-    var select_host_ids = [];
-    $("[tag='host_select']:checked").each(
-        function () {
-            select_host_ids.push($(this).val())
-        }
-    )
-    if (select_host_ids.length == 0) {
-        $.niftyNoty({
-            type: 'pink',
-            container: '#select_host_pannel',
-            html: '<div class="media">🙁Please select a host and try again！</div>',
-            closeBtn: true,
-            timer: 2000
-        });
-    } else if (task_name.length <= 1) {
-        $.niftyNoty({
-            type: 'pink',
-            container: '#cmd_pannel',
-            html: '<div class="media">🙁The Task name can be null</div>',
-            closeBtn: true,
-            timer: 2000
-        });
-    } else if (cmd_text.length <= 1) {
-        $.niftyNoty({
-            type: 'pink',
-            container: '#cmd_pannel',
-            html: '<div class="media">🙁Please try to enter a valid command！</div>',
-            closeBtn: true,
-            timer: 2000
-        });
-    } else if (date_picker.length <= 1) {
-        $.niftyNoty({
-            type: 'pink',
-            container: '#cmd_pannel',
-            html: '<div class="media">🙁Please pick a date</div>',
-            closeBtn: true,
-            timer: 2000
-        });
-    } else if (time_picker.length <= 1) {
-        $.niftyNoty({
-            type: 'pink',
-            container: '#cmd_pannel',
-            html: '<div class="media">🙁Please pick a time</div>',
-            closeBtn: true,
-            timer: 2000
-        });
-    } else {
-        onetime_data = {
-            "cmd_text": cmd_text,
-            "date_picker": date_picker,
-            "timazone_select": timazone_select,
-            "time_picker": time_picker,
-            "user_id": userid,
-            "select_host_ids": select_host_ids,
-            "task_name":task_name
-        }
-        console.log(select_host_ids)
-        $.post('/onetime_task/', {
-            "task_data": JSON.stringify(onetime_data),
-            "csrfmiddlewaretoken": csrftoken
-        }, function (callback) {
-            var result = JSON.parse(callback)
-            console.log(result)
-            if (result==2){
-                panel_alert_message('#cmd_pannel',"The Task Name already had been taken!",'pink');
-            }else if (result==0){
-                panel_alert_message('#cmd_pannel',"unknow error happen in servers .please try again ",'pink');
-            }
-            else {
-                panel_alert_message('#cmd_pannel',"Create one - time task Successful!",'success');
-            }
-
-        })
-
-    }
-
-
-}
-
-function panel_alert_message(panel_alert_name,message,type){
+function panel_alert_message(panel_alert_name, message, type) {
     $.niftyNoty({
-            type: type,
-            container: panel_alert_name,
-            html: '<div class="media">'+message+'</div>',
-            closeBtn: true,
-            timer: 2000
-        });
+        type: type,
+        container: panel_alert_name,
+        html: '<div class="media">' + message + '</div>',
+        closeBtn: true,
+        timer: 2000
+    });
 }
 
 
@@ -144,6 +57,7 @@ function show_one_time_button() {
         timer: 5000
     });
 }
+
 
 // 全选反选  多组复选框
 function groupcheckall(selectStatus, checkboxname) {
@@ -274,6 +188,133 @@ function show_file_demo() {
         closeBtn: true,
         timer: 10000
     });
+}
+
+//页面打开时刷新一次性页面的表格
+function refresh_one_time_task_histry_table() {
+    $("#one_time_task_history").bootstrapTable('refresh');
+    // $("#one_time_task_history").bootstrapTable('refresh', {});
+}
+
+//一次性任务页面，删除按钮提示
+function one_time_task_delete_button(value) {
+    bootbox.confirm("<h3>Are you sure?</h3><br><h5>Once deleted, tasks cannot be recovered,are you ok with that ?</h5>", function (result) {
+        var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+        delete_task_dict = {"seleteid": value}
+        if (result) {
+            $.post("/button_onetask_delete/",{'seleteid': JSON.stringify(value),'csrfmiddlewaretoken':csrftoken}, function (callback) {
+                console.log(callback)
+                if (JSON.parse(callback)=="Success") {
+                    $.niftyNoty({
+                        type: 'success',
+                        icon: 'pli-like-2 icon-2x',
+                        message: 'The task has beed delete successfully! ',
+                        container: 'floating',
+                        timer: 5000
+                    });
+                    setTimeout('refresh_one_time_task_histry_table()', 3000);
+                }else {
+                    $.niftyNoty({
+                        type: 'danger',
+                        icon: 'pli-cross icon-2x',
+                        message: callback,
+                        container: 'floating',
+                        timer: 5000
+                    });
+                }
+            });
+        } else {
+            console.log("nothing to do !")
+        };
+
+    });
+}
+
+// timed_execution页面//一次性任务提交按钮
+function save_onetime_task(self, userid) {
+    var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+    var task_name = $("#one_time_task_name_button").val();
+    var cmd_text = $("#onetime_cmdtext").val();
+    var date_picker = $("#onetime_datapicker").val();
+    var timazone_select = $("#demo-chosen-select").val();
+    var time_picker = $("#demo-tp-com").val();
+    var select_host_ids = [];
+    $("[tag='host_select']:checked").each(
+        function () {
+            select_host_ids.push($(this).val())
+        }
+    )
+    if (select_host_ids.length == 0) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#select_host_pannel',
+            html: '<div class="media">🙁Please select a host and try again！</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (task_name.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁The Task name can be null</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (cmd_text.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁Please try to enter a valid command！</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (date_picker.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁Please pick a date</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (time_picker.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁Please pick a time</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else {
+        onetime_data = {
+            "cmd_text": cmd_text,
+            "date_picker": date_picker,
+            "timazone_select": timazone_select,
+            "time_picker": time_picker,
+            "user_id": userid,
+            "select_host_ids": select_host_ids,
+            "task_name": task_name
+        }
+        // console.log(select_host_ids)
+        $.post('/onetime_task/', {
+            "task_data": JSON.stringify(onetime_data),
+            "csrfmiddlewaretoken": csrftoken
+        }, function (callback) {
+            var result = JSON.parse(callback)
+            console.log(result)
+            if (result == 2) {
+                panel_alert_message('floating', "The Task Name already had been taken!", 'pink');
+            } else if (result == 0) {
+                panel_alert_message('floating', "unknow error happen in servers .please try again ", 'pink');
+            } else {
+                panel_alert_message('floating', "Create one - time task Successful!", 'success');
+                setTimeout('refresh_one_time_task_histry_table()', 3000);
+            }
+
+        })
+
+    }
+
+
 }
 
 //处理最近命令返回的结果
@@ -527,6 +568,7 @@ function active_menu() {
     $("#mainnav-menu-sub li").find("a[href='" + menupath + "']").parent().addClass("active-link");
     $("#mainnav-menu-sub li").find("a[href='" + menupath + "']").parent().parent().addClass("collapse in");
 }
+
 
 //程序运行完以后激活tooltips,popover工具
 //bootstrap tooltips,popover 在表格中无法使用，需要在程序运行结尾激活，一下是激活代码

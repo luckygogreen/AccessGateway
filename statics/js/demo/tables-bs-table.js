@@ -129,6 +129,23 @@ function invoiceFormatter(value, row) {
 }
 
 
+//task_status Formatter
+function taskstatusFormatter(value,row){
+    ele = "";
+    if(value==true){
+        ele = '<span class="label label-warning">Waiting</span>';
+    }else {
+        ele = '<span class="label label-success">complete</span>';
+    }
+    return ele;
+}
+
+function tasksoperatingFormatter(value, row) {
+    ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button'+value+'" value="'+value+'" onclick="one_time_task_delete_button('+value+')"><i class="demo-psi-recycling icon-lg"></i></button>';
+    return ele;
+}
+
+
 function resultToplip(value,row) {
     var html_cmd_result = '<button class="btn btn-xs btn-default add-tooltip" data-html="true" data-toggle="tooltip" data-container="body" data-placement="top" data-original-title="'+value+'">Show</button>'
     return html_cmd_result

@@ -7,11 +7,11 @@ from Web import models
 from backend_task.multi_task import MultiTaskManager
 from backend_task import view_extra
 from backend_task.ag_command_history import CommandHistory
-# from Web.tasks_copy import add, xsum, mul
 from celery.result import AsyncResult
 import time
 import platform
 from django_celery_beat import models as beatmodels
+from backend_task.view_extra import get_one_time_task_history
 
 
 # def celery_test(request):
@@ -123,6 +123,20 @@ def onetime_task(request):
     result = view_extra.create_onetime_task(request)
     print("result:",result)
     return HttpResponse(json.dumps(result))
+
+# 处理一次性任务timed_execution页面one time task history提交过来的删除任务事件
+@login_required
+def button_onetask_delete(request):
+    print("button_onetask_delete 被执行")
+    try:
+        beatmodels.PeriodicTask.objects.get(id=int(request.POST.get("seleteid"))).delete()
+        message = "Success"
+        print("一次性任务被成功删除")
+        get_one_time_task_history(request)
+    except Exception as e:
+        message = str(e)
+        print(message)
+    return HttpResponse(json.dumps(message))
 
 
 # 处理CMD提交过来的任务

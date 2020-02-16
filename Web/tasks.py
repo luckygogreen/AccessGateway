@@ -5,8 +5,11 @@ import subprocess
 import json
 import paramiko
 from Web import models as webmodels
+from django_celery_beat import models as beatmodels
 from concurrent.futures import ThreadPoolExecutor
 import time
+
+from public_def import all_about_json
 
 
 @shared_task(typing=False)
@@ -36,6 +39,7 @@ def shell_cmd_task(*args, **kwargs):
     print("task_log_list:", task_log_list)
     webmodels.TaskDetails.objects.bulk_create(task_log_list)  # 批量创建添加数据  接入list参数
     task_url = "python %s/backend_task/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
+    rewrite_task_status.delay(kwargs["user_id"])
     cmd_process = subprocess.Popen(task_url, shell='True')
     print('打印进程号:', cmd_process.pid)
 
@@ -44,3 +48,21 @@ def shell_cmd_task(*args, **kwargs):
 def test_task():
     print("测试 shell_cmd")
     return "good job"
+
+@shared_task
+def rewrite_task_status(userid):
+    one_time_task_history_list = []
+    one_time_task_history_obj = beatmodels.PeriodicTask.objects.filter(userid=int(userid))
+
+    for each_task in one_time_task_history_obj:
+        if each_task.clocked:
+            one_time_task_history_dict = {
+                'task_id': each_task.id,
+                'task_name': each_task.name,
+                'task_time': str(each_task.clocked.clocked_time),
+                'task_status': each_task.enabled,
+            }
+            one_time_task_history_list.append(one_time_task_history_dict)
+    dir_path = "%s/statics/data/%s/" % (conf.settings.BASE_DIR, userid)
+    file_path = "%s/statics/data/%s/onetimetaskhistory.json" % (conf.settings.BASE_DIR, userid)
+    all_about_json.write_json_file(dir_path, file_path, one_time_task_history_list)

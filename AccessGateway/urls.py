@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^muilt_file_trans/$', views.muilt_file_trans),
     url(r'^host_select_record/$', views.host_select_record),
     url(r'^get_task_result/$', views.get_task_result),
+    url(r'^button_onetask_delete/$', views.button_onetask_delete),   # timed_execution页面one time task history提交过来的删除任务按钮
     # url(r'^celery_test/$', views.celery_test),  # for Celery
     # url(r'^celery_result/$', views.celery_result),  # for Celery
     url(r'^onetime_task/$', views.onetime_task),  # for timed_execution page # onetime_task function in kevin.js

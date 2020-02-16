@@ -7,6 +7,7 @@
     <link href="{% static 'plugins/chosen/chosen.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/bootstrap-datepicker/bootstrap-datepicker.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/bootstrap-timepicker/bootstrap-timepicker.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/animate-css/animate.min.css' %}" rel="stylesheet">
 
 {% endblock %}
 {% block main_box %}
@@ -182,11 +183,6 @@
                                 </div>
                             </div>
                             <div class="row" style="padding-top: 10px;">
-                                {#                                <button id="stop_file_button" onclick="stop_shell_file(this)"#}
-                                {#                                        class="btn btn-danger btn-labeled pull-right space"#}
-                                {#                                        style="margin-left: 16px;">#}
-                                {#                                    <i class="btn-label fa fa-stop"></i> 停止#}
-                                {#                                </button>#}
                                 <button id="run_file_button" onclick="save_onetime_task( this,{{ request.user.id }} )"
                                         class="btn btn-success btn-labeled pull-right">
                                     <i class="btn-label fa fa-play"></i> Save Task
@@ -200,37 +196,37 @@
                         <button class="btn btn-block btn-primary">执行结果</button>
                         <div class="panel-body" id="show_host_results"></div>
                     </div>
-                    <div class="panel panel-bordered panel-dark">
+                    <div class="panel panel-bordered panel-dark" onload="refresh_one_time_task_histry_table()">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Recent Command</h3>
+                            <h3 class="panel-title">One-time task history</h3>
                         </div>
                         <div class="panel-body">
-                            <table id="recent_command_table" data-toggle="table"
-                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/recent_command_filetrans.json"
+                            <table id="one_time_task_history"
+                                   data-toggle="table"
+                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/onetimetaskhistory.json"
                                    data-search="true"
+                                   data-striped="true"
                                    data-show-toggle="true"
                                    data-show-refresh="true"
                                    data-sort-order="desc"
                                    data-show-columns="true"
-                                   data-sort-name="id"
-                                   data-page-list="[5, 10, 20]"
-                                   data-page-size="5"
+                                   data-sort-name="task_id"
+                                   data-page-list="[5, 10, 20,50]"
+                                   data-page-size="10"
                                    data-pagination="true"
                                    data-show-pagination-switch="true">
                                 <thead>
                                 <tr>
-                                    <th data-field="id" data-align="center" data-sortable="true"
+                                    <th data-field="task_id" data-align="center" data-sortable="true"
                                         data-formatter="invoiceFormatter">ID
                                     </th>
-                                    <th data-field="type" data-align="center" data-sortable="true">Type</th>
-                                    <th data-field="cmd" data-align="center" data-formatter="resultToplip">Command</th>
-                                    <th data-field="id" data-formatter="click_small_button">
-                                        Result
-                                    </th>
-                                    <th data-field="useremail" data-sortable="true">User</th>
-                                    <th data-field="date" data-sortable="true" data-formatter="dateFormatter">Date</th>
+                                    <th data-field="task_name" data-align="center" data-sortable="true">Task Name</th>
+                                    <th data-field="task_time" data-sortable="true" data-formatter="dateFormatter">Task Time</th>
+                                    <th data-field="task_status" data-align="center" data-sortable="true" data-formatter="taskstatusFormatter">Status</th>
+                                    <th data-field="task_id" data-align="center"  data-formatter="tasksoperatingFormatter">Operating</th>
                                 </tr>
                                 </thead>
+
                             </table>
                         </div>
                     </div>
@@ -265,6 +261,8 @@
     <script src="{% static 'plugins/bootstrap-timepicker/bootstrap-timepicker.min.js' %}"></script>
     <script src="{% static 'js/demo/form-component.js' %}"></script>
     <script src="{% static 'js/demo/ui-panels.js' %}"></script>
+    <script src="{% static 'js/demo/ui-modals.js' %}"></script>
+    <script src="{% static 'plugins/bootbox/bootbox.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
 
 {% endblock %}
