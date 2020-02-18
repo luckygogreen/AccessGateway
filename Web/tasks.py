@@ -8,12 +8,12 @@ from Web import models as webmodels
 from django_celery_beat import models as beatmodels
 from concurrent.futures import ThreadPoolExecutor
 import time
-
 from public_def import all_about_json
 
 
 @shared_task(typing=False)
 def shell_cmd_task(*args, **kwargs):
+    print("shell_cmd_task启动")
     host_id_list = set(args)
     #############取出所有传入的参数核对数据Begin#############
     # for arg in host_id_list:
@@ -36,7 +36,7 @@ def shell_cmd_task(*args, **kwargs):
                 task=task_obj, host_to_remote_user_id=int(id), result='Init'
             )
         )
-    print("task_log_list:", task_log_list)
+    # print("task_log_list:", task_log_list)
     webmodels.TaskDetails.objects.bulk_create(task_log_list)  # 批量创建添加数据  接入list参数
     task_url = "python %s/backend_task/run_task.py %s" % (conf.settings.BASE_DIR, task_obj.id)
     rewrite_task_status.delay(kwargs["user_id"])
@@ -51,6 +51,7 @@ def test_task():
 
 @shared_task
 def rewrite_task_status(userid):
+    print("rewrite_task_status启动")
     one_time_task_history_list = []
     one_time_task_history_obj = beatmodels.PeriodicTask.objects.filter(userid=int(userid))
 
@@ -66,3 +67,24 @@ def rewrite_task_status(userid):
     dir_path = "%s/statics/data/%s/" % (conf.settings.BASE_DIR, userid)
     file_path = "%s/statics/data/%s/onetimetaskhistory.json" % (conf.settings.BASE_DIR, userid)
     all_about_json.write_json_file(dir_path, file_path, one_time_task_history_list)
+
+
+# 创建周期任务时间数据
+@shared_task
+def create_interval_schedule(id,data):
+    data = json.loads(data)
+    print(id)
+    print(data['task_name'])
+    print(data['cmd_text'])
+    print(data['timazone_select'])
+    print(data['interval_value'])
+    print(data['time_value'])
+    print(data['periodic_task_type'])
+    result = json.dumps('ok')
+    return result
+
+
+# 创建周期任务
+@shared_task
+def create_interval_task(request):
+    pass

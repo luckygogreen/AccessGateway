@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^logout/$', views.access_logout, name='access_logout'),  # 登出页面
     url(r'^web_ssh/$', views.web_ssh, name='web_ssh'),
     url(r'^timed_execution/$', views.timed_execution, name='timed_execution'),
+    url(r'^corntabs_task/$', views.corntabs_task, name='corntabs_task'),
+    url(r'^interval_task/$', views.interval_task, name='interval_task'),
     url(r'^host_record/$', views.host_record, name='host_record'),
     url(r'^host_muilt/$', views.host_muilt, name='host_muilt'),
     url(r'^batch_task_mgr/$', views.batch_task_mgr),
@@ -33,6 +35,7 @@ urlpatterns = [
     url(r'^host_select_record/$', views.host_select_record),
     url(r'^get_task_result/$', views.get_task_result),
     url(r'^button_onetask_delete/$', views.button_onetask_delete),   # timed_execution页面one time task history提交过来的删除任务按钮
+    url(r'^save_internal_task/$', views.save_internal_task),   # interval_task 页面save_internal_task提交过来的添加任务函数
     # url(r'^celery_test/$', views.celery_test),  # for Celery
     # url(r'^celery_result/$', views.celery_result),  # for Celery
     url(r'^onetime_task/$', views.onetime_task),  # for timed_execution page # onetime_task function in kevin.js

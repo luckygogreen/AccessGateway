@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="root@99.79.56.252:22" autoUploadExternalChanges="true" showNewOnSourceInSync="false" showNewOnTargetInSync="false" showExcludedInSync="true">
+  <component name="PublishConfigData" autoUpload="Always" serverName="root@99.79.56.252" autoUploadExternalChanges="true" showNewOnSourceInSync="false" showNewOnTargetInSync="false" showExcludedInSync="true">
     <serverData>
-      <paths name="root@99.79.56.252:22">
+      <paths name="root@99.79.56.252">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/AccessGateway" local="$PROJECT_DIR$" />
+            <mapping deploy="/home/AccessGateway" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

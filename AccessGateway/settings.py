@@ -165,6 +165,7 @@ REST_FRAMEWORK = {
 # for celery
 CELERY_BROKER_URL = 'redis://localhost'
 CELERY_RESULT_BACKEND = 'redis://localhost'
+
 # CELERY_BROKER_URL = 'redis://:kf48#$2Y0!!Mdg9QNMh^4T&S$wdb$6v*51@35.183.17.205:6379'
 # CELERY_RESULT_BACKEND = 'redis://:kf48#$2Y0!!Mdg9QNMh^4T&S$wdb$6v*51@35.183.17.205:6379'
 

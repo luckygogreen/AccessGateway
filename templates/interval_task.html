@@ -7,8 +7,8 @@
     <link href="{% static 'plugins/chosen/chosen.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/bootstrap-datepicker/bootstrap-datepicker.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/bootstrap-timepicker/bootstrap-timepicker.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/noUiSlider/nouislider.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/animate-css/animate.min.css' %}" rel="stylesheet">
-
 {% endblock %}
 {% block main_box %}
     {% load static %}
@@ -153,37 +153,33 @@
                                           class="form-control">pwd</textarea>
                             </div>
                             <div class="row">
-                                <div class="col-lg-3">
-                                    <!--=======================Datepicker============================-->
-                                    <hr class="new-section-sm bord-no">
-                                    <p class="text-main text-bold mar-btm">Datepicker</p>
-                                    <div id="demo-dp-component">
-                                        <div class="input-group date">
-                                            <input id="onetime_datapicker" type="text" class="form-control">
-                                            <span class="input-group-addon"><i class="demo-pli-calendar-4"></i></span>
-                                        </div>
-                                    </div>
-                                    <!--===================================================-->
-                                </div>
                                 <div class="col-lg-5">
-                                    <!--==========================Time Zone=========================-->
                                     <hr class="new-section-sm bord-no">
                                     <p class="text-main text-bold mar-btm">Time Zone</p>
                                     <select data-placeholder="Time zone" id="demo-chosen-select" tabindex="2"></select>
-                                    <!--===================================================-->
-                                </div>
-                                <div class="col-lg-4">
-                                    <!--=======================Timepicker============================-->
+                                </div><!---fk---->
+                                <div class="col-xs-4">
                                     <hr class="new-section-sm bord-no">
-                                    <p class="text-main text-bold mar-btm">Timepicker</p>
-                                    <div class="input-group date">
-                                        <input id="demo-tp-com" type="text" class="form-control">
-                                        <span class="input-group-addon"><i class="demo-pli-clock"></i></span>
+                                    <p class="text-main text-bold mar-btm">Every</p>
+                                    <div id="demo-range-def"></div>
+                                    <div>
+                                        <br>
+                                        <strong>Value : </strong>
+                                        <span id="demo-range-def-val"></span>
                                     </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <hr class="new-section-sm bord-no">
+                                    <hr class="new-section-sm bord-no">
+                                    <select id="interval_time" class="selectpicker col-xs-6 col-sm-4 col-md-6 col-lg-12" data-style="btn-dark">
+                                        <option>Minutes</option>s
+                                        <option>Hours</option>
+                                        <option>Days</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row" style="padding-top: 10px;">
-                                <button id="run_file_button" onclick="save_onetime_task( this,{{ request.user.id }} )"
+                                <button id="run_file_button" onclick="save_interval_task('interval')"
                                         class="btn btn-success btn-labeled pull-right">
                                     <i class="btn-label fa fa-play"></i> Save Task
                                 </button>
@@ -191,10 +187,6 @@
                         </div>
                         <!--===================================================-->
                         <!--End Condensed Table-->
-                    </div>
-                    <div id="show_cmd_result" class="panel panel-bordered-primary hidden">
-                        <button class="btn btn-block btn-primary">执行结果</button>
-                        <div class="panel-body" id="show_host_results"></div>
                     </div>
                     <div class="panel panel-bordered panel-dark" onload="refresh_one_time_task_histry_table()">
                         <div class="panel-heading">
@@ -260,6 +252,7 @@
     <script src="{% static 'plugins/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-timepicker/bootstrap-timepicker.min.js' %}"></script>
     <script src="{% static 'js/demo/form-component.js' %}"></script>
+    <script src="{% static 'plugins/noUiSlider/nouislider.min.js' %}"></script>
     <script src="{% static 'js/demo/ui-panels.js' %}"></script>
     <script src="{% static 'js/demo/ui-modals.js' %}"></script>
     <script src="{% static 'plugins/bootbox/bootbox.min.js' %}"></script>

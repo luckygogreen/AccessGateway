@@ -12,7 +12,7 @@ import time
 import platform
 from django_celery_beat import models as beatmodels
 from backend_task.view_extra import get_one_time_task_history
-
+from Web.tasks import create_interval_schedule
 
 # def celery_test(request):
 #     time.sleep(2)
@@ -112,7 +112,7 @@ def timed_execution(request):
     print("***【System:%s】***" % platform.platform())
     print("****************【Time:%s】****************" % time.strftime("%Y-%m-%d %H:%I:%S"))
     print("*" * 60)
-    view_extra.recent_command(request, 'cmd', 30)
+    # view_extra.recent_command(request, 'cmd', 30)
     host_obj, host_group_obj = host_hostgroup(request)
     return render(request, 'timed_execution.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
 
@@ -191,3 +191,31 @@ def get_task_result(request):
     task_details_obj = models.TaskDetails.objects.filter(task_id=task_id)
     log_data = list(task_details_obj.values('id', 'status', 'result'))
     return HttpResponse(json.dumps(log_data))
+
+
+@login_required
+def interval_task(request):
+    # 打印系统信息开始
+    print("*" * 60)
+    print("***【System:%s】***" % platform.platform())
+    print("****************【Time:%s】****************" % time.strftime("%Y-%m-%d %H:%I:%S"))
+    print("*" * 60)
+    host_obj, host_group_obj = host_hostgroup(request)
+    return render(request, 'interval_task.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
+
+
+def save_internal_task(request):
+    result = create_interval_schedule.delay(request.user.id,request.POST.get('interval_task_data'))
+    return HttpResponse(result.get())
+
+
+@login_required
+def corntabs_task(request):
+    # 打印系统信息开始
+    print("*" * 60)
+    print("***【System:%s】***" % platform.platform())
+    print("****************【Time:%s】****************" % time.strftime("%Y-%m-%d %H:%I:%S"))
+    print("*" * 60)
+    # view_extra.recent_command(request, 'cmd', 30)
+    host_obj, host_group_obj = host_hostgroup(request)
+    return render(request, 'corntabs_task.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})

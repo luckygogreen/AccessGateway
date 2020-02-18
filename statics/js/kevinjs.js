@@ -317,6 +317,69 @@ function save_onetime_task(self, userid) {
 
 }
 
+//interval_task页面// 周期性任务
+function save_interval_task(periodic_task_type) {
+    var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+    var task_name = $("#one_time_task_name_button").val();
+    var cmd_text = $("#onetime_cmdtext").val();
+    var timazone_select = $("#demo-chosen-select").val();
+    var interval_value = $("#demo-range-def-val").text();
+    var time_value = $("#interval_time").val();
+    var select_host_ids = [];
+    $("[tag='host_select']:checked").each(
+        function () {
+            select_host_ids.push($(this).val())
+        }
+    )
+    if (select_host_ids.length == 0) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#select_host_pannel',
+            html: '<div class="media">🙁Please select a host and try again！</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (task_name.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁The Task name can be null</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    } else if (cmd_text.length <= 1) {
+        $.niftyNoty({
+            type: 'pink',
+            container: '#cmd_pannel',
+            html: '<div class="media">🙁Please try to enter a valid command！</div>',
+            closeBtn: true,
+            timer: 2000
+        });
+    }else {
+        console.log(task_name);
+        console.log(cmd_text);
+        console.log(timazone_select);
+        console.log(interval_value);
+        console.log(time_value);
+        console.log(periodic_task_type);
+        interval_dict = {
+            'task_name':task_name,
+            'cmd_text':cmd_text,
+            'timazone_select':timazone_select,
+            'interval_value':interval_value,
+            'time_value':time_value,
+            'periodic_task_type':periodic_task_type
+        }
+        $.post("/save_internal_task/",{'csrfmiddlewaretoken':csrftoken,'interval_task_data':JSON.stringify(interval_dict)},function (callback) {
+            console.log(callback)
+        })
+    }
+}
+
+
+
+
+
 //处理最近命令返回的结果
 function show_cmd_with_result(cmdid, task) {
     $("#recent_command_pannel_alert").text("");

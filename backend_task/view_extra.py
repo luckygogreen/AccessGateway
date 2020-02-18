@@ -121,6 +121,7 @@ def create_onetime_task(request):
     result = creat_clock_schedule(request)
     return result
 
+# 获取一次性任务的历史
 def get_one_time_task_history(request):
     one_time_task_history_list = []
     one_time_task_history_obj = beatmodels.PeriodicTask.objects.filter(userid=request.user.id)
@@ -138,6 +139,7 @@ def get_one_time_task_history(request):
     file_path = "%s/statics/data/%s/onetimetaskhistory.json" % (conf.settings.BASE_DIR,request.user.id)
     all_about_json.write_json_file(dir_path,file_path,one_time_task_history_list)
 
+# 创建一次性任务是时间数据
 def creat_clock_schedule(request):
     task_data = json.loads(request.POST.get('task_data'))
     task_name = task_data.get('task_name')
@@ -185,7 +187,7 @@ def creat_clock_schedule(request):
         result = 0
         return result
 
-
+# 创建一次性任务
 def creat_periodic_task(clocked_schedule_obj, task_name, cmd_text, task_type, user_id, select_host_ids,request):
     print("user_id", type(user_id), user_id)
     task_dict = {
@@ -209,3 +211,6 @@ def creat_periodic_task(clocked_schedule_obj, task_name, cmd_text, task_type, us
     get_one_time_task_history(request)
     result = periodic_task_obj.id
     return result
+
+
+
