@@ -33,7 +33,7 @@ def ssh_command(sub_task_obj):
             sub_task_obj.status = 3
     except Exception as e:
         sub_task_obj.status = 2
-        print('有错误e，status=2',e)
+        print('有错误e，status=2', e)
         sub_task_obj.result = 'The command was run incorrectly, error message was:%s' % e
     sub_task_obj.save()
     print('%s 的结果已存入数据库' % host_remote_user_obj.host.ip_addr)
@@ -49,6 +49,7 @@ def sftp_file(sub_task_obj, task_data):
     login_username = host_remote_user_obj.remote_user.username
     login_password = host_remote_user_obj.remote_user.password
     print('%s的 sftp_file 方法已被执行' % host_ip)
+    cmd_msg = ''
     try:
         host_connect = paramiko.Transport(host_ip, host_port)
         host_connect.banner_timeout = 15
@@ -66,18 +67,23 @@ def sftp_file(sub_task_obj, task_data):
             sftp.get(task_data["service_path"], "%s%s/%s" % (local_file_path, sub_task_obj.task.id, filename))  # SFTP下载文件
             result_msg = "The file has been successfully downloaded locally from the target server.Server location:%s" % task_data['service_path']
             cmd_msg = "[Download file] from [%s]" % task_data['service_path']
-        host_connect.close()
         sub_task_obj.status = 3
         sub_task_obj.result = result_msg
+        host_connect.close()
     except Exception as e:
-        print('e:', e)
+        print(e)
+        cmd_msg = "File transfer"
         sub_task_obj.status = 2
-        sub_task_obj.result = 'File transfer error. The error result is:%s' % e
+        task_result= 'File transfer error. The error result is:%s' % e
+        sub_task_obj.result = task_result.translate(str.maketrans('', '', string.punctuation)) # 去标点
+        # sub_task_obj.result = os.replace(task_result,chr(39),"&acute;")   #去掉单引号
+        print("result",sub_task_obj.result)
     sub_task_obj.save()
     multi_Task = models.MultiTask.objects.get(id=sub_task_obj.task.id)
     multi_Task.taskcontent = cmd_msg
     multi_Task.save()
-
+    print("%s 的任务已执行完成" % host_ip)
+    host_connect.close()
 
 
 if __name__ == "__main__":
@@ -88,6 +94,8 @@ if __name__ == "__main__":
     # os.environ['DJANGO_SETTINGS_MODULE'] = 'AccessGateway.settings'
     import django
     import paramiko
+    import string
+
     django.setup()
     from Web import models
     from django import conf
