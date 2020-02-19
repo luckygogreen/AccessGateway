@@ -30,9 +30,9 @@ class SshHandler(object):
                 host_group_list = self.user.host_group.all()
                 for index,host_group_obj in enumerate(host_group_list):
                     print("%s.\t%s[%s]"%(index,host_group_obj.name, host_group_obj.host_to_remote_users.count()))
-                print("z.\t未分组主机[%s]" % (self.user.host_to_remote_users.count()))
+                print("z.\tUnclassified[%s]" % (self.user.host_to_remote_users.count()))
 
-                choice = input("请选择主机组>>:").strip()
+                choice = input("Please select host >>:").strip()
                 if choice.isdigit():
                     choice = int(choice)
                     selected_host_group  = host_group_list[choice]
@@ -43,7 +43,7 @@ class SshHandler(object):
                     for index,host_to_user_obj in enumerate(selected_host_group.host_to_remote_users.all()):
                         print("%s.\t%s" % (index, host_to_user_obj))
 
-                    choice = input("请选择主机>>:").strip()
+                    choice = input("Please select host>>:").strip()
                     if choice.isdigit():
                         choice = int(choice)
                         selected_host_to_user_obj = selected_host_group.host_to_remote_users.all()[choice]

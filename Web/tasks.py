@@ -98,3 +98,31 @@ def create_interval_schedule(id, data):
         result = create_interval_task(intelval_schedule_obj,id, data)
     return result
 
+
+# handle_periodic_task
+@shared_task
+def handle_periodic_task(uid,data_dict):
+    task_data = json.loads(data_dict)
+    task_name = task_data['periodic_task_name']
+    if beatmodels.PeriodicTask.objects.filter(userid=int(uid),name=task_name):
+        taskname_used = 'taskname_used'
+        result = json.dumps(taskname_used)
+        return result
+    sechdule_type = task_data['periodic_task_sechdule_type']
+    task_command = task_data['periodic_task_command']
+    task_timezone = task_data['periodic_task_timezone']
+    select_host = task_data['select_host']
+    if sechdule_type == 'corntab':
+        corntab_month_val = task_data['corntab_month_val']
+        corntab_day_val = task_data['corntab_day_val']
+        corntab_weekday_val = task_data['corntab_weekday_val']
+        corntab_hour_val = task_data['corntab_hour_val']
+        corntab_minute_val = task_data['corntab_minute_val']
+    elif sechdule_type == 'interval':
+        result = json.dumps('for future improve[interval]')
+    elif sechdule_type == 'clocked':
+        result = json.dumps('for future improve[clocked]')
+    else:
+        result = json.dumps('do noting')
+    return result
+

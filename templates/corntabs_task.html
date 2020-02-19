@@ -7,8 +7,8 @@
     <link href="{% static 'plugins/chosen/chosen.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/bootstrap-datepicker/bootstrap-datepicker.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/bootstrap-timepicker/bootstrap-timepicker.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/noUiSlider/nouislider.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/animate-css/animate.min.css' %}" rel="stylesheet">
-
 {% endblock %}
 {% block main_box %}
     {% load static %}
@@ -27,14 +27,14 @@
                                 <!--Nav tabs-->
                                 <ul class="nav nav-tabs">
                                     <li class="active"><a data-toggle="tab" href="#demo-tabs-box-1"
-                                                          aria-expanded="true">已分组主机</a>
+                                                          aria-expanded="true">Grouped</a>
                                     </li>
                                     <li class=""><a data-toggle="tab" href="#demo-tabs-box-2"
-                                                    aria-expanded="false">未分组主机</a></li>
+                                                    aria-expanded="false">Unclassified</a></li>
                                 </ul>
 
                             </div>
-                            <h3 class="panel-title">选择主机</h3>
+                            <h3 class="panel-title">Selected Host</h3>
                         </div>
                         <div id="select_host_pannel" class="panel-alert"></div>
                         <div class="panel-body">
@@ -137,7 +137,7 @@
                 <div class="col-lg-7">
                     <div class="panel panel-bordered panel-dark">{% csrf_token %}
                         <div class="panel-heading">
-                            <h3 class="panel-title">Add a one-time task</h3>
+                            <h3 class="panel-title">Interval time task</h3>
                         </div>
                         <div id="cmd_pannel" class="panel-alert"></div>
                         <div class="panel-body">
@@ -145,45 +145,74 @@
                                 <div class="input-group mar-btm">
                                     <span class="input-group-btn">
                                         <button class="btn btn-mint" type="button">Task Name</button></span>
-                                    <input id="one_time_task_name_button" type="text" placeholder="task name" class="form-control">
+                                    <input id="periodic_task_name" type="text" placeholder="task name" class="form-control">
                                 </div>
                             </div>
                             <div class="row">
-                                <textarea id="onetime_cmdtext" placeholder="请输入要执行的SSH命令..." rows="8"
-                                          class="form-control">pwd</textarea>
+                                <textarea id="periodic_task_command" placeholder="Please enter a command to execute" rows="8"
+                                          class="form-control"></textarea>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4">
-                                    <!--=======================Datepicker============================-->
-                                    <hr class="new-section-sm bord-no">
-                                    <p class="text-main text-bold mar-btm">Datepicker</p>
-                                    <div id="demo-dp-component">
-                                        <div class="input-group date">
-                                            <input id="onetime_datapicker" type="text" class="form-control">
-                                            <span class="input-group-addon"><i class="demo-pli-calendar-4"></i></span>
-                                        </div>
-                                    </div>
-                                    <!--===================================================-->
-                                </div>
-                                <div class="col-lg-4">
-                                    <!--==========================Time Zone=========================-->
+                                <div class="col-lg-5">
                                     <hr class="new-section-sm bord-no">
                                     <p class="text-main text-bold mar-btm">Time Zone</p>
                                     <select data-placeholder="Time zone" id="demo-chosen-select" tabindex="2"></select>
-                                    <!--===================================================-->
                                 </div>
-                                <div class="col-lg-4">
-                                    <!--=======================Timepicker============================-->
+                                <div class="col-xs-3">
                                     <hr class="new-section-sm bord-no">
-                                    <p class="text-main text-bold mar-btm">Timepicker</p>
-                                    <div class="input-group date">
-                                        <input id="demo-tp-com" type="text" class="form-control">
-                                        <span class="input-group-addon"><i class="demo-pli-clock"></i></span>
+                                    <p class="text-main text-bold mar-btm">Month of year</p>
+                                    <div id="corntab_month"></div>
+                                    <div>
+                                        <br>
+                                        <strong>Month : </strong>
+                                        <span id="corntab_month_val"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <hr class="new-section-sm bord-no">
+                                    <p class="text-main text-bold mar-btm">Day of month</p>
+                                    <div id="corntab_day"></div>
+                                    <div>
+                                        <br>
+                                        <strong>Day : </strong>
+                                        <span id="corntab_day_val"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <hr class="new-section-sm bord-no">
+                                    <p class="text-main text-bold mar-btm">Day of week</p>
+                                    <div id="corntab_weekday"></div>
+                                    <div>
+                                        <br>
+                                        <strong>Week : </strong>
+                                        <span id="corntab_weekday_val"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <hr class="new-section-sm bord-no">
+                                    <p class="text-main text-bold mar-btm">Hours</p>
+                                    <div id="corntab_hour"></div>
+                                    <div>
+                                        <br>
+                                        <strong>Hour : </strong>
+                                        <span id="corntab_hour_val"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <hr class="new-section-sm bord-no">
+                                    <p class="text-main text-bold mar-btm">Minute</p>
+                                    <div id="corntab_minute"></div>
+                                    <div>
+                                        <br>
+                                        <strong>Minute : </strong>
+                                        <span id="corntab_minute_val"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row" style="padding-top: 10px;">
-                                <button id="run_file_button" onclick="save_onetime_task( this,{{ request.user.id }} )"
+                                <button id="run_file_button" onclick="if_required_fields('corntab')"
                                         class="btn btn-success btn-labeled pull-right">
                                     <i class="btn-label fa fa-play"></i> Save Task
                                 </button>
@@ -192,18 +221,14 @@
                         <!--===================================================-->
                         <!--End Condensed Table-->
                     </div>
-                    <div id="show_cmd_result" class="panel panel-bordered-primary hidden">
-                        <button class="btn btn-block btn-primary">执行结果</button>
-                        <div class="panel-body" id="show_host_results"></div>
-                    </div>
-                    <div class="panel panel-bordered panel-dark" onload="refresh_one_time_task_histry_table()">
+                    <div class="panel panel-bordered panel-dark" onload="periodic_history_table_refresh()">
                         <div class="panel-heading">
-                            <h3 class="panel-title">One-time task history</h3>
+                            <h3 class="panel-title">Interval task history</h3>
                         </div>
                         <div class="panel-body">
-                            <table id="one_time_task_history"
+                            <table id="periodic_history_table"
                                    data-toggle="table"
-                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/onetimetaskhistory.json"
+                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/intervaltaskhistory.json"
                                    data-search="true"
                                    data-striped="true"
                                    data-show-toggle="true"
@@ -221,9 +246,9 @@
                                         data-formatter="invoiceFormatter">ID
                                     </th>
                                     <th data-field="task_name" data-align="center" data-sortable="true">Task Name</th>
-                                    <th data-field="task_time" data-sortable="true" data-formatter="dateFormatter">Task Time</th>
-                                    <th data-field="task_status" data-align="center" data-sortable="true" data-formatter="taskstatusFormatter">Status</th>
-                                    <th data-field="task_id" data-align="center"  data-formatter="tasksoperatingFormatter">Operating</th>
+                                    <th data-field="task_every" data-sortable="true" data-formatter="dateFormatter">Task every</th>
+                                    <th data-field="task_status" data-align="center" data-sortable="true" data-formatter="intervalStatusFormatter">Status</th>
+                                    <th data-field="task_id" data-align="center"  data-formatter="taskintervaldeleteFormatter">Operating</th>
                                 </tr>
                                 </thead>
 
@@ -259,10 +284,12 @@
     <script src="{% static 'plugins/chosen/chosen.jquery.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-timepicker/bootstrap-timepicker.min.js' %}"></script>
-    <script src="{% static 'js/demo/form-component.js' %}"></script>
+    <script src="{% static 'js/corntab_task_page.js' %}"></script>
+    <script src="{% static 'plugins/noUiSlider/nouislider.min.js' %}"></script>
     <script src="{% static 'js/demo/ui-panels.js' %}"></script>
     <script src="{% static 'js/demo/ui-modals.js' %}"></script>
     <script src="{% static 'plugins/bootbox/bootbox.min.js' %}"></script>
+    <script src="{% static 'js/kevinjs_new.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
 
 {% endblock %}

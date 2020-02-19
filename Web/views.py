@@ -11,8 +11,9 @@ from celery.result import AsyncResult
 import time
 import platform
 from django_celery_beat import models as beatmodels
-from backend_task.view_extra import get_one_time_task_history,get_interval_task_history_with_request
+from backend_task.view_extra import get_one_time_task_history, get_interval_task_history_with_request
 from Web.tasks import create_interval_schedule
+from Web.tasks import handle_periodic_task
 
 
 # def celery_test(request):
@@ -236,3 +237,10 @@ def corntabs_task(request):
     # view_extra.recent_command(request, 'cmd', 30)
     host_obj, host_group_obj = host_hostgroup(request)
     return render(request, 'corntabs_task.html', {'host_obj': host_obj, 'host_group_obj': host_group_obj})
+
+
+# 万能定时任务提交入口
+@login_required
+def periodic_task_post_views(request):
+    result = handle_periodic_task.delay(request.user.id, request.POST.get('data_dict'))
+    return HttpResponse(result.get())

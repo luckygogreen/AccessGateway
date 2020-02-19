@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^button_onetask_delete/$', views.button_onetask_delete),   # timed_execution页面one time task history提交过来的删除任务按钮
     url(r'^button_interval_delete/$', views.button_interval_delete),   # interval_task 页面interval task history提交过来的删除任务按钮
     url(r'^save_internal_task/$', views.save_internal_task),   # interval_task 页面save_internal_task提交过来的添加任务函数
+    url(r'^periodic_task_post_views/$', views.periodic_task_post_views),   # 万能定时任务，通用提交入口
     # url(r'^celery_test/$', views.celery_test),  # for Celery
     # url(r'^celery_result/$', views.celery_result),  # for Celery
     url(r'^onetime_task/$', views.onetime_task),  # for timed_execution page # onetime_task function in kevin.js
