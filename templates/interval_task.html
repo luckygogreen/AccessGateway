@@ -172,14 +172,14 @@
                                     <hr class="new-section-sm bord-no">
                                     <hr class="new-section-sm bord-no">
                                     <select id="interval_time" class="selectpicker col-xs-6 col-sm-4 col-md-6 col-lg-12" data-style="btn-dark">
-                                        <option>Minutes</option>s
-                                        <option>Hours</option>
-                                        <option>Days</option>
+                                        <option>hours</option>
+                                        <option>minutes</option>
+                                        <option>days</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row" style="padding-top: 10px;">
-                                <button id="run_file_button" onclick="save_interval_task('interval')"
+                                <button id="run_file_button" onclick="save_interval_task('Interval')"
                                         class="btn btn-success btn-labeled pull-right">
                                     <i class="btn-label fa fa-play"></i> Save Task
                                 </button>
@@ -188,14 +188,14 @@
                         <!--===================================================-->
                         <!--End Condensed Table-->
                     </div>
-                    <div class="panel panel-bordered panel-dark" onload="refresh_one_time_task_histry_table()">
+                    <div class="panel panel-bordered panel-dark" onload="periodic_history_table_refresh()">
                         <div class="panel-heading">
-                            <h3 class="panel-title">One-time task history</h3>
+                            <h3 class="panel-title">Interval task history</h3>
                         </div>
                         <div class="panel-body">
-                            <table id="one_time_task_history"
+                            <table id="periodic_history_table"
                                    data-toggle="table"
-                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/onetimetaskhistory.json"
+                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/intervaltaskhistory.json"
                                    data-search="true"
                                    data-striped="true"
                                    data-show-toggle="true"
@@ -213,9 +213,9 @@
                                         data-formatter="invoiceFormatter">ID
                                     </th>
                                     <th data-field="task_name" data-align="center" data-sortable="true">Task Name</th>
-                                    <th data-field="task_time" data-sortable="true" data-formatter="dateFormatter">Task Time</th>
-                                    <th data-field="task_status" data-align="center" data-sortable="true" data-formatter="taskstatusFormatter">Status</th>
-                                    <th data-field="task_id" data-align="center"  data-formatter="tasksoperatingFormatter">Operating</th>
+                                    <th data-field="task_every" data-sortable="true" data-formatter="dateFormatter">Task every</th>
+                                    <th data-field="task_status" data-align="center" data-sortable="true" data-formatter="intervalStatusFormatter">Status</th>
+                                    <th data-field="task_id" data-align="center"  data-formatter="taskintervaldeleteFormatter">Operating</th>
                                 </tr>
                                 </thead>
 
@@ -251,7 +251,7 @@
     <script src="{% static 'plugins/chosen/chosen.jquery.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-timepicker/bootstrap-timepicker.min.js' %}"></script>
-    <script src="{% static 'js/demo/form-component.js' %}"></script>
+    <script src="{% static 'js/interval_task_page.js' %}"></script>
     <script src="{% static 'plugins/noUiSlider/nouislider.min.js' %}"></script>
     <script src="{% static 'js/demo/ui-panels.js' %}"></script>
     <script src="{% static 'js/demo/ui-modals.js' %}"></script>

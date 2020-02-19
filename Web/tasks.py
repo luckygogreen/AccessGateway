@@ -9,7 +9,7 @@ from django_celery_beat import models as beatmodels
 from concurrent.futures import ThreadPoolExecutor
 import time
 from public_def import all_about_json
-
+from backend_task.view_extra import create_interval_task
 
 @shared_task(typing=False)
 def shell_cmd_task(*args, **kwargs):
@@ -49,6 +49,7 @@ def test_task():
     print("测试 shell_cmd")
     return "good job"
 
+
 @shared_task
 def rewrite_task_status(userid):
     print("rewrite_task_status启动")
@@ -71,20 +72,29 @@ def rewrite_task_status(userid):
 
 # 创建周期任务时间数据
 @shared_task
-def create_interval_schedule(id,data):
+def create_interval_schedule(id, data):
     data = json.loads(data)
     print(id)
     print(data['task_name'])
     print(data['cmd_text'])
+    print(data['periodic_task_type'])
     print(data['timazone_select'])
     print(data['interval_value'])
     print(data['time_value'])
     print(data['periodic_task_type'])
-    result = json.dumps('ok')
+    if beatmodels.PeriodicTask.objects.filter(name=data['task_name']):
+        result = json.dumps('taskname_used')
+    else:
+        if beatmodels.IntervalSchedule.objects.filter(every=int(data['interval_value']), period=data['time_value']):
+            intelval_schedule_obj = beatmodels.IntervalSchedule.objects.get(
+                every=int(data['interval_value']),
+                period=data['time_value']
+            )
+        else:
+            intelval_schedule_obj = beatmodels.IntervalSchedule.objects.create(
+                every=int(data['interval_value']),
+                period=data['time_value']
+            )
+        result = create_interval_task(intelval_schedule_obj,id, data)
     return result
 
-
-# 创建周期任务
-@shared_task
-def create_interval_task(request):
-    pass

@@ -196,6 +196,10 @@ function refresh_one_time_task_histry_table() {
     // $("#one_time_task_history").bootstrapTable('refresh', {});
 }
 
+function periodic_history_table_refresh(){
+    $("#periodic_history_table").bootstrapTable('refresh');
+}
+
 //一次性任务页面，删除按钮提示
 function one_time_task_delete_button(value) {
     bootbox.confirm("<h3>Are you sure?</h3><br><h5>Once deleted, tasks cannot be recovered,are you ok with that ?</h5>", function (result) {
@@ -317,6 +321,40 @@ function save_onetime_task(self, userid) {
 
 }
 
+//循环任务页面，删除按钮提示
+function interval_task_button(value){
+    bootbox.confirm("<h3>Are you sure?</h3><br><h5>Once deleted, tasks cannot be recovered,are you ok with that ?</h5>", function (result) {
+        var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+        delete_task_dict = {"seleteid": value};
+        if (result) {
+            $.post("/button_interval_delete/",{'seleteid': JSON.stringify(value),'csrfmiddlewaretoken':csrftoken}, function (callback) {
+                console.log(callback)
+                if (JSON.parse(callback)=="Success") {
+                    $.niftyNoty({
+                        type: 'success',
+                        icon: 'pli-like-2 icon-2x',
+                        message: 'The task has beed delete successfully! ',
+                        container: 'floating',
+                        timer: 5000
+                    });
+                    setTimeout('periodic_history_table_refresh()', 3000);
+                }else {
+                    $.niftyNoty({
+                        type: 'danger',
+                        icon: 'pli-cross icon-2x',
+                        message: callback,
+                        container: 'floating',
+                        timer: 5000
+                    });
+                }
+            });
+        } else {
+            console.log("nothing to do !")
+        };
+
+    });
+}
+
 //interval_task页面// 周期性任务
 function save_interval_task(periodic_task_type) {
     var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
@@ -368,10 +406,20 @@ function save_interval_task(periodic_task_type) {
             'timazone_select':timazone_select,
             'interval_value':interval_value,
             'time_value':time_value,
-            'periodic_task_type':periodic_task_type
+            'periodic_task_type':periodic_task_type,
+            'select_host_ids':select_host_ids
         }
         $.post("/save_internal_task/",{'csrfmiddlewaretoken':csrftoken,'interval_task_data':JSON.stringify(interval_dict)},function (callback) {
             console.log(callback)
+            var result = JSON.parse(callback)
+            if (result == 'taskname_used') {
+                panel_alert_message('floating', "The Task Name already had been taken!", 'pink');
+            } else if (result == 'error') {
+                panel_alert_message('floating', "unknow error happen in servers .please try again ", 'pink');
+            } else {
+                panel_alert_message('floating', "Create interval task Successful!", 'success');
+                setTimeout('periodic_history_table_refresh()', 3000);
+            }
         })
     }
 }

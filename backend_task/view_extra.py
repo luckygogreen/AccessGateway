@@ -139,6 +139,44 @@ def get_one_time_task_history(request):
     file_path = "%s/statics/data/%s/onetimetaskhistory.json" % (conf.settings.BASE_DIR,request.user.id)
     all_about_json.write_json_file(dir_path,file_path,one_time_task_history_list)
 
+
+def get_interval_task_history(id):
+    interval_task_history_list = []
+    interval_task_history_obj = beatmodels.PeriodicTask.objects.filter(userid=int(id),schedule_type='Interval')
+
+    for each_task in interval_task_history_obj:
+        if each_task.interval:
+            interval_task_history_dict = {
+                'task_id': each_task.id,
+                'task_name': each_task.name,
+                'task_every': 'every %s%s' % (str(each_task.interval.every),str(each_task.interval.period)),
+                'task_status': each_task.enabled,
+                'schedule_type':each_task.schedule_type
+            }
+            interval_task_history_list.append(interval_task_history_dict)
+    dir_path = "%s/statics/data/%s/" % (conf.settings.BASE_DIR, id)
+    file_path = "%s/statics/data/%s/intervaltaskhistory.json" % (conf.settings.BASE_DIR, id)
+    all_about_json.write_json_file(dir_path, file_path, interval_task_history_list)
+
+def get_interval_task_history_with_request(request):
+    interval_task_history_list = []
+    interval_task_history_obj = beatmodels.PeriodicTask.objects.filter(userid=request.user.id,schedule_type='Interval')
+
+    for each_task in interval_task_history_obj:
+        if each_task.interval:
+            interval_task_history_dict = {
+                'task_id': each_task.id,
+                'task_name': each_task.name,
+                'task_every': 'every %s%s' % (str(each_task.interval.every),str(each_task.interval.period)),
+                'task_status': each_task.enabled,
+                'schedule_type':each_task.schedule_type
+            }
+            interval_task_history_list.append(interval_task_history_dict)
+    dir_path = "%s/statics/data/%s/" % (conf.settings.BASE_DIR, request.user.id)
+    file_path = "%s/statics/data/%s/intervaltaskhistory.json" % (conf.settings.BASE_DIR, request.user.id)
+    all_about_json.write_json_file(dir_path, file_path, interval_task_history_list)
+
+
 # 创建一次性任务是时间数据
 def creat_clock_schedule(request):
     task_data = json.loads(request.POST.get('task_data'))
@@ -205,12 +243,36 @@ def creat_periodic_task(clocked_schedule_obj, task_name, cmd_text, task_type, us
         kwargs=json.dumps(task_dict),
         userid=int(user_id)
     )
-    print("任务表的时间：", periodic_task_obj.clocked.clocked_time)
     print("一次性任务名：", task_name)
     print("一次性任务ID：", periodic_task_obj.id)
     get_one_time_task_history(request)
     result = periodic_task_obj.id
     return result
+
+
+
+# 创建周期任务
+def create_interval_task(intelval_schedule_obj,id,data):
+    print('程序运行create_interval_task')
+    task_dict = {
+        "user_id": int(id),
+        "cmd_text": data['cmd_text'],
+        "task_type": 'cmd',
+        "task_name": data['task_name'],
+    }
+    periodic_task_obj = beatmodels.PeriodicTask.objects.create(
+        name=data['task_name'],
+        task="Web.tasks.shell_cmd_task",
+        interval=intelval_schedule_obj,
+        args=json.dumps(data['select_host_ids']),
+        kwargs=json.dumps(task_dict),
+        userid=int(id),
+        schedule_type=data['periodic_task_type']
+    )
+    get_interval_task_history(id)
+    result = periodic_task_obj.id
+    return result
+
 
 
 

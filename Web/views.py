@@ -11,8 +11,9 @@ from celery.result import AsyncResult
 import time
 import platform
 from django_celery_beat import models as beatmodels
-from backend_task.view_extra import get_one_time_task_history
+from backend_task.view_extra import get_one_time_task_history,get_interval_task_history_with_request
 from Web.tasks import create_interval_schedule
+
 
 # def celery_test(request):
 #     time.sleep(2)
@@ -121,8 +122,9 @@ def timed_execution(request):
 @login_required
 def onetime_task(request):
     result = view_extra.create_onetime_task(request)
-    print("result:",result)
+    print("result:", result)
     return HttpResponse(json.dumps(result))
+
 
 # 处理一次性任务timed_execution页面one time task history提交过来的删除任务事件
 @login_required
@@ -133,6 +135,21 @@ def button_onetask_delete(request):
         message = "Success"
         print("一次性任务被成功删除")
         get_one_time_task_history(request)
+    except Exception as e:
+        message = str(e)
+        print(message)
+    return HttpResponse(json.dumps(message))
+
+
+# 处理周期任务 页面 interval task history提交的删除任务事件
+@login_required
+def button_interval_delete(request):
+    print("button_interval_delete 被执行")
+    try:
+        beatmodels.PeriodicTask.objects.get(id=int(request.POST.get("seleteid"))).delete()
+        message = "Success"
+        print("周期性任务被成功删除")
+        get_interval_task_history_with_request(request)
     except Exception as e:
         message = str(e)
         print(message)
@@ -205,7 +222,7 @@ def interval_task(request):
 
 
 def save_internal_task(request):
-    result = create_interval_schedule.delay(request.user.id,request.POST.get('interval_task_data'))
+    result = create_interval_schedule.delay(request.user.id, request.POST.get('interval_task_data'))
     return HttpResponse(result.get())
 
 

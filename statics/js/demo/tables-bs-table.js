@@ -130,6 +130,18 @@ function invoiceFormatter(value, row) {
 
 
 //task_status Formatter
+function intervalStatusFormatter(value,row){
+    ele = "";
+    if(value==true){
+        ele = '<span class="label label-success">Run</span>';
+    }else {
+        ele = '<span class="label label-danger">Stop</span>';
+    }
+    return ele;
+}
+
+
+//task_status Formatter
 function taskstatusFormatter(value,row){
     ele = "";
     if(value==true){
@@ -142,6 +154,11 @@ function taskstatusFormatter(value,row){
 
 function tasksoperatingFormatter(value, row) {
     ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button'+value+'" value="'+value+'" onclick="one_time_task_delete_button('+value+')"><i class="demo-psi-recycling icon-lg"></i></button>';
+    return ele;
+}
+
+function taskintervaldeleteFormatter(value, row){
+    ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button'+value+'" value="'+value+'" onclick="interval_task_button('+value+')"><i class="demo-psi-recycling icon-lg"></i></button>';
     return ele;
 }
 
