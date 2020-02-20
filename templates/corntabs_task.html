@@ -137,7 +137,7 @@
                 <div class="col-lg-7">
                     <div class="panel panel-bordered panel-dark">{% csrf_token %}
                         <div class="panel-heading">
-                            <h3 class="panel-title">Interval time task</h3>
+                            <h3 class="panel-title">Crontab time task</h3>
                         </div>
                         <div id="cmd_pannel" class="panel-alert"></div>
                         <div class="panel-body">
@@ -223,12 +223,12 @@
                     </div>
                     <div class="panel panel-bordered panel-dark" onload="periodic_history_table_refresh()">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Interval task history</h3>
+                            <h3 class="panel-title">Crontab task history</h3>
                         </div>
                         <div class="panel-body">
                             <table id="periodic_history_table"
                                    data-toggle="table"
-                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/intervaltaskhistory.json"
+                                   data-url="{% get_static_url request %}data/{{ request.user.id }}/crontabtaskhistory.json"
                                    data-search="true"
                                    data-striped="true"
                                    data-show-toggle="true"
@@ -246,9 +246,9 @@
                                         data-formatter="invoiceFormatter">ID
                                     </th>
                                     <th data-field="task_name" data-align="center" data-sortable="true">Task Name</th>
-                                    <th data-field="task_every" data-sortable="true" data-formatter="dateFormatter">Task every</th>
-                                    <th data-field="task_status" data-align="center" data-sortable="true" data-formatter="intervalStatusFormatter">Status</th>
-                                    <th data-field="task_id" data-align="center"  data-formatter="taskintervaldeleteFormatter">Operating</th>
+                                    <th data-field="task_sechdule" data-sortable="true" data-formatter="dateFormatter">Task every</th>
+                                    <th data-field="task_status" data-align="center" data-sortable="true" data-formatter="periodicTaskStatusFormatter">Status</th>
+                                    <th data-field="task_id" data-align="center"  data-formatter="taskdeletebuttonFormatter">Operating</th>
                                 </tr>
                                 </thead>
 

@@ -1,4 +1,6 @@
 from __future__ import absolute_import, unicode_literals
+
+import pytz
 from celery import shared_task
 from django import conf
 import subprocess
@@ -10,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 from public_def import all_about_json
 from backend_task.view_extra import create_interval_task
+
 
 @shared_task(typing=False)
 def shell_cmd_task(*args, **kwargs):
@@ -95,16 +98,16 @@ def create_interval_schedule(id, data):
                 every=int(data['interval_value']),
                 period=data['time_value']
             )
-        result = create_interval_task(intelval_schedule_obj,id, data)
+        result = create_interval_task(intelval_schedule_obj, id, data)
     return result
 
 
 # handle_periodic_task
 @shared_task
-def handle_periodic_task(uid,data_dict):
+def handle_periodic_task(uid, data_dict):
     task_data = json.loads(data_dict)
     task_name = task_data['periodic_task_name']
-    if beatmodels.PeriodicTask.objects.filter(userid=int(uid),name=task_name):
+    if beatmodels.PeriodicTask.objects.filter(userid=int(uid), name=task_name):
         taskname_used = 'taskname_used'
         result = json.dumps(taskname_used)
         return result
@@ -112,17 +115,140 @@ def handle_periodic_task(uid,data_dict):
     task_command = task_data['periodic_task_command']
     task_timezone = task_data['periodic_task_timezone']
     select_host = task_data['select_host']
-    if sechdule_type == 'corntab':
+    if sechdule_type == 'Corntab':
         corntab_month_val = task_data['corntab_month_val']
         corntab_day_val = task_data['corntab_day_val']
         corntab_weekday_val = task_data['corntab_weekday_val']
         corntab_hour_val = task_data['corntab_hour_val']
         corntab_minute_val = task_data['corntab_minute_val']
-    elif sechdule_type == 'interval':
+        corntab_dict = {
+            "user_id": int(uid),
+            "cmd_text": task_command,
+            "task_type": 'cmd',
+            "task_name": task_name,
+        }
+        if beatmodels.CrontabSchedule.objects.filter(
+                minute=corntab_minute_val,
+                hour=corntab_hour_val,
+                day_of_week=corntab_weekday_val,
+                day_of_month=corntab_day_val,
+                month_of_year=corntab_month_val,
+                timezone=pytz.timezone(task_timezone)  # 把字符串转换成timezone格式
+                # timezone=time.timezone(task_timezone),
+        ):
+            corntab_sechdule_obj = beatmodels.CrontabSchedule.objects.get(
+                minute=corntab_minute_val,
+                hour=corntab_hour_val,
+                day_of_week=corntab_weekday_val,
+                day_of_month=corntab_day_val,
+                month_of_year=corntab_month_val
+            )
+        else:
+            corntab_sechdule_obj = beatmodels.CrontabSchedule.objects.create(
+                minute=corntab_minute_val,
+                hour=corntab_hour_val,
+                day_of_week=corntab_weekday_val,
+                day_of_month=corntab_day_val,
+                month_of_year=corntab_month_val
+            )
+        if corntab_sechdule_obj:
+            periodic_task_obj = beatmodels.PeriodicTask.objects.create(
+                name=task_name,
+                task="Web.tasks.shell_cmd_task",
+                crontab=corntab_sechdule_obj,
+                args=json.dumps(select_host),
+                kwargs=json.dumps(corntab_dict),
+                userid=int(uid),
+                schedule_type=sechdule_type
+            )
+            if periodic_task_obj:
+                build_crontab_history(uid)
+                success_message = 'success'
+                result = json.dumps(success_message)
+                return result
+            else:
+                servererror_message = 'servererror'
+                result = json.dumps(servererror_message)
+                return result
+        else:
+            servererror_message = 'servererror'
+            result = json.dumps(servererror_message)
+            return result
+    elif sechdule_type == 'Interval':
         result = json.dumps('for future improve[interval]')
-    elif sechdule_type == 'clocked':
+        return result
+    elif sechdule_type == 'Clocked':
         result = json.dumps('for future improve[clocked]')
+        return result
     else:
-        result = json.dumps('do noting')
+        result = json.dumps('Do noting')
+        return result
+
+
+# build crontab sechdule type JSON history
+def build_crontab_history(uid):
+    corntab_task_list = []
+    corntab_task_queryset = beatmodels.PeriodicTask.objects.filter(schedule_type='corntab', userid=int(uid))
+    for each_task in corntab_task_queryset:
+        corntab_list_dict = {
+            'task_id': each_task.id,
+            'task_name': each_task.name,
+            'task_sechdule': 'm:%s-d:%s-w:%s-h:%s-m:%s' % (
+                each_task.crontab.month_of_year,
+                each_task.crontab.day_of_month,
+                each_task.crontab.day_of_week,
+                each_task.crontab.hour,
+                each_task.crontab.minute,
+            ),
+            'timezone': str(each_task.crontab.timezone),
+            'sechdule_type': each_task.schedule_type,
+            'task_status': each_task.enabled
+        }
+        corntab_task_list.append(corntab_list_dict)
+
+    dir_path = "%s/statics/data/%s/" % (conf.settings.BASE_DIR, uid)
+    file_path = "%s/statics/data/%s/crontabtaskhistory.json" % (conf.settings.BASE_DIR, uid)
+    all_about_json.write_json_file(dir_path, file_path, corntab_task_list)
+
+
+# all type of sechdule periodic task delete button task
+@shared_task
+def all_sechdule_delete_task(uid, taskid):
+    try:
+        beatmodels.PeriodicTask.objects.get(id=int(taskid)).delete()
+        message = "deleteSuccess"
+        build_crontab_history(uid)
+    except Exception as e:
+        message = str(e)
+        print(message)
+    return message
+
+
+# all type of sechdule periodic task change status button task
+@shared_task
+def all_sechdule_status_change_task(uid, taskid, taskstatus):
+    uid = json.loads(uid)
+    taskid = json.loads(taskid)
+    taskstatus = json.loads(taskstatus)
+    print('taskstatus:',taskstatus)
+    if taskstatus == False:
+        try:
+            periodic_task_obj = beatmodels.PeriodicTask.objects.get(id=int(taskid))
+            periodic_task_obj.enabled = True
+            periodic_task_obj.save()
+            message = 'statuschangeTure'
+            build_crontab_history(uid)
+        except Exception as e:
+            message = 'errorNoChange'
+    else:
+        try:
+            periodic_task_obj = beatmodels.PeriodicTask.objects.get(id=int(taskid))
+            periodic_task_obj.enabled = False
+            periodic_task_obj.save()
+            message = 'statuschangeFalse'
+            build_crontab_history(uid)
+        except Exception as e:
+            message = 'errorNoChange'
+    result = message
     return result
 

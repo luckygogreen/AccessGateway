@@ -1,6 +1,5 @@
 //get all select host id
 function get_all_select_host_id() {
-    console.log('get_all_select_host_id running');
     var host_select_list = [];
     $("[tag='host_select']:checked").each(
         function () {
@@ -10,20 +9,8 @@ function get_all_select_host_id() {
     return host_select_list;
 }
 
-//post post_periodic_task to view
-function post_periodic_task_button(data_dict, csrfmiddlewaretoken) {
-    console.log('post_periodic_task_button running');
-    $.post('/periodic_task_post_views/', {
-        'csrfmiddlewaretoken': csrfmiddlewaretoken,
-        'data_dict': JSON.stringify(data_dict)
-    }, function (callback) {
-        console.log(callback);
-    });
-
-}
-
+//if required fields = empty
 function if_required_fields(shedule_type) {
-    console.log('if_required_fields running');
     host_select_list = get_all_select_host_id();
     if (host_select_list.length <= 0) {
         $.niftyNoty({
@@ -63,9 +50,8 @@ function if_required_fields(shedule_type) {
     }
 }
 
-
+// get all data
 function corntab_periodic_task_button(host_select_list) {
-    console.log('corntab_periodic_task_button running');
     // get CSRF TOKEN
     var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
     // get all corntab task data
@@ -73,11 +59,31 @@ function corntab_periodic_task_button(host_select_list) {
     var periodic_task_name = $("#periodic_task_name").val();
     var periodic_task_command = $("#periodic_task_command").val();
     var periodic_task_ime_zone = $("#demo-chosen-select").val();
-    var corntab_month_val = $("#corntab_month_val").text();
-    var corntab_day_val = $("#corntab_day_val").text();
-    var corntab_weekday_val = $("#corntab_weekday_val").text();
-    var corntab_hour_val = $("#corntab_hour_val").text();
-    var corntab_minute_val = $("#corntab_minute_val").text();
+    if ($("#corntab_month_val").text() == '0') {
+        var corntab_month_val = '*'
+    } else {
+        var corntab_month_val = $("#corntab_month_val").text();
+    }
+    if ($("#corntab_day_val").text() == '0') {
+        var corntab_day_val = '*'
+    } else {
+        var corntab_day_val = $("#corntab_day_val").text();
+    }
+    if ($("#corntab_weekday_val").text() == '0') {
+        var corntab_weekday_val = '*'
+    } else {
+        var corntab_weekday_val = $("#corntab_weekday_val").text();
+    }
+    if ($("#corntab_hour_val").text() == '0') {
+        var corntab_hour_val = '*'
+    } else {
+        var corntab_hour_val = $("#corntab_hour_val").text();
+    }
+    if ($("#corntab_minute_val").text() == '0') {
+        var corntab_minute_val = '*'
+    } else {
+        var corntab_minute_val = $("#corntab_minute_val").text();
+    }
     var select_host = host_select_list;
     // //check all value had been gotten
     // console.log(periodic_task_sechdule_type);
@@ -103,11 +109,139 @@ function corntab_periodic_task_button(host_select_list) {
         'corntab_minute_val': corntab_minute_val,
         'select_host': select_host
     }
-    // data_dict = JSON.stringify(data)
-    //post dict to AJAX POST function
     post_periodic_task_button(data_dict, csrftoken);
 
 }
+
+//post post_periodic_task to view
+function post_periodic_task_button(data_dict, csrfmiddlewaretoken) {
+    $.post('/periodic_task_post_views/', {
+        'csrfmiddlewaretoken': csrfmiddlewaretoken,
+        'data_dict': JSON.stringify(data_dict)
+    }, function (callback) {
+        callback = JSON.parse(callback)
+        if (callback == 'taskname_used') {
+            $.niftyNoty({
+                type: 'danger',
+                icon: 'pli-cross icon-2x',
+                message: 'The task name was alraedy been taken!',
+                container: 'floating',
+                timer: 5000
+            });
+        } else if (callback == 'servererror') {
+            $.niftyNoty({
+                type: 'danger',
+                icon: 'pli-cross icon-2x',
+                message: 'Service busy please try again ',
+                container: 'floating',
+                timer: 5000
+            });
+        } else if (callback == 'success') {
+            $.niftyNoty({
+                type: 'success',
+                icon: 'pli-like-2 icon-2x',
+                message: 'The task has beed created successfully! ',
+                container: 'floating',
+                timer: 5000
+            });
+            setTimeout('periodic_history_table_refresh()', 3000);
+        } else {
+            $.niftyNoty({
+                type: 'danger',
+                icon: 'pli-cross icon-2x',
+                message: 'Unknow error please contact amdin ',
+                container: 'floating',
+                timer: 5000
+            });
+        }
+    });
+
+}
+
+
+//AJAX page refresh or data refresh
+function periodic_history_table_refresh() {
+    $("#periodic_history_table").bootstrapTable('refresh');
+}
+
+
+//All sechdule type history delete button
+function all_task_delete_button(del_id) {
+    bootbox.confirm("<h3>Are you sure?</h3><br><h5>Once deleted, tasks cannot be recovered,are you ok with that ?</h5>", function (result) {
+        var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+        if (result) {
+            $.post("/all_task_delete_button/", {
+                'seleteid': JSON.stringify(del_id),
+                'csrfmiddlewaretoken': csrftoken
+            }, function (callback) {
+                callback = JSON.parse(callback)
+                if (callback == "deleteSuccess") {
+                    $.niftyNoty({
+                        type: 'success',
+                        icon: 'pli-like-2 icon-2x',
+                        message: 'The task has beed delete successfully! ',
+                        container: 'floating',
+                        timer: 5000
+                    });
+                    setTimeout('periodic_history_table_refresh()', 3000);
+                } else {
+                    $.niftyNoty({
+                        type: 'danger',
+                        icon: 'pli-cross icon-2x',
+                        message: callback,
+                        container: 'floating',
+                        timer: 5000
+                    });
+                }
+            });
+        } else {
+            console.log("nothing to do !")
+        }
+        ;
+
+    });
+}
+
+//all sechdule type history change status button
+function change_task_status_button(taskid, taskstatus) {
+    var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+    $.post('/all_task_edit_button/', {
+        'csrfmiddlewaretoken': csrftoken,
+        'taskid': JSON.stringify(taskid),
+        'taskstatus': JSON.stringify(taskstatus)
+    }, function (callback) {
+        callback = JSON.parse(callback)
+        if (callback == 'statuschangeTure') {
+            $.niftyNoty({
+                type: 'success',
+                icon: 'pli-like-2 icon-2x',
+                message: 'The task is run now! ',
+                container: 'floating',
+                timer: 5000
+            });
+            setTimeout('periodic_history_table_refresh()', 3000);
+        } else if (callback == 'statuschangeFalse') {
+            $.niftyNoty({
+                type: 'success',
+                icon: 'pli-like-2 icon-2x',
+                message: 'The task is stop now! ',
+                container: 'floating',
+                timer: 5000
+            });
+            setTimeout('periodic_history_table_refresh()', 3000);
+        } else {
+            $.niftyNoty({
+                type: 'danger',
+                icon: 'pli-cross icon-2x',
+                message: 'Server busy ,please try again!',
+                container: 'floating',
+                timer: 5000
+            });
+        }
+
+    });
+}
+
 
 
 

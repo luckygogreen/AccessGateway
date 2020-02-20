@@ -196,7 +196,7 @@ function refresh_one_time_task_histry_table() {
     // $("#one_time_task_history").bootstrapTable('refresh', {});
 }
 
-function periodic_history_table_refresh(){
+function periodic_history_table_refresh() {
     $("#periodic_history_table").bootstrapTable('refresh');
 }
 
@@ -206,9 +206,12 @@ function one_time_task_delete_button(value) {
         var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
         delete_task_dict = {"seleteid": value}
         if (result) {
-            $.post("/button_onetask_delete/",{'seleteid': JSON.stringify(value),'csrfmiddlewaretoken':csrftoken}, function (callback) {
+            $.post("/button_onetask_delete/", {
+                'seleteid': JSON.stringify(value),
+                'csrfmiddlewaretoken': csrftoken
+            }, function (callback) {
                 console.log(callback)
-                if (JSON.parse(callback)=="Success") {
+                if (JSON.parse(callback) == "Success") {
                     $.niftyNoty({
                         type: 'success',
                         icon: 'pli-like-2 icon-2x',
@@ -217,7 +220,7 @@ function one_time_task_delete_button(value) {
                         timer: 5000
                     });
                     setTimeout('refresh_one_time_task_histry_table()', 3000);
-                }else {
+                } else {
                     $.niftyNoty({
                         type: 'danger',
                         icon: 'pli-cross icon-2x',
@@ -229,7 +232,8 @@ function one_time_task_delete_button(value) {
             });
         } else {
             console.log("nothing to do !")
-        };
+        }
+        ;
 
     });
 }
@@ -322,14 +326,17 @@ function save_onetime_task(self, userid) {
 }
 
 //循环任务页面，删除按钮提示
-function interval_task_button(value){
+function interval_task_button(value) {
     bootbox.confirm("<h3>Are you sure?</h3><br><h5>Once deleted, tasks cannot be recovered,are you ok with that ?</h5>", function (result) {
         var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
         delete_task_dict = {"seleteid": value};
         if (result) {
-            $.post("/button_interval_delete/",{'seleteid': JSON.stringify(value),'csrfmiddlewaretoken':csrftoken}, function (callback) {
+            $.post("/button_interval_delete/", {
+                'seleteid': JSON.stringify(value),
+                'csrfmiddlewaretoken': csrftoken
+            }, function (callback) {
                 console.log(callback)
-                if (JSON.parse(callback)=="Success") {
+                if (JSON.parse(callback) == "Success") {
                     $.niftyNoty({
                         type: 'success',
                         icon: 'pli-like-2 icon-2x',
@@ -338,7 +345,7 @@ function interval_task_button(value){
                         timer: 5000
                     });
                     setTimeout('periodic_history_table_refresh()', 3000);
-                }else {
+                } else {
                     $.niftyNoty({
                         type: 'danger',
                         icon: 'pli-cross icon-2x',
@@ -350,7 +357,8 @@ function interval_task_button(value){
             });
         } else {
             console.log("nothing to do !")
-        };
+        }
+        ;
 
     });
 }
@@ -393,7 +401,7 @@ function save_interval_task(periodic_task_type) {
             closeBtn: true,
             timer: 2000
         });
-    }else {
+    } else {
         console.log(task_name);
         console.log(cmd_text);
         console.log(timazone_select);
@@ -401,15 +409,18 @@ function save_interval_task(periodic_task_type) {
         console.log(time_value);
         console.log(periodic_task_type);
         interval_dict = {
-            'task_name':task_name,
-            'cmd_text':cmd_text,
-            'timazone_select':timazone_select,
-            'interval_value':interval_value,
-            'time_value':time_value,
-            'periodic_task_type':periodic_task_type,
-            'select_host_ids':select_host_ids
+            'task_name': task_name,
+            'cmd_text': cmd_text,
+            'timazone_select': timazone_select,
+            'interval_value': interval_value,
+            'time_value': time_value,
+            'periodic_task_type': periodic_task_type,
+            'select_host_ids': select_host_ids
         }
-        $.post("/save_internal_task/",{'csrfmiddlewaretoken':csrftoken,'interval_task_data':JSON.stringify(interval_dict)},function (callback) {
+        $.post("/save_internal_task/", {
+            'csrfmiddlewaretoken': csrftoken,
+            'interval_task_data': JSON.stringify(interval_dict)
+        }, function (callback) {
             console.log(callback)
             var result = JSON.parse(callback)
             if (result == 'taskname_used') {
@@ -423,9 +434,6 @@ function save_interval_task(periodic_task_type) {
         })
     }
 }
-
-
-
 
 
 //处理最近命令返回的结果

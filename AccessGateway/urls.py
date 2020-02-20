@@ -36,6 +36,8 @@ urlpatterns = [
     url(r'^get_task_result/$', views.get_task_result),
     url(r'^button_onetask_delete/$', views.button_onetask_delete),   # timed_execution页面one time task history提交过来的删除任务按钮
     url(r'^button_interval_delete/$', views.button_interval_delete),   # interval_task 页面interval task history提交过来的删除任务按钮
+    url(r'^all_task_delete_button/$', views.all_task_delete_button),   # 所有定时任务类型页面，可调用的删除方法，优化过的
+    url(r'^all_task_edit_button/$', views.all_task_edit_button),   # 所有定时任务类型页面，可调用的修改状态方法，优化过的
     url(r'^save_internal_task/$', views.save_internal_task),   # interval_task 页面save_internal_task提交过来的添加任务函数
     url(r'^periodic_task_post_views/$', views.periodic_task_post_views),   # 万能定时任务，通用提交入口
     # url(r'^celery_test/$', views.celery_test),  # for Celery

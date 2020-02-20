@@ -131,6 +131,7 @@ function invoiceFormatter(value, row) {
 
 //task_status Formatter
 function intervalStatusFormatter(value,row){
+    console.log(row)
     ele = "";
     if(value==true){
         ele = '<span class="label label-success">Run</span>';
@@ -140,8 +141,19 @@ function intervalStatusFormatter(value,row){
     return ele;
 }
 
+//all_periodic_task_status Formatter
+function periodicTaskStatusFormatter(value,row){
+    ele = "";
+    if(value==true){
+        ele = '<button id="taskstatus_'+row.task_id+'" statusidtag="'+row.task_id+'" class="btn btn-xs btn-success" onclick="change_task_status_button('+row.task_id+','+row.task_status+')">Run</button>';
+    }else {
+        ele = '<button id="taskstatus_'+row.task_id+'" statusidtag="'+row.task_id+'" class="btn btn-xs btn-danger" onclick="change_task_status_button('+row.task_id+','+row.task_status+')">Stop</button>';
+    }
+    return ele;
+}
 
-//task_status Formatter
+
+//all_periodic_task_status Formatter
 function taskstatusFormatter(value,row){
     ele = "";
     if(value==true){
@@ -161,6 +173,12 @@ function taskintervaldeleteFormatter(value, row){
     ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button'+value+'" value="'+value+'" onclick="interval_task_button('+value+')"><i class="demo-psi-recycling icon-lg"></i></button>';
     return ele;
 }
+
+function taskdeletebuttonFormatter(value, row){
+    ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button'+value+'" value="'+value+'" onclick="all_task_delete_button('+value+')"><i class="demo-psi-recycling icon-lg"></i></button>';
+    return ele;
+}
+
 
 
 function resultToplip(value,row) {

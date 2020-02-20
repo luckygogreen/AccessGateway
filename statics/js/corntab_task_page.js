@@ -13,10 +13,10 @@ $(document).on('nifty.ready', function () {
     var corntab_day = document.getElementById('corntab_day');
     var corntab_day_val = document.getElementById('corntab_day_val');
     noUiSlider.create(corntab_day, {
-        start: [1],
+        start: [0],
         connect: 'lower',
         range: {
-            'min': [1],
+            'min': [0],
             'max': [31]
         }
     });
@@ -32,10 +32,10 @@ $(document).on('nifty.ready', function () {
     var corntab_month = document.getElementById('corntab_month');
     var corntab_month_val = document.getElementById('corntab_month_val');
     noUiSlider.create(corntab_month, {
-        start: [1],
+        start: [0],
         connect: 'lower',
         range: {
-            'min': [1],
+            'min': [0],
             'max': [12]
         }
     });
@@ -49,10 +49,10 @@ $(document).on('nifty.ready', function () {
     var corntab_weekday_val = document.getElementById('corntab_weekday_val');
 
     noUiSlider.create(corntab_weekday, {
-        start: [1],
+        start: [0],
         connect: 'lower',
         range: {
-            'min': [1],
+            'min': [0],
             'max': [7]
         }
     });
@@ -65,10 +65,10 @@ $(document).on('nifty.ready', function () {
     var corntab_minute = document.getElementById('corntab_minute');
     var corntab_minute_val = document.getElementById('corntab_minute_val');
     noUiSlider.create(corntab_minute, {
-        start: [1],
+        start: [0],
         connect: 'lower',
         range: {
-            'min': [1],
+            'min': [0],
             'max': [59]
         }
     });
@@ -84,7 +84,7 @@ $(document).on('nifty.ready', function () {
         start: [1],
         connect: 'lower',
         range: {
-            'min': [1],
+            'min': [0],
             'max': [23]
         }
     });

@@ -19,3 +19,12 @@ def write_json_file(dir_path, file_path, result_list):
         with open(file_path, "w") as f:
             json.dump(result_list, f)
             print("Successfully written to a json file[%s]" % file_path)
+
+
+# # public
+# dir_path = "%s/statics/data/public/" % conf.settings.BASE_DIR
+# file_path = "%s/statics/data/public/timezone.json" % conf.settings.BASE_DIR
+
+# # private
+# dir_path = "%s/statics/data/%s/" % (conf.settings.BASE_DIR, id)
+# file_path = "%s/statics/data/%s/intervaltaskhistory.json" % (conf.settings.BASE_DIR, id)

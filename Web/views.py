@@ -14,6 +14,8 @@ from django_celery_beat import models as beatmodels
 from backend_task.view_extra import get_one_time_task_history, get_interval_task_history_with_request
 from Web.tasks import create_interval_schedule
 from Web.tasks import handle_periodic_task
+from Web.tasks import all_sechdule_delete_task
+from Web.tasks import all_sechdule_status_change_task
 
 
 # def celery_test(request):
@@ -244,3 +246,20 @@ def corntabs_task(request):
 def periodic_task_post_views(request):
     result = handle_periodic_task.delay(request.user.id, request.POST.get('data_dict'))
     return HttpResponse(result.get())
+
+
+
+# 万能定时任务删除任务方法
+@login_required
+def all_task_delete_button(request):
+    message = all_sechdule_delete_task.delay(request.user.id,request.POST.get('seleteid'))
+    result = json.dumps(message.get())
+    return HttpResponse(result)
+
+
+# 万能定时任务编辑任务状态方法
+@login_required
+def all_task_edit_button(request):
+    message = all_sechdule_status_change_task.delay(json.dumps(request.user.id),request.POST.get('taskid'),request.POST.get('taskstatus'))
+    result = json.dumps(message.get())
+    return HttpResponse(result)
