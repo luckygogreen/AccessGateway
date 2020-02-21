@@ -252,3 +252,21 @@ def all_sechdule_status_change_task(uid, taskid, taskstatus):
     result = message
     return result
 
+
+# all type of sechdule periodic task change Task name button task
+@shared_task
+def all_sechdule_taskname_change_task(uid,data):
+    data = json.loads(data)
+    uid = json.loads(uid)
+    task_id = data['task_id']
+    task_name = data['task_name']
+    message = ''
+    if beatmodels.PeriodicTask.objects.filter(name=task_name):
+        message = 'name_used'
+    else:
+        task_obj = beatmodels.PeriodicTask.objects.get(id=int(task_id))
+        task_obj.name = task_name
+        task_obj.save()
+        build_crontab_history(uid)
+        message = 'success'
+    return message

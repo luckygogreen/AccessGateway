@@ -196,9 +196,9 @@ function refresh_one_time_task_histry_table() {
     // $("#one_time_task_history").bootstrapTable('refresh', {});
 }
 
-function periodic_history_table_refresh() {
-    $("#periodic_history_table").bootstrapTable('refresh');
-}
+// function periodic_history_table_refresh() {
+//     $("#periodic_history_table_interval").bootstrapTable('refresh',setTimeout(1000));
+// }
 
 //一次性任务页面，删除按钮提示
 function one_time_task_delete_button(value) {
@@ -344,7 +344,7 @@ function interval_task_button(value) {
                         container: 'floating',
                         timer: 5000
                     });
-                    setTimeout('periodic_history_table_refresh()', 3000);
+                    $("#periodic_history_table_interval").bootstrapTable('refresh',setTimeout(1000));
                 } else {
                     $.niftyNoty({
                         type: 'danger',
@@ -429,7 +429,7 @@ function save_interval_task(periodic_task_type) {
                 panel_alert_message('floating', "unknow error happen in servers .please try again ", 'pink');
             } else {
                 panel_alert_message('floating', "Create interval task Successful!", 'success');
-                setTimeout('periodic_history_table_refresh()', 3000);
+                $("#periodic_history_table_interval").bootstrapTable('refresh',setTimeout(1000));
             }
         })
     }

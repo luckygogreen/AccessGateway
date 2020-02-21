@@ -37,39 +37,89 @@ $(document).on('nifty.ready', function () {
     // Require X-editable Extension of Bootstrap Table
     // http://bootstrap-table.wenzhixin.net.cn/
     // =================================================================
-    $('#demo-editable').bootstrapTable({
-        idField: 'id',
-        url: 'data/bs-table.json',
+    $.fn.editable.defaults.ajaxOptions = {type: "post"}
+    $('#periodic_history_table_crontab').bootstrapTable({
+        idField: 'task_id',
+        onEditableSave: function (field, row, oldValue, $el) {//编辑单元格事件
+            $.ajax({
+                type: 'post',
+                url: '/perioidc_task_name_edit/',
+                data: {
+                    'data': JSON.stringify(row),
+                    'csrfmiddlewaretoken': $("input[name='csrfmiddlewaretoken']").val()
+                },    //var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    if ("success" == data) {
+                        $.niftyNoty({
+                            type: 'success',
+                            icon: 'pli-like-2 icon-2x',
+                            message: 'The task has beed changed successfully! ',
+                            container: 'floating',
+                            timer: 5000
+                        });
+                        $("#periodic_history_table_crontab").bootstrapTable('refresh',setTimeout(1000)); //刷新最新数据表格
+                    } else if (data == 'name_used') {
+                        $.niftyNoty({
+                            type: 'danger',
+                            icon: 'pli-cross icon-2x',
+                            message: 'The task name is already been taken',
+                            container: 'floating',
+                            timer: 5000
+                        });
+                    } else {
+                        $.niftyNoty({
+                            type: 'danger',
+                            icon: 'pli-cross icon-2x',
+                            message: 'Server busy,please try again later',
+                            container: 'floating',
+                            timer: 5000
+                        });
+                    }
+                },
+                error: function () {
+                    $.niftyNoty({
+                        type: 'danger',
+                        icon: 'pli-cross icon-2x',
+                        message: 'Unknow error please contact amdin ',
+                        container: 'floating',
+                        timer: 5000
+                    });
+                },
+            });
+        },
         columns: [{
-            field: 'id',
+            field: 'task_id',
             formatter: 'invoiceFormatter',
-            title: 'Invoice'
+            align: 'center',
+            title: 'ID'
         }, {
-            field: 'name',
-            title: 'Name',
+            field: 'task_name',
+            title: 'Task Name',
+            align: 'center',
+            orderable: true,
             editable: {
-                type: 'text'
+                type: 'text',
+                validate: function (value) {
+                    if ($.trim(value) == "") return "This field is required";
+                }
             }
         }, {
-            field: 'date',
-            title: 'Order date'
+            field: 'task_sechdule',
+            formatter: 'dateFormatter',
+            align: 'center',
+            title: 'Sechdule',
         }, {
-            field: 'amount',
-            title: 'Amount',
-            editable: {
-                type: 'text'
-            }
-        }, {
-            field: 'status',
+            field: 'task_status',
+            formatter: 'periodicTaskStatusFormatter',
             align: 'center',
             title: 'Status',
-            formatter: 'statusFormatter'
         }, {
-            field: 'track',
-            title: 'Tracking Number',
-            editable: {
-                type: 'text'
-            }
+            field: 'task_id',
+            formatter: 'taskdeletebuttonFormatter',
+            align: 'center',
+            title: 'Operating',
         }]
     });
 
@@ -82,13 +132,13 @@ $(document).on('nifty.ready', function () {
     // Require Font Awesome
     // http://fortawesome.github.io/Font-Awesome/icons/
     // =================================================================
-    $.fn.editableform.buttons =
-        '<button type="submit" class="btn btn-primary editable-submit">' +
-        '<i class="fa fa-fw fa-check"></i>' +
-        '</button>' +
-        '<button type="button" class="btn btn-default editable-cancel">' +
-        '<i class="fa fa-fw fa-times"></i>' +
-        '</button>';
+    // $.fn.editableform.buttons =
+    //     '<button type="submit" class="btn btn-primary editable-submit">' +
+    //     '<i class="fa fa-fw fa-check"></i>' +
+    //     '</button>' +
+    //     '<button type="button" class="btn btn-default editable-cancel">' +
+    //     '<i class="fa fa-fw fa-times"></i>' +
+    //     '</button>';
 
 
     // BOOTSTRAP TABLE - CUSTOM TOOLBAR
@@ -125,77 +175,77 @@ $(document).on('nifty.ready', function () {
 // Sample format for Invoice Column.
 // =================================================================
 function invoiceFormatter(value, row) {
-    return '<a href="#" class="btn-link" >#' + value + '</a>';
+    return '<span >#' + value + '</span>';
 }
 
 
 //task_status Formatter
-function intervalStatusFormatter(value,row){
+function intervalStatusFormatter(value, row) {
     console.log(row)
     ele = "";
-    if(value==true){
+    if (value == true) {
         ele = '<span class="label label-success">Run</span>';
-    }else {
+    } else {
         ele = '<span class="label label-danger">Stop</span>';
     }
     return ele;
 }
 
 //all_periodic_task_status Formatter
-function periodicTaskStatusFormatter(value,row){
+function periodicTaskStatusFormatter(value, row) {
     ele = "";
-    if(value==true){
-        ele = '<button id="taskstatus_'+row.task_id+'" statusidtag="'+row.task_id+'" class="btn btn-xs btn-success" onclick="change_task_status_button('+row.task_id+','+row.task_status+')">Run</button>';
-    }else {
-        ele = '<button id="taskstatus_'+row.task_id+'" statusidtag="'+row.task_id+'" class="btn btn-xs btn-danger" onclick="change_task_status_button('+row.task_id+','+row.task_status+')">Stop</button>';
+    if (value == true) {
+        ele = '<button id="taskstatus_' + row.task_id + '" statusidtag="' + row.task_id + '" class="btn btn-xs btn-success" onclick="change_task_status_button(' + row.task_id + ',' + row.task_status + ')">Run</button>';
+    } else {
+        ele = '<button id="taskstatus_' + row.task_id + '" statusidtag="' + row.task_id + '" class="btn btn-xs btn-danger" onclick="change_task_status_button(' + row.task_id + ',' + row.task_status + ')">Stop</button>';
     }
     return ele;
 }
 
 
 //all_periodic_task_status Formatter
-function taskstatusFormatter(value,row){
+function taskstatusFormatter(value, row) {
     ele = "";
-    if(value==true){
+    if (value == true) {
         ele = '<span class="label label-warning">Waiting</span>';
-    }else {
+    } else {
         ele = '<span class="label label-success">complete</span>';
     }
     return ele;
 }
 
 function tasksoperatingFormatter(value, row) {
-    ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button'+value+'" value="'+value+'" onclick="one_time_task_delete_button('+value+')"><i class="demo-psi-recycling icon-lg"></i></button>';
+    ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button' + value + '" value="' + value + '" onclick="one_time_task_delete_button(' + value + ')"><i class="demo-psi-recycling icon-lg"></i></button>';
     return ele;
 }
 
-function taskintervaldeleteFormatter(value, row){
-    ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button'+value+'" value="'+value+'" onclick="interval_task_button('+value+')"><i class="demo-psi-recycling icon-lg"></i></button>';
+function taskintervaldeleteFormatter(value, row) {
+    ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button' + value + '" value="' + value + '" onclick="interval_task_button(' + value + ')"><i class="demo-psi-recycling icon-lg"></i></button>';
     return ele;
 }
 
-function taskdeletebuttonFormatter(value, row){
-    ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button'+value+'" value="'+value+'" onclick="all_task_delete_button('+value+')"><i class="demo-psi-recycling icon-lg"></i></button>';
+function taskdeletebuttonFormatter(value, row) {
+    ele = '<button class="btn btn-xs btn-danger btn-icon" id="task_delete_button' + value + '" value="' + value + '" onclick="all_task_delete_button(' + value + ')"><i class="demo-psi-recycling icon-lg"></i></button>';
     return ele;
 }
 
 
-
-function resultToplip(value,row) {
-    var html_cmd_result = '<button class="btn btn-xs btn-default add-tooltip" data-html="true" data-toggle="tooltip" data-container="body" data-placement="top" data-original-title="'+value+'">Show</button>'
+function resultToplip(value, row) {
+    var html_cmd_result = '<button class="btn btn-xs btn-default add-tooltip" data-html="true" data-toggle="tooltip" data-container="body" data-placement="top" data-original-title="' + value + '">Show</button>'
     return html_cmd_result
 }
+
 //host_muilt 批量命令页面结果result按钮样式
-function click_small_button(value,row){
+function click_small_button(value, row) {
     console.log(row)
-    var html_cmd_result = '<button class="btn btn-primary btn-labeled btn-xs" onclick="show_cmd_with_result('+value+')"><i class="btn-label fa fa-code"></i> Show</button>'
+    var html_cmd_result = '<button class="btn btn-primary btn-labeled btn-xs" onclick="show_cmd_with_result(' + value + ')"><i class="btn-label fa fa-code"></i> Show</button>'
     return html_cmd_result
 }
 
 //host_record 命令操作记录页面结果result按钮样式
-function task_result_button(value,row){
-    var task = JSON.stringify(row).replace(/\"/g,"'");
-    var html_cmd_result = '<button class="btn btn-primary btn-labeled btn-xs" onclick="show_task_info_result('+value+','+task+')"><i class="btn-label fa fa-code"></i> Show</button>'
+function task_result_button(value, row) {
+    var task = JSON.stringify(row).replace(/\"/g, "'");
+    var html_cmd_result = '<button class="btn btn-primary btn-labeled btn-xs" onclick="show_task_info_result(' + value + ',' + task + ')"><i class="btn-label fa fa-code"></i> Show</button>'
     return html_cmd_result
 }
 
@@ -223,7 +273,7 @@ function statusFormatter(value, row) {
         labelColor = "success";
     } else if (value == "Error") {
         labelColor = "danger";
-    } else{
+    } else {
         labelColor = "warning";
     }
     var icon = row.id % 2 === 0 ? 'fa-star' : 'fa-user';

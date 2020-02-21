@@ -16,6 +16,7 @@ from Web.tasks import create_interval_schedule
 from Web.tasks import handle_periodic_task
 from Web.tasks import all_sechdule_delete_task
 from Web.tasks import all_sechdule_status_change_task
+from Web.tasks import all_sechdule_taskname_change_task
 
 
 # def celery_test(request):
@@ -248,11 +249,10 @@ def periodic_task_post_views(request):
     return HttpResponse(result.get())
 
 
-
 # 万能定时任务删除任务方法
 @login_required
 def all_task_delete_button(request):
-    message = all_sechdule_delete_task.delay(request.user.id,request.POST.get('seleteid'))
+    message = all_sechdule_delete_task.delay(request.user.id, request.POST.get('seleteid'))
     result = json.dumps(message.get())
     return HttpResponse(result)
 
@@ -260,6 +260,15 @@ def all_task_delete_button(request):
 # 万能定时任务编辑任务状态方法
 @login_required
 def all_task_edit_button(request):
-    message = all_sechdule_status_change_task.delay(json.dumps(request.user.id),request.POST.get('taskid'),request.POST.get('taskstatus'))
+    message = all_sechdule_status_change_task.delay(json.dumps(request.user.id), request.POST.get('taskid'), request.POST.get('taskstatus'))
     result = json.dumps(message.get())
     return HttpResponse(result)
+
+
+# 万能定时任务AJAX修改任务名称
+@login_required
+def perioidc_task_name_edit(request):
+    data = request.POST.get('data')
+    message = all_sechdule_taskname_change_task.delay(json.dumps(request.user.id),data)
+    result = message.get()
+    return HttpResponse(json.dumps(result))

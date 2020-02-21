@@ -144,7 +144,7 @@ function post_periodic_task_button(data_dict, csrfmiddlewaretoken) {
                 container: 'floating',
                 timer: 5000
             });
-            setTimeout('periodic_history_table_refresh()', 3000);
+            $("#periodic_history_table_crontab").bootstrapTable('refresh',setTimeout(1000));
         } else {
             $.niftyNoty({
                 type: 'danger',
@@ -161,7 +161,9 @@ function post_periodic_task_button(data_dict, csrfmiddlewaretoken) {
 
 //AJAX page refresh or data refresh
 function periodic_history_table_refresh() {
-    $("#periodic_history_table").bootstrapTable('refresh');
+    console.log('okookokokokooko')
+    $("#periodic_history_table_crontab").bootstrapTable('destroy'); // 销毁数据表格
+    $("#periodic_history_table_crontab").bootstrapTable('refresh',setTimeout(1000)); //刷新最新数据表格
 }
 
 
@@ -183,7 +185,8 @@ function all_task_delete_button(del_id) {
                         container: 'floating',
                         timer: 5000
                     });
-                    setTimeout('periodic_history_table_refresh()', 3000);
+                    $("#periodic_history_table_crontab").bootstrapTable('refresh',setTimeout(1000));
+                    // $("#periodic_history_table_crontab").bootstrapTable('refresh'); //刷新最新数据表格
                 } else {
                     $.niftyNoty({
                         type: 'danger',
@@ -219,7 +222,7 @@ function change_task_status_button(taskid, taskstatus) {
                 container: 'floating',
                 timer: 5000
             });
-            setTimeout('periodic_history_table_refresh()', 3000);
+            $("#periodic_history_table_crontab").bootstrapTable('refresh',setTimeout(1000));
         } else if (callback == 'statuschangeFalse') {
             $.niftyNoty({
                 type: 'success',
@@ -228,7 +231,7 @@ function change_task_status_button(taskid, taskstatus) {
                 container: 'floating',
                 timer: 5000
             });
-            setTimeout('periodic_history_table_refresh()', 3000);
+            $("#periodic_history_table_crontab").bootstrapTable('refresh',setTimeout(1000));
         } else {
             $.niftyNoty({
                 type: 'danger',

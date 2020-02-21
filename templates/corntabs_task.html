@@ -2,6 +2,7 @@
 {% block extra_css %}
     {% load static %}
     <link href="{% static 'plugins/bootstrap-table/bootstrap-table.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/x-editable/css/bootstrap-editable.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/bootstrap-select/bootstrap-select.min.css' %}" rel="stylesheet">
     <link href="{% static 'plugins/chosen/chosen.css' %}" rel="stylesheet">
@@ -226,7 +227,7 @@
                             <h3 class="panel-title">Crontab task history</h3>
                         </div>
                         <div class="panel-body">
-                            <table id="periodic_history_table"
+                            <table id="periodic_history_table_crontab"
                                    data-toggle="table"
                                    data-url="{% get_static_url request %}data/{{ request.user.id }}/crontabtaskhistory.json"
                                    data-search="true"
@@ -240,18 +241,6 @@
                                    data-page-size="10"
                                    data-pagination="true"
                                    data-show-pagination-switch="true">
-                                <thead>
-                                <tr>
-                                    <th data-field="task_id" data-align="center" data-sortable="true"
-                                        data-formatter="invoiceFormatter">ID
-                                    </th>
-                                    <th data-field="task_name" data-align="center" data-sortable="true">Task Name</th>
-                                    <th data-field="task_sechdule" data-sortable="true" data-formatter="dateFormatter">Task every</th>
-                                    <th data-field="task_status" data-align="center" data-sortable="true" data-formatter="periodicTaskStatusFormatter">Status</th>
-                                    <th data-field="task_id" data-align="center"  data-formatter="taskdeletebuttonFormatter">Operating</th>
-                                </tr>
-                                </thead>
-
                             </table>
                         </div>
                     </div>

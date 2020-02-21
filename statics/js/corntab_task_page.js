@@ -4,10 +4,8 @@
 // This is just a sample how to initialize plugins or components.
 $(document).on('nifty.ready', function () {
 
-
     // CHOSEN TIME ZONE
     $('#demo-chosen-select').chosen();
-
 
     // DEFAULT RANGE SLIDER Day of month
     var corntab_day = document.getElementById('corntab_day');
@@ -23,9 +21,6 @@ $(document).on('nifty.ready', function () {
     corntab_day.noUiSlider.on('update', function (values, handle) {
         corntab_day_val.innerHTML = values[handle].split('.')[0]; //.split('.')[0]  从点开始,全部去掉，0表示全部去掉，点表示从点开始
     });
-
-
-
 
 
     // DEFAULT RANGE SLIDER Month of year
