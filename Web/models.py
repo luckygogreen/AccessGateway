@@ -116,7 +116,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 # 机房信息
 class IDC(models.Model):
     name = models.CharField(max_length=64, unique=True)
-
+    user = models.ForeignKey(UserProfile,on_delete=models.CASCADE,null=True,blank=True)
     def __str__(self):
         return self.name
 

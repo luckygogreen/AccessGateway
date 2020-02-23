@@ -77,14 +77,14 @@ def rewrite_task_status(userid):
 @shared_task
 def create_interval_schedule(id, data):
     data = json.loads(data)
-    print(id)
-    print(data['task_name'])
-    print(data['cmd_text'])
-    print(data['periodic_task_type'])
-    print(data['timazone_select'])
-    print(data['interval_value'])
-    print(data['time_value'])
-    print(data['periodic_task_type'])
+    # print(id)
+    # print(data['task_name'])
+    # print(data['cmd_text'])
+    # print(data['periodic_task_type'])
+    # print(data['timazone_select'])
+    # print(data['interval_value'])
+    # print(data['time_value'])
+    # print(data['periodic_task_type'])
     if beatmodels.PeriodicTask.objects.filter(name=data['task_name']):
         result = json.dumps('taskname_used')
     else:
@@ -220,7 +220,6 @@ def all_sechdule_delete_task(uid, taskid):
         build_crontab_history(uid)
     except Exception as e:
         message = str(e)
-        print(message)
     return message
 
 
@@ -230,7 +229,6 @@ def all_sechdule_status_change_task(uid, taskid, taskstatus):
     uid = json.loads(uid)
     taskid = json.loads(taskid)
     taskstatus = json.loads(taskstatus)
-    print('taskstatus:',taskstatus)
     if taskstatus == False:
         try:
             periodic_task_obj = beatmodels.PeriodicTask.objects.get(id=int(taskid))
@@ -270,3 +268,53 @@ def all_sechdule_taskname_change_task(uid,data):
         build_crontab_history(uid)
         message = 'success'
     return message
+
+# add host
+@shared_task
+def add_host_task():
+    result = json.dumps('ok')
+    return result
+
+
+# add user IDC tag
+@shared_task
+def create_user_idc_tag_task(uid,idc_tag):
+    message = ''
+    idc_tag = json.loads(idc_tag).strip()
+    if webmodels.IDC.objects.filter(name=idc_tag,user_id=int(uid)):
+        message = 'name_used'
+    else:
+        webmodels.IDC.objects.create(
+            name=idc_tag,
+            user_id=int(uid)
+        )
+        message = 'success'
+    result = message
+    return result
+
+
+# add user group tag
+@shared_task
+def create_user_group_tag_task(uid,group_tag):
+    message = ''
+    group_tag = json.loads(group_tag).strip()
+    if webmodels.UserProfile.objects.get(id=int(uid)).host_group.filter(name=group_tag):
+        message = 'name_used'
+    else:
+        user_obj = webmodels.UserProfile.objects.get(id=int(uid))
+        group_obj = webmodels.HostGroup.objects.create(
+            name=group_tag
+        )
+        user_obj.host_group.add(group_obj)
+        user_obj.save()
+        message = 'success'
+    result = message
+    return result
+
+
+# add new host
+@shared_task
+def create_user_new_host_task(uid,data):
+    message = 'name_useeed'
+    result = json.dumps(message)
+    return result

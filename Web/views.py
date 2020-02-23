@@ -17,6 +17,9 @@ from Web.tasks import handle_periodic_task
 from Web.tasks import all_sechdule_delete_task
 from Web.tasks import all_sechdule_status_change_task
 from Web.tasks import all_sechdule_taskname_change_task
+from Web.tasks import create_user_idc_tag_task, create_user_group_tag_task,create_user_new_host_task
+from Web.tasks import add_host_task
+from django.contrib.auth import models as authmodels
 
 
 # def celery_test(request):
@@ -269,6 +272,40 @@ def all_task_edit_button(request):
 @login_required
 def perioidc_task_name_edit(request):
     data = request.POST.get('data')
-    message = all_sechdule_taskname_change_task.delay(json.dumps(request.user.id),data)
+    message = all_sechdule_taskname_change_task.delay(json.dumps(request.user.id), data)
     result = message.get()
     return HttpResponse(json.dumps(result))
+
+
+# 添加用户服务器页面
+@login_required
+def add_host(request):
+    idc_queryset = models.IDC.objects.filter(user=request.user)
+    groups_queryset = models.UserProfile.objects.get(id=request.user.id).host_group.all()
+    hosts_queryset = models.UserProfile.objects.get(id=request.user.id).host_to_remote_users.all()
+    return render(request, 'add_host.html', {'idcs': idc_queryset, 'groups': groups_queryset, 'hosts': hosts_queryset})
+
+
+# 添加用户自定义IDC
+@login_required
+def add_idc_tag_to_user(request):
+    idc_tag = request.POST.get('data')
+    message = create_user_idc_tag_task.delay(json.dumps(request.user.id), idc_tag)
+    result = json.dumps(message.get())
+    return HttpResponse(result)
+
+
+# 添加用户自定义Group
+@login_required
+def add_group_tag_to_user(request):
+    group_tag = request.POST.get('data')
+    message = create_user_group_tag_task.delay(json.dumps(request.user.id), group_tag)
+    result = json.dumps(message.get())
+    return HttpResponse(result)
+
+
+def user_and_new_host(request):
+    data = request.POST.get('data')
+    result = create_user_new_host_task(json.dumps(request.user.id), data)
+    print(result)
+    return HttpResponse(result)

@@ -535,6 +535,7 @@ $(document).on('nifty.ready', function() {
     // a - Represents an alpha character (A-Z,a-z)
     // 9 - Represents a numeric character (0-9)
     // * - Represents an alphanumeric character (A-Z,a-z,0-9)
+    $('#ip_address').mask('999.999.999.999');
     $('#demo-msk-date').mask('99/99/9999');
     $('#demo-msk-date2').mask('99-99-9999');
     $('#demo-msk-phone').mask('(999) 999-9999');

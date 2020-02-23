@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load custom_tag %}
+{% block extra_css %}
+    {% load static %}
+    <script src="{% static 'plugins/pace/pace.min.js' %}"></script>
+    <link href="{% static 'plugins/bootstrap-table/bootstrap-table.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/bootstrap-select/bootstrap-select.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block main_box %}
+    {% load static %}
+    {% load custom_tag %}
+    <div id="content-container">
+        <div id="page-content">
+            <div class="row">{% csrf_token %}
+                <div class="col-lg-3">
+                    <!--Basic Toolbar-->
+                    <!--===================================================-->
+                    <div class="panel panel-primary panel-bordered panel-dark">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Add New Host</h3>
+                        </div>
+                        <div class="panel-body form-horizontal">
+                            <div class="alert alert-primary">
+                                <strong>Tips!</strong> Test users can only use passwords, Can't upload Auth_key or other
+                                Key
+                                file.
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Ip Address</label>
+                                <div class="col-lg-7">
+                                    <input id="new_ipaddress" type="text" class="form-control" name="fullName"
+                                           placeholder="255.255.255.255">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Port</label>
+                                <div class="col-lg-7">
+                                    <input id="new_port" type="text" class="form-control" name="company" placeholder="22">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Username</label>
+                                <div class="col-lg-7">
+                                    <input id="new_remote_username" type="text" class="form-control" name="company" placeholder="root">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Password</label>
+                                <div class="col-lg-7">
+                                    <input id="new_remote_password" type="text" class="form-control" name="company" placeholder="password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">IDC</label>
+                                <div class="col-lg-7">
+                                    <select id="user_idc" class="form-control selectpicker col-xs-6 col-sm-4 col-md-6 col-lg-4"
+                                            data-style="btn-dark">
+                                        <option value="NA">N/A</option>
+                                        {% for idc in idcs %}
+                                            <option>{{ idc }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-lg-1">
+                                    <button id="add_idc_tag" class="btn btn-xs btn-dark btn-icon btn-circle"><i
+                                            class="fa fa-plus-square"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Host Group</label>
+                                <div class="col-lg-7">
+                                    <select id="user_groups" class="form-control selectpicker col-xs-6 col-sm-4 col-md-6 col-lg-4"
+                                            data-style="btn-dark">
+                                        <option>N/A</option>
+                                        {% for group in groups %}
+                                            <option>{{ group }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-lg-1">
+                                    <button id="add_group_tag" class="btn btn-xs btn-dark btn-icon btn-circle"><i
+                                            class="fa fa-plus-square"></i></button>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button class="btn btn-success" onclick="user_add_new_host_button()">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--===================================================-->
+                </div>
+                <div class="col-lg-9">
+                    <!----------------------------->
+                    <div class="panel panel-bordered panel-dark">
+
+                        <!--Panel heading-->
+                        <div class="panel-heading">
+                            <div class="panel-control">
+
+                                <!--Nav tabs-->
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#demo-tabs-box-1"
+                                                          aria-expanded="true">Grouped</a>
+                                    </li>
+                                    <li class=""><a data-toggle="tab" href="#demo-tabs-box-2"
+                                                    aria-expanded="false">Unclassified</a></li>
+                                </ul>
+
+                            </div>
+                            <h3 class="panel-title">Host List</h3>
+                        </div>
+                        <div id="select_host_pannel" class="panel-alert"></div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div id="demo-tabs-box-1" class="tab-pane fade active in">
+                                    {% for group in groups %}
+                                        <!--Collapsed Panel by default-->
+                                        <!--===================================================-->
+                                        <div class="panel" id="grouphostpanel">
+                                            <!--Panel heading-->
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title"><a data-toggle="collapse"
+                                                                           href="#{{ group.name }}">{{ group.name }}</a>
+                                                </h3>
+                                            </div>
+                                            <!--Panel body-->
+                                            <div class="collapse" id="{{ group.name }}">
+                                                <div class="panel-body">
+                                                    <table class="demo-add-niftycheck" data-toggle="table"
+                                                           data-page-size="10"
+                                                           data-pagination="true">
+                                                        <thead>
+                                                        <tr>
+                                                            <th data-field="id" data-sortable="true">ID</th>
+                                                            <th data-field="name" data-sortable="true">Host Name</th>
+                                                            <th data-field="ip" data-sortable="true">IP Address</th>
+                                                            <th data-field="port" data-sortable="true">Port</th>
+                                                            <th data-field="username" data-sortable="true">Username</th>
+                                                            <th data-field="password" data-sortable="true">password</th>
+                                                            <th data-field="Operating" data-sortable="true">Operating
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for single_host in group.host_to_remote_users.select_related %}
+                                                            <tr>
+                                                                <td>{{ single_host.id }}</td>
+                                                                <td>{{ single_host.host.name }}</td>
+                                                                <td>{{ single_host.host.ip_addr }}</td>
+                                                                <td>{{ single_host.host.port }}</td>
+                                                                <td>{{ single_host.remote_user.username }}</td>
+                                                                <td style="">
+                                                                    <button class="btn btn-xs btn-warning">Change
+                                                                    </button>
+                                                                </td>
+                                                                <td style="">
+                                                                    <button class="btn btn-xs btn-danger">Delete
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--===================================================-->
+                                        <!--End Collapsed Panel by default-->
+                                    {% endfor %}
+                                </div>
+                                <div id="demo-tabs-box-2" class="tab-pane fade">
+                                    <table id="demo-custom-toolbar"
+                                           class="demo-add-niftycheck"
+                                           data-toggle="table"
+                                           data-toolbar="#demo-delete-row"
+                                           data-search="true"
+                                           data-show-toggle="true"
+                                           data-show-columns="true"
+                                           data-sort-name="id"
+                                           data-page-list="[5, 10, 20]"
+                                           data-page-size="10"
+                                           data-pagination="true"
+                                           data-show-pagination-switch="true">
+                                        <thead>
+                                        <tr class="">
+                                            <th data-field="id" data-sortable="true">ID</th>
+                                            <th data-field="name" data-sortable="true">Host Name</th>
+                                            <th data-field="IP" data-sortable="true">IP Address</th>
+                                            <th data-field="Port" data-sortable="true">Port</th>
+                                            <th data-field="Username" data-sortable="true">Username</th>
+                                            <th data-field="Password" data-sortable="true">Password</th>
+                                            <th data-field="Operating" data-sortable="true">Operating</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for host_info in hosts %}
+                                            <tr>
+                                                <td style="">{{ host_info.id }}<a href="#" class="btn-link"></a></td>
+                                                <td style="">{{ host_info.host.name }}</td>
+                                                <td style="">{{ host_info.host.ip_addr }}</td>
+                                                <td style="">{{ host_info.host.port }}</td>
+                                                <td style="">{{ host_info.remote_user.username }}</td>
+                                                <td style="">
+                                                    <button class="btn btn-xs btn-warning">Change</button>
+                                                </td>
+                                                <td style="">
+                                                    <button class="btn btn-xs btn-danger">Delete</button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!----------------------------->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_javascript %}
+    <script src="{% static 'js/demo/tables-bs-table.js' %}"></script>
+    <script src="{% static 'plugins/x-editable/js/bootstrap-editable.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-table/bootstrap-table.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-select/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'plugins/bootbox/bootbox.min.js' %}"></script>
+    <script src="{% static 'js/addhost.js' %}"></script>
+
+
+{% endblock %}
+

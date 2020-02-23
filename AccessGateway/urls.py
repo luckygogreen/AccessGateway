@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^$', views.dashboard, name='dashboard'),
     url(r'^login/$', views.access_login, name='access_login'),  # 登录页面
     url(r'^logout/$', views.access_logout, name='access_logout'),  # 登出页面
+    url(r'^add_host/$', views.add_host, name='add_host'),  # 登出页面
     url(r'^web_ssh/$', views.web_ssh, name='web_ssh'),
     url(r'^timed_execution/$', views.timed_execution, name='timed_execution'),
     url(r'^corntabs_task/$', views.corntabs_task, name='corntabs_task'),
@@ -45,4 +46,7 @@ urlpatterns = [
     # url(r'^celery_result/$', views.celery_result),  # for Celery
     url(r'^onetime_task/$', views.onetime_task),  # for timed_execution page # onetime_task function in kevin.js
     url(r'^host_filetrans/$', views.host_filetrans, name='host_filetrans'),
+    url(r'^add_idc_tag_to_user/$', views.add_idc_tag_to_user),
+    url(r'^add_group_tag_to_user/$', views.add_group_tag_to_user),
+    url(r'^user_and_new_host/$', views.user_and_new_host),
 ]
