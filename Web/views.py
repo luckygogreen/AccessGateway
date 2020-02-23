@@ -306,6 +306,6 @@ def add_group_tag_to_user(request):
 
 def user_and_new_host(request):
     data = request.POST.get('data')
-    result = create_user_new_host_task(json.dumps(request.user.id), data)
-    print(result)
+    message = create_user_new_host_task.delay(json.dumps(request.user.id), data)
+    result = json.dumps(message.get())
     return HttpResponse(result)

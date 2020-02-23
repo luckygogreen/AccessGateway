@@ -31,12 +31,12 @@ function checkall(selectStatus) {
     //传入参数（全选框的选中状态）
     //根据name属性获取到单选框的input，使用each方法循环设置所有单选框的选中状态
     if (selectStatus) {
-        console.log(selectStatus)
+        // console.log(selectStatus)
         $("input[name='selectitem']").each(function (i, n) {
             n.checked = true;
         });
     } else {
-        console.log(selectStatus)
+        // console.log(selectStatus)
         $("input[name='selectitem']").each(function (i, n) {
             n.checked = false;
         });
@@ -157,10 +157,10 @@ function run_shell_cmd(self) {
             'task_data': JSON.stringify(task_mgr),
             'csrfmiddlewaretoken': csrftoken
         }, function (callback) {
-            console.log("task_callback:" + callback)
+            // console.log("task_callback:" + callback)
             var callbackdata = JSON.parse(callback);
             $.each(callbackdata.select_host_list, function (index, ele) {
-                console.log("ele:" + ele.host_to_remote_user__host__ip_addr)
+                // console.log("ele:" + ele.host_to_remote_user__host__ip_addr)
                 var li_ele = "<div pannelbox_id='" + ele.id + "' class=\"panel panel-bordered panel-dark \"><div class=\"panel-heading\"> <div class=\"panel-control\"> <div progressmain_id='" + ele.id + "' class=\"progress progress-md\" > <div progress_id='" + ele.id + "' style=\"width: 25%\" class=\"progress-bar progress-bar-primary progress-bar-striped active\"></div></div><button statusbutton_id='" + ele.id + "' class=\"btn btn-primary btn-labeled\" ><i statusi_id='" + ele.id + "' class=\"btn-label fa fa-gears\"  style=\" padding-left: 10px; border-left-width: 10px; \"></i> <span statusspan_id='" + ele.id + "'>Running</span></button></div><h3 class=\"panel-title\">" + (index + 1) + "—<i class=\"fa fa-linux\"></i>—" + ele.host_to_remote_user__host__name + "@" + ele.host_to_remote_user__host__ip_addr + "</h3> </div><div class=\"panel-body\"> <pre log_id='" + ele.id + "'>Start</pre> </div> </div>";
                 $("#show_host_results").append(li_ele);
             });
@@ -210,7 +210,7 @@ function one_time_task_delete_button(value) {
                 'seleteid': JSON.stringify(value),
                 'csrfmiddlewaretoken': csrftoken
             }, function (callback) {
-                console.log(callback)
+                // console.log(callback)
                 if (JSON.parse(callback) == "Success") {
                     $.niftyNoty({
                         type: 'success',
@@ -231,7 +231,7 @@ function one_time_task_delete_button(value) {
                 }
             });
         } else {
-            console.log("nothing to do !")
+            // console.log("nothing to do !")
         }
         ;
 
@@ -308,7 +308,7 @@ function save_onetime_task(self, userid) {
             "csrfmiddlewaretoken": csrftoken
         }, function (callback) {
             var result = JSON.parse(callback)
-            console.log(result)
+            // console.log(result)
             if (result == 2) {
                 panel_alert_message('floating', "The Task Name already had been taken!", 'pink');
             } else if (result == 0) {
@@ -335,7 +335,7 @@ function interval_task_button(value) {
                 'seleteid': JSON.stringify(value),
                 'csrfmiddlewaretoken': csrftoken
             }, function (callback) {
-                console.log(callback)
+                // console.log(callback)
                 if (JSON.parse(callback) == "Success") {
                     $.niftyNoty({
                         type: 'success',
@@ -356,7 +356,7 @@ function interval_task_button(value) {
                 }
             });
         } else {
-            console.log("nothing to do !")
+            // console.log("nothing to do !")
         }
         ;
 
@@ -402,12 +402,12 @@ function save_interval_task(periodic_task_type) {
             timer: 2000
         });
     } else {
-        console.log(task_name);
-        console.log(cmd_text);
-        console.log(timazone_select);
-        console.log(interval_value);
-        console.log(time_value);
-        console.log(periodic_task_type);
+        // console.log(task_name);
+        // console.log(cmd_text);
+        // console.log(timazone_select);
+        // console.log(interval_value);
+        // console.log(time_value);
+        // console.log(periodic_task_type);
         interval_dict = {
             'task_name': task_name,
             'cmd_text': cmd_text,
@@ -421,7 +421,7 @@ function save_interval_task(periodic_task_type) {
             'csrfmiddlewaretoken': csrftoken,
             'interval_task_data': JSON.stringify(interval_dict)
         }, function (callback) {
-            console.log(callback)
+            // console.log(callback)
             var result = JSON.parse(callback)
             if (result == 'taskname_used') {
                 panel_alert_message('floating', "The Task Name already had been taken!", 'pink');
@@ -440,13 +440,13 @@ function save_interval_task(periodic_task_type) {
 function show_cmd_with_result(cmdid, task) {
     $("#recent_command_pannel_alert").text("");
     $("#show_rencent_cmd_result_panel").removeClass("hidden")
-    console.log("CMDID:" + cmdid);
+    // console.log("CMDID:" + cmdid);
     var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
     $.getJSON('/recent_cmd_result_button/', {
         'cmdid': cmdid,
         'csrfmiddlewaretoken': csrftoken
     }, function (callback) {
-        console.log("callback：" + callback)
+        // console.log("callback：" + callback)
         // var callbackdata = JSON.parse(callback);  已经 object对象，不需要在JSON.parse
         $.each(callback, function (index, ele) {
             if (ele.taskstatus == "Error") {
@@ -491,7 +491,7 @@ function show_cmd_with_result(cmdid, task) {
 
 //处理host_record命令记录页面提交的Result结果按钮
 function show_task_info_result(task_id, task) {
-    console.log(task_id)
+    // console.log(task_id)
     console.log(task)
     $("#single_task_pannel_alert").text("");
     $("#show_single_task_info_pannel").removeClass("hidden");
@@ -554,10 +554,10 @@ function run_shell_file(self) {
         $(self).attr("disabled", "true");  //程序运行过程中禁止提交执行按钮
         $("#show_cmd_result").attr("class", " panel panel-bordered-primary ");    //显示运行结果框
         var csrftoken = $("input[name='csrfmiddlewaretoken']").val()    //获取CSRF TOKEN
-        console.log("service_path:" + service_path);
-        console.log("local_path:" + local_path);
-        console.log("file_trans_type:" + file_trans_type);
-        console.log("csrftoken:" + csrftoken);
+        // console.log("service_path:" + service_path);
+        // console.log("local_path:" + local_path);
+        // console.log("file_trans_type:" + file_trans_type);
+        // console.log("csrftoken:" + csrftoken);
         task_data = {
             "select_host_list": select_host_ids,
             "task_type": "file",
@@ -570,7 +570,7 @@ function run_shell_file(self) {
             "task_data": JSON.stringify(task_data),
             "csrfmiddlewaretoken": csrftoken
         }, function (callback) {
-            console.log("task_callback:" + callback)
+            // console.log("task_callback:" + callback)
             var callbackdata = JSON.parse(callback);
             $.each(callbackdata.select_host_list, function (index, ele) {
                 var li_ele = "<div pannelbox_id='" + ele.id + "' class=\"panel panel-bordered panel-dark \"><div class=\"panel-heading\"> <div class=\"panel-control\"> <div progressmain_id='" + ele.id + "' class=\"progress progress-md\" > <div progress_id='" + ele.id + "' style=\"width: 25%\" class=\"progress-bar progress-bar-primary progress-bar-striped active\"></div></div><button statusbutton_id='" + ele.id + "' class=\"btn btn-primary btn-labeled\" ><i statusi_id='" + ele.id + "' class=\"btn-label fa fa-gears\"  style=\" padding-left: 10px; border-left-width: 10px; \"></i> <span statusspan_id='" + ele.id + "'>Running</span></button></div><h3 class=\"panel-title\">" + (index + 1) + "—<i class=\"fa fa-linux\"></i>—" + ele.host_to_remote_user__host__name + "@" + ele.host_to_remote_user__host__ip_addr + "</h3> </div><div class=\"panel-body\"> <pre log_id='" + ele.id + "'>Start</pre> </div> </div>";
@@ -590,7 +590,7 @@ function run_shell_file(self) {
 //处理批量命令返回的结果
 function GetTaskResult(task_id) {
     $.getJSON("/get_task_result/", {"task_id": task_id}, function (callback) {
-        console.log("data_callback:" + callback)
+        // console.log("data_callback:" + callback)
         var all_finish = true;
         $.each(callback, function (index, ele) {
             var pre_ele = $("pre[log_id=" + ele.id + "]")
@@ -616,25 +616,25 @@ function GetTaskResult(task_id) {
             }
         })
 
-        console.log(all_finish)
+        // console.log(all_finish)
         if (all_finish) {
             clearInterval(ResultRefresh) //停止运行方法
             $("#run_cmd_button").attr("disabled", false); //任务结束，恢复执行按钮
             $("#run_file_button").attr("disabled", false); //任务结束，恢复执行按钮
-            console.log("All command are finish!")
+            // console.log("All command are finish!")
         }
     })
 }
 
 function select_host_checkbox(self) {
-    console.log("select_host_checkbox成功运行")
+    // console.log("select_host_checkbox成功运行")
     if (self.checked) {
-        console.log(self.checked)
+        // console.log(self.checked)
         $("input[name='selectitem']").each(function (i, n) {
             n.checked = true;
         });
     } else {
-        console.log(self.checked)
+        // console.log(self.checked)
         $("input[name='selectitem']").each(function (i, n) {
             n.checked = false;
         });
@@ -643,12 +643,12 @@ function select_host_checkbox(self) {
 }
 
 function select_host_cmd(self) {
-    console.log("select_host_cmd 成功运行")
+    // console.log("select_host_cmd 成功运行")
     var select_host_ids = []
     $("[tag=host_select]:checked").each(function () {
         select_host_ids.push($(this).val())
     })
-    console.log(select_host_ids)
+    // console.log(select_host_ids)
     var csrftoken = $("input[name='csrfmiddlewaretoken']").val()
     $.post("/host_select_record/", {
         'select_host_ids': JSON.stringify(select_host_ids),
@@ -657,7 +657,7 @@ function select_host_cmd(self) {
     })
     $("#sk_wave_spinkit").removeClass("hidden")
     var x = (1 + Math.ceil(Math.random() * 5)) * 1000;
-    console.log('x=' + x)
+    // console.log('x=' + x)
     setTimeout('refresh_table()', x)  //设置延时执行方法
     setTimeout('sk_wave_spinkit_control()', x)  //设置延时执行方法
 

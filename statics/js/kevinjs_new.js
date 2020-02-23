@@ -161,7 +161,7 @@ function post_periodic_task_button(data_dict, csrfmiddlewaretoken) {
 
 //AJAX page refresh or data refresh
 function periodic_history_table_refresh() {
-    console.log('okookokokokooko')
+    // console.log('okookokokokooko')
     $("#periodic_history_table_crontab").bootstrapTable('destroy'); // 销毁数据表格
     $("#periodic_history_table_crontab").bootstrapTable('refresh',setTimeout(1000)); //刷新最新数据表格
 }
@@ -198,7 +198,7 @@ function all_task_delete_button(del_id) {
                 }
             });
         } else {
-            console.log("nothing to do !")
+            // console.log("nothing to do !")
         }
         ;
 

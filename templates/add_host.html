@@ -27,28 +27,35 @@
                                 file.
                             </div>
                             <div class="form-group">
+                                <label class="col-lg-3 control-label">Host Name</label>
+                                <div class="col-lg-7">
+                                    <input id="new_hostname" type="text" class="form-control" name="newhostname"
+                                           placeholder="Host name">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-lg-3 control-label">Ip Address</label>
                                 <div class="col-lg-7">
-                                    <input id="new_ipaddress" type="text" class="form-control" name="fullName"
+                                    <input id="new_ipaddress" type="text" class="form-control" name="newhostip"
                                            placeholder="255.255.255.255">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-3 control-label">Port</label>
                                 <div class="col-lg-7">
-                                    <input id="new_port" type="text" class="form-control" name="company" placeholder="22">
+                                    <input id="new_port" type="text" class="form-control" name="newport" placeholder="22">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-3 control-label">Username</label>
                                 <div class="col-lg-7">
-                                    <input id="new_remote_username" type="text" class="form-control" name="company" placeholder="root">
+                                    <input id="new_remote_username" type="text" class="form-control" name="newusername" placeholder="root">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-3 control-label">Password</label>
                                 <div class="col-lg-7">
-                                    <input id="new_remote_password" type="text" class="form-control" name="company" placeholder="password">
+                                    <input id="new_remote_password" type="text" class="form-control" name="newpassword" placeholder="password">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -56,7 +63,6 @@
                                 <div class="col-lg-7">
                                     <select id="user_idc" class="form-control selectpicker col-xs-6 col-sm-4 col-md-6 col-lg-4"
                                             data-style="btn-dark">
-                                        <option value="NA">N/A</option>
                                         {% for idc in idcs %}
                                             <option>{{ idc }}</option>
                                         {% endfor %}
@@ -72,7 +78,7 @@
                                 <div class="col-lg-7">
                                     <select id="user_groups" class="form-control selectpicker col-xs-6 col-sm-4 col-md-6 col-lg-4"
                                             data-style="btn-dark">
-                                        <option>N/A</option>
+                                        <option value="NA">N/A</option>
                                         {% for group in groups %}
                                             <option>{{ group }}</option>
                                         {% endfor %}
@@ -101,10 +107,10 @@
 
                                 <!--Nav tabs-->
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#demo-tabs-box-1"
+                                    <li id="group_tab" class="active"><a data-toggle="tab" href="#demo-tabs-box-1"
                                                           aria-expanded="true">Grouped</a>
                                     </li>
-                                    <li class=""><a data-toggle="tab" href="#demo-tabs-box-2"
+                                    <li id="Unclassified_tab" class=""><a data-toggle="tab" href="#demo-tabs-box-2"
                                                     aria-expanded="false">Unclassified</a></li>
                                 </ul>
 
@@ -128,7 +134,7 @@
                                             <!--Panel body-->
                                             <div class="collapse" id="{{ group.name }}">
                                                 <div class="panel-body">
-                                                    <table class="demo-add-niftycheck" data-toggle="table"
+                                                    <table id="table_{{ group.name }}" class="demo-add-niftycheck" data-toggle="table"
                                                            data-page-size="10"
                                                            data-pagination="true">
                                                         <thead>

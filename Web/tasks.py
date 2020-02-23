@@ -253,7 +253,7 @@ def all_sechdule_status_change_task(uid, taskid, taskstatus):
 
 # all type of sechdule periodic task change Task name button task
 @shared_task
-def all_sechdule_taskname_change_task(uid,data):
+def all_sechdule_taskname_change_task(uid, data):
     data = json.loads(data)
     uid = json.loads(uid)
     task_id = data['task_id']
@@ -269,6 +269,7 @@ def all_sechdule_taskname_change_task(uid,data):
         message = 'success'
     return message
 
+
 # add host
 @shared_task
 def add_host_task():
@@ -278,16 +279,12 @@ def add_host_task():
 
 # add user IDC tag
 @shared_task
-def create_user_idc_tag_task(uid,idc_tag):
+def create_user_idc_tag_task(uid, idc_tag):
     message = ''
     idc_tag = json.loads(idc_tag).strip()
-    if webmodels.IDC.objects.filter(name=idc_tag,user_id=int(uid)):
+    if webmodels.IDC.objects.filter(name=idc_tag, user_id=int(uid)):
         message = 'name_used'
     else:
-        webmodels.IDC.objects.create(
-            name=idc_tag,
-            user_id=int(uid)
-        )
         message = 'success'
     result = message
     return result
@@ -295,18 +292,12 @@ def create_user_idc_tag_task(uid,idc_tag):
 
 # add user group tag
 @shared_task
-def create_user_group_tag_task(uid,group_tag):
+def create_user_group_tag_task(uid, group_tag):
     message = ''
     group_tag = json.loads(group_tag).strip()
     if webmodels.UserProfile.objects.get(id=int(uid)).host_group.filter(name=group_tag):
         message = 'name_used'
     else:
-        user_obj = webmodels.UserProfile.objects.get(id=int(uid))
-        group_obj = webmodels.HostGroup.objects.create(
-            name=group_tag
-        )
-        user_obj.host_group.add(group_obj)
-        user_obj.save()
         message = 'success'
     result = message
     return result
@@ -314,7 +305,86 @@ def create_user_group_tag_task(uid,group_tag):
 
 # add new host
 @shared_task
-def create_user_new_host_task(uid,data):
-    message = 'name_useeed'
-    result = json.dumps(message)
+def create_user_new_host_task(uid, data):
+    message = ''
+    hostid = 0
+    uid = json.loads(uid)
+    data = json.loads(data)
+    newhostname = data['newhostname'].strip()
+    newip = data['newip'].strip()
+    newport = data['newport'].strip()
+    newusername = data['newusername'].strip()
+    newpassword = data['newpassword'].strip()
+    newidc = data['newidc'].strip()
+    newgroup = data['newgroup'].strip()
+    pass_tyoe = data['pass_tyoe'].strip()
+    print(uid)
+    print(newhostname)
+    print(newip)
+    print(newport)
+    print(newusername)
+    print(newpassword)
+    print(pass_tyoe)
+    print(newidc)
+    print(newgroup)
+    user_host_remote_obj = webmodels.UserProfile.objects.get(id=int(uid)).host_to_remote_users.filter(
+        host__ip_addr=newip, remote_user__username=newusername)
+    user_host_group_obj = webmodels.UserProfile.objects.get(id=int(uid)).host_group.filter(
+        host_to_remote_users__host__ip_addr=newip, host_to_remote_users__remote_user__username=newusername)
+    user_host_remote_obj_name = webmodels.UserProfile.objects.get(id=int(uid)).host_to_remote_users.filter(
+        host__name=newhostname, remote_user__username=newusername)
+    user_host_group_obj_name = webmodels.UserProfile.objects.get(id=int(uid)).host_group.filter(
+        host_to_remote_users__host__name=newhostname, host_to_remote_users__remote_user__username=newusername)
+    if user_host_remote_obj or user_host_group_obj:
+        message = 'hostused'
+    elif user_host_remote_obj_name or user_host_group_obj_name:
+        message = 'hostnameused'
+    else:
+        if webmodels.IDC.objects.filter(name=newidc, user_id=int(uid)):
+            idc_obj = webmodels.IDC.objects.get(name=newidc, user_id=int(uid))
+        else:
+            idc_obj = webmodels.IDC.objects.create(
+                name=newidc,
+                user_id=int(uid)
+            )
+        if webmodels.Host.objects.filter(ip_addr=newip):
+            host_obj = webmodels.Host.objects.get(ip_addr=newip)
+        elif webmodels.Host.objects.filter(name=newhostname):
+            host_obj = webmodels.Host.objects.get(name=newhostname)
+        elif webmodels.Host.objects.filter(name=newhostname, ip_addr=newip):
+            host_obj = webmodels.Host.objects.get(name=newhostname, ip_addr=newip)
+        else:
+            host_obj = webmodels.Host.objects.create(
+                name=newhostname,
+                ip_addr=newip,
+                port=newport,
+                idc=idc_obj
+            )
+        remote_obj = webmodels.RemoteUser.objects.create(
+            auth_type=int(pass_tyoe),
+            username=newusername,
+            password=newpassword
+        )
+        host_remote_obj = webmodels.HostToRemoteUser.objects.create(
+            host=host_obj,
+            remote_user=remote_obj
+        )
+        user_obj = webmodels.UserProfile.objects.get(id=int(uid))
+        if newgroup == 'NA':
+            user_obj.host_to_remote_users.add(host_remote_obj)
+            user_obj.save()
+            message = 'singlesuccess'
+        else:
+            if webmodels.UserProfile.objects.get(id=int(uid)).host_group.filter(name=newgroup):
+                group_obj = webmodels.UserProfile.objects.get(id=int(uid)).host_group.get(name=newgroup)
+            else:
+                group_obj = webmodels.HostGroup.objects.create(
+                    name=newgroup
+                )
+            group_obj.host_to_remote_users.add(host_remote_obj)
+            group_obj.save()
+            user_obj.host_group.add(group_obj)
+            user_obj.save()
+            message = 'groupsuccess'
+    result = message
     return result

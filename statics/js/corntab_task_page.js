@@ -87,6 +87,16 @@ $(document).on('nifty.ready', function () {
         corntab_hour_val.innerHTML = values[handle].split('.')[0]; //.split('.')[0]  从点开始,全部去掉，0表示全部去掉，点表示从点开始
     });
 
+    //defaults
+    $.fn.editable.defaults.mode = 'popup';
+    //x-edit periodic taskname history
+    $("#periodic_task_name_history").editable({
+        url: "/post",
+        type: "text",
+        pk: 1,
+        name: "username",
+        title: "Enter username"
+    });
 
 });
 

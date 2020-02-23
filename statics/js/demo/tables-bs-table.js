@@ -203,6 +203,12 @@ function periodicTaskStatusFormatter(value, row) {
 }
 
 
+function periodicTaskNameFormatter(value, row) {
+    ele = '<a href="#" id="periodic_task_name_history" data-type="text" data-placement="right" data-title="Enter Task name">' + value + '</a>';
+    return ele;
+}
+
+
 //all_periodic_task_status Formatter
 function taskstatusFormatter(value, row) {
     ele = "";
