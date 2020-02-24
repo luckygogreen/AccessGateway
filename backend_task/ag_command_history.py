@@ -10,7 +10,11 @@ class CommandHistory(object):
 
     def get_command_history(self):
         print("执行get_command_history成功")
-        command_task = models.UserProfile.objects.get(id=self.request.user.id).host_to_remote_users.select_related()
+        print(self.request.user.id)
+        # command_task = models.UserProfile.objects.get(id=self.request.user.id).host_to_remote_users.select_related()
+        # command_group_task = models.UserProfile.objects.get(id=self.request.user.id).host_group.select_related()
+        command_task = models.UserProfile.objects.get(id=self.request.user.id).multitask_set.select_related()
+        print('command_task',command_task)
         command_history_list = []
         for i in command_task.order_by('-id'):
             task_details = i.taskdetails_set.select_related()
