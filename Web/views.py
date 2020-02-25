@@ -77,7 +77,17 @@ def dashboard(request):
 # 操作记录页面
 @login_required
 def host_record(request):
-    host_list = models.UserProfile.objects.get(id=request.user.id).host_to_remote_users.select_related()
+    host_list = []
+    ungrouped_host = models.UserProfile.objects.get(id=request.user.id).host_to_remote_users.select_related()
+    for single_host in ungrouped_host:
+        host_list.append(single_host)
+    host_groups = models.UserProfile.objects.get(id=request.user.id).host_group.select_related()
+    for hosts in host_groups:
+        for host in hosts.host_to_remote_users.select_related():
+            host_list.append(host)
+    print(host_list)
+    host_list = set(host_list)   # queryset 也可以用set去重
+    print(host_list)
     return render(request, 'host_record.html', {'host_list': host_list})
 
 
@@ -85,7 +95,8 @@ def host_record(request):
 @login_required
 def web_ssh(request):
     hostlist = models.UserProfile.objects.get(id=request.user.id).host_to_remote_users.select_related()
-    return render(request, 'web_ssh.html', {'hostlist': hostlist})
+    hostgroups = models.UserProfile.objects.get(id=request.user.id).host_group.select_related()
+    return render(request, 'web_ssh.html', {'hostlist': hostlist,'hostgroups':hostgroups})
 
 
 # 获取用户权限下的服务器以及服务器组信息

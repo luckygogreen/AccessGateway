@@ -648,6 +648,8 @@ function select_host_cmd(self) {
     $("[tag=host_select]:checked").each(function () {
         select_host_ids.push($(this).val())
     })
+    // var select_host_ids = $("[tag=host_select]:checked").val(); // for radio select
+    console.log(select_host_ids)
     // console.log(select_host_ids)
     var csrftoken = $("input[name='csrfmiddlewaretoken']").val()
     $.post("/host_select_record/", {

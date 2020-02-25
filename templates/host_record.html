@@ -31,9 +31,7 @@
                                    data-show-pagination-switch="true" class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th class="bs-checkbox "><input type="checkbox"
-                                                                    onclick="select_host_checkbox(this)">
-                                        <!--onclick="checkall(this.checked)"-->
+                                    <th class="bs-checkbox ">#
                                     </th>
                                     <th data-field="id" data-sortable="true">ID</th>
                                     <th data-field="name" data-sortable="true">Host Name</th>
@@ -48,7 +46,7 @@
                                 {% for single_host in host_list %}
                                     <tr data-index="" id="{{ single_host.host.id }}">
                                         <td class="bs-checkbox ">
-                                            <input name="selectitem" tag="host_select" type="checkbox"
+                                            <input name="selectitem" tag="host_select" type="radio"
                                                    value="{{ single_host.id }}" id="host{{ single_host.id }}"
                                                    onclick="select_host_cmd(this)">
                                         </td>
